@@ -228,6 +228,23 @@
         "padding-block-end": 0
       }
     },
+    "gifts_image_text_home": {
+      "type": "gifts-image-text",
+      "name": "Gifts image + text",
+      "settings": {
+        "eyebrow": "gifts",
+        "heading": "As often given as it's kept",
+        "description": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order.",
+        "button_label": "Start yours",
+        "button_link": "",
+        "desktop_image_asset": "gifts-image-text-desktop.png",
+        "mobile_image_asset": "gifts-image-text-mobile.png",
+        "image_alt": "Framed pup portrait ready for gifting",
+        "panel_color": "#fbeeca",
+        "text_color": "#242027",
+        "brand_color": "#321c41"
+      }
+    },
     "trust_strip_home": {
       "type": "trust-strip",
       "blocks": {
@@ -304,76 +321,6 @@
         "padding-block-end-mobile": 40,
         "padding-inline-start-mobile": 25,
         "padding-inline-end-mobile": 25
-      }
-    },
-    "gifts_image_text_home": {
-      "type": "gifts-image-text",
-      "name": "Gifts image + text",
-      "settings": {
-        "eyebrow": "gifts",
-        "heading": "As often given as it's kept",
-        "description": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order.",
-        "button_label": "Start yours",
-        "button_link": "",
-        "desktop_image_asset": "gifts-image-text-desktop.png",
-        "mobile_image_asset": "gifts-image-text-mobile.png",
-        "image_alt": "Framed pup portrait ready for gifting",
-        "panel_color": "#fbeeca",
-        "text_color": "#242027",
-        "brand_color": "#321c41"
-      }
-    },
-    "testimonials_home": {
-      "type": "testimonials",
-      "blocks": {
-        "testimonial_maria": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "The free preview sold me instantly. I saw my Luna in the Provence scene and knew it had to be real.",
-            "author": "Maria S.",
-            "meta": "Verified buyer · Lavender Fields"
-          }
-        },
-        "testimonial_james": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "Gave this as a gift and my sister cried, in a good way. The packaging alone felt like a real gift.",
-            "author": "James O.",
-            "meta": "Verified buyer · Lavender Fields"
-          }
-        },
-        "testimonial_priya": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "Ordered from Australia, shipped without a hitch. The “mood” browsing made it so much easier to pick.",
-            "author": "Priya K.",
-            "meta": "Verified buyer · Coastal Morning"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_maria",
-        "testimonial_james",
-        "testimonial_priya"
-      ],
-      "name": "Testimonials",
-      "settings": {
-        "eyebrow": "Testimonials",
-        "heading": "What our lovely humans say",
-        "marquee_text": "Soft impressionist style   ·   Free preview, always   ·   Ships worldwide   ·   Scenes from around the world",
-        "button_label": "See all reviews",
-        "button_link": "",
-        "dots_label": "Review slides",
-        "star_asset": "testimonials-star.svg",
-        "background_color": "#f2f7fc",
-        "text_color": "#242027",
-        "muted_color": "#605c64",
-        "card_border": "#c9def4",
-        "button_color": "#212c4a",
-        "marquee_color": "#c9def4"
       }
     },
     "featured_prints_home": {
@@ -459,6 +406,59 @@
         "padding-block-end-mobile": 60,
         "padding-inline-start-mobile": 25,
         "padding-inline-end-mobile": 25
+      }
+    },
+    "testimonials_home": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_maria": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The free preview sold me instantly. I saw my Luna in the Provence scene and knew it had to be real.",
+            "author": "Maria S.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_james": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Gave this as a gift and my sister cried, in a good way. The packaging alone felt like a real gift.",
+            "author": "James O.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_priya": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Ordered from Australia, shipped without a hitch. The “mood” browsing made it so much easier to pick.",
+            "author": "Priya K.",
+            "meta": "Verified buyer · Coastal Morning"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_maria",
+        "testimonial_james",
+        "testimonial_priya"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "eyebrow": "Testimonials",
+        "heading": "What our lovely humans say",
+        "marquee_text": "Soft impressionist style   ·   Free preview, always   ·   Ships worldwide   ·   Scenes from around the world",
+        "button_label": "See all reviews",
+        "button_link": "",
+        "dots_label": "Review slides",
+        "star_asset": "testimonials-star.svg",
+        "background_color": "#f2f7fc",
+        "text_color": "#242027",
+        "muted_color": "#605c64",
+        "card_border": "#c9def4",
+        "button_color": "#212c4a",
+        "marquee_color": "#c9def4"
       }
     },
     "join_the_pack_home": {
