@@ -1,0 +1,385 @@
+{%- liquid
+  assign background_color = section.settings.background_color | default: '#C8AFDE'
+  assign text_color = section.settings.text_color | default: '#321C41'
+-%}
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="section-background color-custom-{{ section.id }}"
+  style="background-color: {{ background_color }};"
+></div>
+
+<div
+  class="
+    section
+    section--full-width
+    trust-strip
+    color-custom-{{ section.id }}
+    spacing-style
+  "
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --trust-strip-bg: {{ background_color }};
+    --trust-strip-text: {{ text_color }};
+    background-color: {{ background_color }};
+  "
+>
+  <ul class="trust-strip__list" role="list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign icon = block.settings.icon
+        assign icon_asset = block.settings.icon_asset
+        if icon_asset == blank
+          case forloop.index
+            when 1
+              assign icon_asset = 'trust-strip-icon-brush.svg'
+            when 2
+              assign icon_asset = 'trust-strip-icon-heart.svg'
+            when 3
+              assign icon_asset = 'trust-strip-icon-box.svg'
+            else
+              assign icon_asset = 'trust-strip-icon-brush.svg'
+          endcase
+        endif
+      -%}
+      <li
+        class="trust-strip__item"
+        {{ block.shopify_attributes }}
+      >
+        <div class="trust-strip__icon" aria-hidden="true">
+          {%- if icon != blank -%}
+            {{
+              icon
+              | image_url: width: 100
+              | image_tag:
+                class: 'trust-strip__icon-img',
+                widths: '50, 100',
+                sizes: '50px',
+                loading: 'lazy',
+                alt: ''
+            }}
+          {%- else -%}
+            <img
+              class="trust-strip__icon-img"
+              src="{{ icon_asset | asset_url }}"
+              alt=""
+              width="50"
+              height="50"
+              loading="lazy"
+            >
+          {%- endif -%}
+        </div>
+
+        <div class="trust-strip__copy">
+          {%- if block.settings.title != blank -%}
+            <p class="trust-strip__title">{{ block.settings.title }}</p>
+          {%- endif -%}
+          {%- if block.settings.description != blank -%}
+            <p class="trust-strip__description">{{ block.settings.description }}</p>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .trust-strip {
+    position: relative;
+    overflow: hidden;
+    color: var(--trust-strip-text, #321c41);
+    background-color: var(--trust-strip-bg, #c8afde);
+  }
+
+  .trust-strip__list {
+    display: flex;
+    align-items: center;
+    gap: 1.625rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .trust-strip__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .trust-strip__item {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 min(21.375rem, 85vw);
+    align-items: center;
+    justify-content: center;
+    gap: 0.9375rem;
+    width: min(21.375rem, 85vw);
+    overflow: clip;
+    text-align: center;
+    scroll-snap-align: start;
+  }
+
+  .trust-strip__icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 3.125rem;
+    height: 3.125rem;
+    overflow: clip;
+  }
+
+  .trust-strip__icon-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .trust-strip__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+    width: 100%;
+    color: var(--trust-strip-text, #321c41);
+    text-align: center;
+    overflow-wrap: break-word;
+  }
+
+  .trust-strip__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+  }
+
+  .trust-strip__description {
+    margin: 0;
+    max-width: 20.6875rem;
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+    color: inherit;
+  }
+
+  @media screen and (min-width: 750px) {
+    .trust-strip__list {
+      justify-content: space-between;
+      gap: 1.5rem;
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+
+    .trust-strip__item {
+      flex: 1 1 0;
+      width: auto;
+      max-width: 20.6875rem;
+      scroll-snap-align: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.trust_strip",
+  "tag": "section",
+  "class": "trust-strip-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "default": "#C8AFDE"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#321C41"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_padding",
+      "label": "Use mobile padding",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "Mobile top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 18,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "Mobile bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "Mobile left",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "Mobile right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset fallback",
+          "info": "Filename in the assets folder. Used when no icon is selected."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "No Risk of a Bad Fit"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Free preview first, then up to three free adjustments. Still off? Try a new photo."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.trust_strip",
+      "category": "t:categories.other_sections",
+      "settings": {
+        "background_color": "#C8AFDE",
+        "text_color": "#321C41",
+        "padding-block-start": 40,
+        "padding-block-end": 40,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 18,
+        "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      },
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-brush.svg",
+            "title": "No Risk of a Bad Fit",
+            "description": "Free preview first, then up to three free adjustments. Still off? Try a new photo."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-heart.svg",
+            "title": "Real Humans Who Love Dogs Too",
+            "description": "Questions about a scene, a photo, or an order? Reach us anytime by email or live chat."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-box.svg",
+            "title": "Worldwide Delivery",
+            "description": "We ship portraits globally with fully tracked shipping methods. Free shipping on all orders over $100!"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

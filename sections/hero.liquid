@@ -33,9 +33,21 @@
     assign media_count = media_count | plus: 1
   endif
 
+  if section.settings.image_1 == blank and section.settings.image_1_asset != blank and section.settings.media_type_1 == 'image'
+    assign media_1 = 'asset'
+    assign media_count = media_count | plus: 1
+  endif
+
+  assign has_mobile_asset_override = false
+
   # Simple mobile image override for media 1 (without enabling full custom mobile media)
   if section.settings.image_1_mobile_override != blank and section.settings.media_type_1 == 'image' and section.settings.custom_mobile_media == false
     assign has_mobile_override = true
+  endif
+
+  if section.settings.image_1_mobile_override == blank and section.settings.image_1_mobile_asset != blank and section.settings.media_type_1 == 'image' and section.settings.custom_mobile_media == false
+    assign has_mobile_override = true
+    assign has_mobile_asset_override = true
   endif
 
   if section.settings.custom_mobile_media
@@ -58,7 +70,7 @@
       assign media_count_mobile = media_count_mobile | plus: 1
     endif
   endif
-  if media_count > 0 and media_1 != 'image' and media_2 != 'image'
+  if media_count > 0 and media_1 != 'image' and media_1 != 'asset' and media_2 != 'image'
     assign has_only_video = true
   endif
   if media_count > 0 and media_count_mobile > 0 and media_1_mobile != 'image' and media_2_mobile != 'image'
@@ -120,17 +132,65 @@
   endif
 
   assign media_1_use_picture = false
+  assign media_1_use_asset = false
+
   if media_1 == 'image'
     if media_1_mobile == 'image' or has_mobile_override
+      assign media_1_use_picture = true
+    endif
+  elsif media_1 == 'asset'
+    assign media_1_use_asset = true
+    if has_mobile_override or section.settings.image_1_mobile_asset != blank
       assign media_1_use_picture = true
     endif
   endif
 %}
 
 {% capture media_slot_1 %}
-  {%- if media_1_use_picture -%}
+  {%- if media_1_use_asset and media_1_use_picture == false -%}
+    <div class="{{ media_wrapper_desktop_class }}">
+      <img
+        src="{{ section.settings.image_1_asset | asset_url }}"
+        alt=""
+        class="hero__media"
+        width="1440"
+        height="700"
+        loading="eager"
+        {% if fetch_priority == 'high' %}
+          fetchpriority="high"
+        {% endif %}
+        data-testid="hero-desktop-asset-1"
+      >
+    </div>
+  {%- elsif media_1_use_asset and media_1_use_picture -%}
+    <picture
+      data-testid="hero-picture-asset-1"
+      class="hero__media"
+    >
+      <source
+        media="(max-width: 749px)"
+        srcset="{{ section.settings.image_1_mobile_asset | asset_url }}"
+        width="390"
+        height="796"
+      >
+      <img
+        src="{{ section.settings.image_1_asset | asset_url }}"
+        alt=""
+        class="hero__media"
+        width="1440"
+        height="700"
+        loading="eager"
+        {% if fetch_priority == 'high' %}
+          fetchpriority="high"
+        {% endif %}
+        data-testid="hero-desktop-asset-1"
+      >
+    </picture>
+  {%- elsif media_1_use_picture -%}
     {%- liquid
-      if has_mobile_override
+      if has_mobile_asset_override
+        assign mobile_asset_1 = section.settings.image_1_mobile_asset
+      elsif has_mobile_override
         assign mobile_image_1 = section.settings.image_1_mobile_override
       else
         assign mobile_image_1 = section.settings.image_1_mobile
@@ -143,14 +203,18 @@
     >
       <source
         media="(max-width: 749px)"
-        srcset="
-          {%-  for mobile_width in mobile_widths_array -%}
-            {{ mobile_image_1 | image_url: width: mobile_width }} {{ mobile_width }}w{% unless forloop.last %},{% endunless %}
-          {%- endfor -%}
-        "
-        sizes="{{ sizes_mobile }}"
-        width="{{ mobile_image_1.width }}"
-        height="{{ mobile_image_1.height }}"
+        {% if has_mobile_asset_override %}
+          srcset="{{ mobile_asset_1 | asset_url }}"
+        {% else %}
+          srcset="
+            {%-  for mobile_width in mobile_widths_array -%}
+              {{ mobile_image_1 | image_url: width: mobile_width }} {{ mobile_width }}w{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          "
+          sizes="{{ sizes_mobile }}"
+          width="{{ mobile_image_1.width }}"
+          height="{{ mobile_image_1.height }}"
+        {% endif %}
       >
       {{
         section.settings.image_1
@@ -478,7 +542,7 @@
 
 <div
   id="Hero-{{ section.id }}"
-  class="hero{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}{% if section.blocks.size == 0 and section.settings.section_height == 'auto' %} hero--no-blocks-auto-height{% endif %}{% if section.settings.stack_media_on_mobile %} hero--stack-mobile{% endif %}{% if section.settings.hero_style == 'pups-home' %} hero--pups-home{% endif %}"
   style="
     --hero-border-style: {{ section.settings.border }};
     --hero-border-width: {{ section.settings.border_width }}px;
@@ -663,6 +727,130 @@
     z-index: var(--layer-base);
   }
 
+  .hero--pups-home .hero__media {
+    object-position: 70% center;
+
+    @media screen and (max-width: 749px) {
+      object-position: center 85%;
+    }
+  }
+
+  .hero--pups-home {
+    @media screen and (max-width: 749px) {
+      --hero-min-height: 92svh;
+    }
+  }
+
+  .hero--pups-home .hero__content-wrapper .text-block {
+    @media screen and (max-width: 749px) {
+      --text-align: center;
+    }
+  }
+
+  .hero--pups-home .hero__content-wrapper .group-block-content {
+    @media screen and (max-width: 749px) {
+      align-items: center;
+    }
+  }
+
+  /* Pups hero floating badges (absolutely positioned over the hero media) */
+  .hero--pups-home .hero-pups-badge {
+    position: absolute;
+    z-index: var(--layer-flat);
+    width: auto;
+    height: auto;
+    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    background: #faf8f0;
+    border-radius: 10px;
+    padding: 11px 15px;
+    gap: 6px;
+  }
+
+  .hero--pups-home .hero-pups-badge__icon {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero--pups-home .hero-pups-badge__icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hero--pups-home .hero-pups-badge__lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .hero--pups-home .hero-pups-badge__line {
+    font-family: var(--font-body--family);
+    font-size: 0.4375rem; /* 7px */
+    line-height: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
+  .hero--pups-home .hero-pups-badge__line--primary {
+    color: #242027;
+  }
+
+  .hero--pups-home .hero-pups-badge__line--secondary {
+    color: #918d95;
+  }
+
+  /* Mobile positioning */
+  .hero--pups-home .hero-pups-badge--preview {
+    left: 13px;
+    bottom: 293px;
+    width: 175px;
+    height: 50px;
+    box-shadow: 0px 14px 34px -14px rgba(58, 55, 51, 0.4);
+  }
+
+  .hero--pups-home .hero-pups-badge--style {
+    left: 181px;
+    bottom: 21px;
+    width: 191px;
+    height: 52px;
+    box-shadow: 0px 14px 17px rgba(58, 55, 51, 0.4);
+    padding: 11px 15px;
+  }
+
+  @media screen and (min-width: 750px) {
+    /* Desktop positioning */
+    .hero--pups-home .hero-pups-badge--preview {
+      left: 740px;
+      bottom: 435px;
+      width: 193px;
+      height: 56px;
+    }
+
+    .hero--pups-home .hero-pups-badge--style {
+      left: 1164px;
+      bottom: 240px;
+      width: 201px;
+      height: 58px;
+    }
+
+    .hero--pups-home .hero-pups-badge--style {
+      padding: 14px 15px;
+    }
+  }
+
+  .hero__content-wrapper--design-mode .hero-pups-badge {
+    pointer-events: auto;
+  }
+
   /* Mobile/Desktop media visibility */
 
   .hero__media-wrapper--mobile {
@@ -810,6 +998,9 @@
       "type": "group"
     },
     {
+      "type": "hero-badge"
+    },
+    {
       "type": "_marquee"
     }
   ],
@@ -847,6 +1038,19 @@
       "type": "image_picker",
       "id": "image_1_mobile_override",
       "label": "Mobile image (optional)",
+      "visible_if": "{{ section.settings.media_type_1 == 'image' and section.settings.custom_mobile_media == false }}"
+    },
+    {
+      "type": "text",
+      "id": "image_1_asset",
+      "label": "Desktop image asset (fallback)",
+      "info": "Filename in the assets folder. Used when no desktop image is selected."
+    },
+    {
+      "type": "text",
+      "id": "image_1_mobile_asset",
+      "label": "Mobile image asset (fallback)",
+      "info": "Filename in the assets folder. Used when no mobile image override is selected.",
       "visible_if": "{{ section.settings.media_type_1 == 'image' and section.settings.custom_mobile_media == false }}"
     },
     {
@@ -1153,6 +1357,62 @@
       "visible_if": "{{ section.settings.use_mobile_gap }}"
     },
     {
+      "type": "header",
+      "content": "Mobile alignment"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_alignment",
+      "label": "Use mobile alignment",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_horizontal_alignment_flex_direction_column",
+      "label": "t:settings.alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "t:options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "flex-end",
+          "label": "t:options.right"
+        }
+      ],
+      "default": "flex-start",
+      "visible_if": "{{ section.settings.use_mobile_alignment and section.settings.content_direction != 'row' or section.settings.use_mobile_alignment and section.settings.vertical_on_mobile }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_vertical_alignment_flex_direction_column",
+      "label": "t:settings.position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "t:options.top"
+        },
+        {
+          "value": "center",
+          "label": "t:options.center"
+        },
+        {
+          "value": "flex-end",
+          "label": "t:options.bottom"
+        },
+        {
+          "value": "space-between",
+          "label": "t:options.space_between"
+        }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.use_mobile_alignment and section.settings.content_direction != 'row' or section.settings.use_mobile_alignment and section.settings.vertical_on_mobile }}"
+    },
+    {
       "type": "select",
       "id": "section_width",
       "label": "t:settings.width",
@@ -1230,6 +1490,22 @@
     {
       "type": "header",
       "content": "t:content.appearance"
+    },
+    {
+      "type": "select",
+      "id": "hero_style",
+      "label": "Hero style",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "pups-home",
+          "label": "Pups home"
+        }
+      ],
+      "default": "default"
     },
     {
       "type": "color",
@@ -1439,6 +1715,315 @@
         "padding-block-end": 40,
         "toggle_overlay": true,
         "overlay_style": "gradient"
+      }
+    },
+    {
+      "name": "Pups hero home",
+      "category": "t:categories.banners",
+      "blocks": {
+        "group_content": {
+          "type": "group",
+          "name": "t:names.group",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "use_mobile_alignment": true,
+            "mobile_horizontal_alignment_flex_direction_column": "center",
+            "mobile_vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 40,
+            "use_mobile_gap": true,
+            "mobile_gap": 16,
+            "width": "custom",
+            "custom_width": 45,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_copy_cta": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "content_direction": "column",
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "use_mobile_alignment": true,
+                "mobile_horizontal_alignment_flex_direction_column": "center",
+                "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 25,
+                "use_mobile_gap": true,
+                "mobile_gap": 18,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "group_heading_body": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "column",
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "flex-start",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                    "gap": 5,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "heading_line_1": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<p>Here begins the portrait of your</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-heading--family)",
+                        "font_size": "3.5625rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.17,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "2.25rem",
+                        "mobile_custom_line_height": 1.22,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      }
+                    },
+                    "heading_line_2": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<p><em>Best Friend</em></p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-heading--family)",
+                        "font_size": "3.5625rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.17,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "2.25rem",
+                        "mobile_custom_line_height": 1.22,
+                        "text_color": "#ce6911",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      }
+                    },
+                    "body": {
+                      "type": "text",
+                      "name": "t:names.text",
+                      "settings": {
+                        "text": "<p>Upload one photo of your pup. Choose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.375,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "0.875rem",
+                        "mobile_custom_line_height": 1.43,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      }
+                    }
+                  },
+                  "block_order": ["heading_line_1", "heading_line_2", "body"]
+                },
+                "buttons": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": false,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "gap": 15,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "button_primary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "Start free preview",
+                        "link": "shopify://collections/all",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "#321c41",
+                        "custom_button_text": "#fefefd",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      }
+                    },
+                    "button_secondary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "See how it works",
+                        "link": "shopify://pages/about-us",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "rgba(0,0,0,0)",
+                        "custom_button_text": "#321c41",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      }
+                    }
+                  },
+                  "block_order": ["button_primary", "button_secondary"]
+                }
+              },
+              "block_order": ["group_heading_body", "buttons"]
+            },
+            "social_proof": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<p>★★★★★ Loved by 40,000+ readers · Ships worldwide</p>",
+                "width": "100%",
+                "max_width": "none",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.6875rem",
+                "line_height": "custom",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "type_preset_mobile": "custom",
+                "mobile_font_size": "0.4375rem",
+                "mobile_custom_line_height": 2.14,
+                "text_color": "#605c64",
+                "padding-block-start": 16,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            }
+          },
+          "block_order": ["group_copy_cta", "social_proof"]
+        }
+      },
+      "block_order": ["group_content"],
+      "settings": {
+        "media_type_1": "image",
+        "image_1_asset": "hero-pups-desktop.png",
+        "image_1_mobile_asset": "hero-pups-mobile.png",
+        "content_direction": "column",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "use_mobile_alignment": true,
+        "mobile_horizontal_alignment_flex_direction_column": "center",
+        "mobile_vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_width-mobile": "full-width",
+        "section_height": "custom",
+        "section_height_custom": 49,
+        "hero_style": "pups-home",
+        "background_color": "#fffdf8",
+        "toggle_overlay": false,
+        "padding-block-start": 48,
+        "padding-block-end": 48,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 24,
+        "padding-block-end-mobile": 32
       }
     },
     {

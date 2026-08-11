@@ -1,0 +1,369 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign description = section.settings.description
+  assign button_label = section.settings.button_label
+  assign button_link = section.settings.button_link
+  assign panel_color = section.settings.panel_color | default: '#FBEECA'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign brand_color = section.settings.brand_color | default: '#321C41'
+  assign desktop_image = section.settings.desktop_image
+  assign mobile_image = section.settings.mobile_image
+  assign desktop_asset = section.settings.desktop_image_asset | default: 'gifts-image-text-desktop.png'
+  assign mobile_asset = section.settings.mobile_image_asset | default: 'gifts-image-text-mobile.png'
+  assign image_alt = section.settings.image_alt | default: heading
+-%}
+
+{% render 'contrast-override',
+  background_color: panel_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="gifts-image-text color-custom-{{ section.id }}"
+  id="GiftsImageText-{{ section.id }}"
+  style="
+    --git-panel: {{ panel_color }};
+    --git-text: {{ text_color }};
+    --git-brand: {{ brand_color }};
+  "
+>
+  <div class="gifts-image-text__panel">
+    <div class="gifts-image-text__content">
+      <div class="gifts-image-text__copy">
+        {%- if eyebrow != blank -%}
+          <p class="gifts-image-text__eyebrow">{{ eyebrow }}</p>
+        {%- endif -%}
+        {%- if heading != blank -%}
+          <h2 class="gifts-image-text__heading">{{ heading }}</h2>
+        {%- endif -%}
+        {%- if description != blank -%}
+          <p class="gifts-image-text__description">{{ description }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if button_label != blank -%}
+        <a
+          class="gifts-image-text__button"
+          {% if button_link != blank %}
+            href="{{ button_link }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{ button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="gifts-image-text__media">
+    <picture>
+      {%- if mobile_image != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ mobile_image | image_url: width: 750 }} 750w,
+            {{ mobile_image | image_url: width: 1100 }} 1100w
+          "
+          sizes="100vw"
+        >
+      {%- else -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mobile_asset | asset_url }}"
+        >
+      {%- endif -%}
+
+      {%- if desktop_image != blank -%}
+        {{
+          desktop_image
+          | image_url: width: 1600
+          | image_tag:
+            class: 'gifts-image-text__img',
+            widths: '700, 1000, 1400, 1600',
+            sizes: '(min-width: 750px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: image_alt
+        }}
+      {%- else -%}
+        <img
+          class="gifts-image-text__img"
+          src="{{ desktop_asset | asset_url }}"
+          alt="{{ image_alt | escape }}"
+          width="702"
+          height="651"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </picture>
+  </div>
+</div>
+
+{% stylesheet %}
+  .gifts-image-text {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fffdf8;
+    padding-block-start: 2.5rem;
+  }
+
+  .gifts-image-text__panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: var(--git-panel, #fbeeca);
+    padding: 3.75rem 1.5625rem;
+  }
+
+  .gifts-image-text__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.8125rem;
+    width: 100%;
+    max-width: 30.25rem;
+    text-align: center;
+  }
+
+  .gifts-image-text__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9375rem;
+    width: 100%;
+    color: var(--git-text, #242027);
+  }
+
+  .gifts-image-text__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+  }
+
+  .gifts-image-text__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    color: inherit;
+  }
+
+  .gifts-image-text__description {
+    margin: 0;
+    width: 100%;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  .gifts-image-text__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 0.5px solid var(--git-brand, #321c41);
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--git-brand, #321c41);
+    font-family: var(--font-accent--family, var(--font-body--family));
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    text-align: center;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .gifts-image-text__button:hover {
+    background-color: var(--git-brand, #321c41);
+    color: #fffdf8;
+  }
+
+  .gifts-image-text__button[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .gifts-image-text__button:focus-visible {
+    outline: 2px solid var(--git-brand, #321c41);
+    outline-offset: 2px;
+  }
+
+  .gifts-image-text__media {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 392 / 364;
+  }
+
+  .gifts-image-text__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .gifts-image-text__media picture,
+  .gifts-image-text__media img {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .gifts-image-text {
+      flex-direction: row;
+      align-items: stretch;
+      background-color: transparent;
+      padding-block-start: 5rem;
+    }
+
+    .gifts-image-text__panel {
+      flex: 1 1 51%;
+      min-height: 40.6875rem;
+      padding: 0 7.9375rem;
+    }
+
+    .gifts-image-text__content {
+      max-width: 30.25rem;
+      gap: 2.8125rem;
+    }
+
+    .gifts-image-text__heading {
+      font-size: 2.5rem;
+      line-height: 1.08;
+      letter-spacing: -0.0125rem;
+    }
+
+    .gifts-image-text__description {
+      max-width: 28.8125rem;
+    }
+
+    .gifts-image-text__media {
+      flex: 1 1 49%;
+      min-height: 40.6875rem;
+      aspect-ratio: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gifts image + text",
+  "tag": "section",
+  "class": "gifts-image-text-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "gifts"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "As often given as it's kept"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Start yours"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "desktop_image_asset",
+      "label": "Desktop image asset filename",
+      "default": "gifts-image-text-desktop.png",
+      "info": "Used when no desktop image is selected"
+    },
+    {
+      "type": "text",
+      "id": "mobile_image_asset",
+      "label": "Mobile image asset filename",
+      "default": "gifts-image-text-mobile.png",
+      "info": "Used when no mobile image is selected"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Framed pup portrait ready for gifting"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panel background",
+      "default": "#FBEECA"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Button color",
+      "default": "#321C41"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gifts image + text",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

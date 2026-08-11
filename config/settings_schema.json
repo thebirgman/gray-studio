@@ -2000,6 +2000,10 @@
             "label": "Normal"
           },
           {
+            "value": "500",
+            "label": "Medium"
+          },
+          {
             "value": "700",
             "label": "Bold"
           }

@@ -1,0 +1,82 @@
+<div
+  class="pups-hero-image"
+  id="PupsHero-{{ section.id }}"
+>
+  {%- liquid
+    assign desktop_asset = section.settings.desktop_image_asset
+    assign mobile_asset = section.settings.mobile_image_asset
+  -%}
+
+  <picture>
+    <source
+      media="(max-width: 749px)"
+      srcset="{{ mobile_asset | asset_url }}"
+    >
+    <img
+      class="pups-hero-image__img"
+      src="{{ desktop_asset | asset_url }}"
+      alt="{{ section.settings.image_alt | escape }}"
+      width="1440"
+      height="700"
+      loading="eager"
+      fetchpriority="high"
+    >
+  </picture>
+</div>
+
+{% stylesheet %}
+  #PupsHero-{{ section.id }}.pups-hero-image {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .pups-hero-image__img {
+    width: 100%;
+    height: 700px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    #PupsHero-{{ section.id }}.pups-hero-image .pups-hero-image__img {
+      height: 812px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pups hero (image)",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "desktop_image_asset",
+      "label": "Desktop image asset filename",
+      "default": "figma-hero-desktop.png"
+    },
+    {
+      "type": "text",
+      "id": "mobile_image_asset",
+      "label": "Mobile image asset filename",
+      "default": "figma-hero-mobile.png"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Alt text",
+      "default": "Pups Around the World hero"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pups hero (image)",
+      "category": "t:categories.banners"
+    }
+  ]
+}
+{% endschema %}
+
