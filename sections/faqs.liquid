@@ -1,0 +1,388 @@
+{%- liquid
+  assign heading = section.settings.heading
+  assign button_label = section.settings.button_label
+  assign button_link = section.settings.button_link
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign brand_color = section.settings.brand_color | default: '#321C41'
+  assign border_color = section.settings.border_color | default: '#D9D6DB'
+-%}
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="faqs color-custom-{{ section.id }}"
+  id="Faqs-{{ section.id }}"
+  style="
+    --faqs-bg: {{ background_color }};
+    --faqs-text: {{ text_color }};
+    --faqs-brand: {{ brand_color }};
+    --faqs-border: {{ border_color }};
+  "
+>
+  {%- if heading != blank -%}
+    <h2 class="faqs__heading">{{ heading }}</h2>
+  {%- endif -%}
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="faqs__list">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.question != blank -%}
+          <details
+            class="faqs__item"
+            {{ block.shopify_attributes }}
+          >
+            <summary class="faqs__question">
+              <span class="faqs__question-text">{{ block.settings.question }}</span>
+              <span class="faqs__icon" aria-hidden="true">
+                <span class="faqs__icon-circle">
+                  {{ 'faq-icon-circle.svg' | inline_asset_content }}
+                </span>
+                <span class="faqs__icon-arrow">
+                  {{ 'faq-icon-arrow.svg' | inline_asset_content }}
+                </span>
+              </span>
+            </summary>
+
+            {%- if block.settings.answer != blank -%}
+              <div class="faqs__answer">
+                <p class="faqs__answer-text">{{ block.settings.answer | newline_to_br }}</p>
+              </div>
+            {%- endif -%}
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if button_label != blank -%}
+    <a
+      class="faqs__cta"
+      {% if button_link != blank %}
+        href="{{ button_link }}"
+      {% else %}
+        role="link"
+        aria-disabled="true"
+      {% endif %}
+    >
+      <span>{{ button_label }}</span>
+      <span class="faqs__cta-icon" aria-hidden="true">
+        {{ 'icon-long-arrow-right.svg' | inline_asset_content }}
+      </span>
+    </a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .faqs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5625rem;
+    width: 100%;
+    padding: 3.75rem 1.5625rem;
+    color: var(--faqs-text, #242027);
+    background-color: var(--faqs-bg, #fffdf8);
+  }
+
+  .faqs__heading {
+    margin: 0;
+    max-width: 21.25rem;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    text-align: center;
+    color: var(--faqs-text, #242027);
+  }
+
+  .faqs__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 21.25rem;
+  }
+
+  .faqs__item {
+    padding: 0.5rem 0;
+  }
+
+  .faqs__question {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    padding: 1rem;
+    border-bottom: 1px solid var(--faqs-border, #d9d6db);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faqs__question::-webkit-details-marker,
+  .faqs__question::marker {
+    display: none;
+    content: '';
+  }
+
+  .faqs__question:focus-visible {
+    outline: 2px solid var(--faqs-brand, #321c41);
+    outline-offset: 2px;
+  }
+
+  .faqs__question-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    text-align: left;
+    color: var(--faqs-text, #242027);
+  }
+
+  .faqs__icon {
+    position: relative;
+    flex: 0 0 1.5625rem;
+    width: 1.5625rem;
+    height: 1.5625rem;
+    overflow: clip;
+  }
+
+  .faqs__icon-circle,
+  .faqs__icon-arrow {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .faqs__icon-circle svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .faqs__icon-arrow {
+    transition: transform 0.25s ease;
+    transform: rotate(90deg);
+  }
+
+  .faqs__icon-arrow svg {
+    display: block;
+    width: 0.7782rem;
+    height: 0.6002rem;
+  }
+
+  .faqs__item[open] .faqs__icon-arrow {
+    transform: rotate(-90deg);
+  }
+
+  .faqs__answer {
+    display: flex;
+    width: 100%;
+    padding: 1rem 1rem 1rem 1.5rem;
+  }
+
+  .faqs__answer-text {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.009375rem;
+    text-align: left;
+    color: var(--faqs-text, #242027);
+  }
+
+  .faqs__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 0.5px solid var(--faqs-brand, #321c41);
+    color: var(--faqs-brand, #321c41);
+    font-family: var(--font-accent--family, var(--font-body--family));
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .faqs__cta[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .faqs__cta:focus-visible {
+    outline: 2px solid var(--faqs-brand, #321c41);
+    outline-offset: 2px;
+  }
+
+  .faqs__cta-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    overflow: clip;
+  }
+
+  .faqs__cta-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .faqs {
+      padding: 5rem 7.5rem;
+    }
+
+    .faqs__heading {
+      max-width: 31.5rem;
+      font-size: 2.5rem;
+      line-height: 1.08;
+      letter-spacing: -0.0125rem;
+    }
+
+    .faqs__list {
+      max-width: 39.625rem;
+    }
+
+    .faqs__question-text {
+      font-size: 1.125rem;
+      line-height: 1.25;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQs",
+  "tag": "section",
+  "class": "faqs-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Read all FAQ"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Button color",
+      "default": "#321C41"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider",
+      "default": "#D9D6DB"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What makes your portraits different?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Most pet-portrait sites give you a bold, high-contrast oil-painting look. Ours are softer and more romantic, a gentle, dreamy impressionist style, set in beautiful places all around the world."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQs",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What makes your portraits different?",
+            "answer": "Most pet-portrait sites give you a bold, high-contrast oil-painting look. Ours are softer and more romantic, a gentle, dreamy impressionist style, set in beautiful places all around the world."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "Free preview first, then up to three free adjustments. Still off? Try a new photo — until it's unmistakably them."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes. We ship portraits globally with fully tracked shipping. Free shipping on all orders over $100."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to arrive?",
+            "answer": "Digital downloads are ready right away. Printed portraits typically ship within a few business days and arrive with tracked delivery."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Yes. Most portraits find their way to someone else first. Add a note at checkout and we'll make it feel like a gift, not an order."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
