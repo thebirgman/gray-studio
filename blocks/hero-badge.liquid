@@ -1,0 +1,78 @@
+{%- liquid
+  assign variant = block.settings.variant | default: 'preview'
+
+  assign icon_asset = 'pups-badge-preview-icon.svg'
+  if variant == 'style'
+    assign icon_asset = 'pups-badge-style-icon.svg'
+  endif
+
+  assign icon_url = icon_asset | asset_url
+-%}
+
+<div
+  class="hero-pups-badge hero-pups-badge--{{ variant }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="hero-pups-badge__icon" aria-hidden="true">
+    <img src="{{ icon_url }}" alt="" width="27" height="27" />
+  </div>
+
+  <div class="hero-pups-badge__lines">
+    <div class="hero-pups-badge__line hero-pups-badge__line--primary">
+      {{ block.settings.line_1 }}
+    </div>
+    <div class="hero-pups-badge__line hero-pups-badge__line--secondary">
+      {{ block.settings.line_2 }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pups hero badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "variant",
+      "label": "Badge variant",
+      "options": [
+        { "value": "preview", "label": "Preview badge" },
+        { "value": "style", "label": "Style badge" }
+      ],
+      "default": "preview"
+    },
+    {
+      "type": "text",
+      "id": "line_1",
+      "label": "Primary line",
+      "default": "PREVIEW IN MINUTES"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "label": "Secondary line",
+      "default": "SEE IT BEFORE YOU PAY"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Preview badge",
+      "settings": {
+        "variant": "preview",
+        "line_1": "PREVIEW IN MINUTES",
+        "line_2": "SEE IT BEFORE YOU PAY"
+      }
+    },
+    {
+      "name": "Style badge",
+      "settings": {
+        "variant": "style",
+        "line_1": "SOFT IMPRESSIONIST STYLE",
+        "line_2": "READY IN MOMENTS"
+      }
+    }
+  ]
+}
+{% endschema %}
+

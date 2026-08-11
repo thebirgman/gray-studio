@@ -12,98 +12,337 @@
     "hero_jVaWmY": {
       "type": "hero",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "group_content": {
+          "type": "group",
+          "name": "t:names.group",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "mobile_text": "",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h1",
-            "font": "var(--font-body--family)",
-            "enable_custom_font_weight": false,
-            "weight": "400",
-            "font_size": "1rem",
-            "line_height": "custom",
-            "custom_line_height": 1,
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
-            "use_mobile_settings": false,
-            "mobile_font_size": "1rem",
-            "mobile_custom_line_height": 1.5,
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "use_mobile_alignment": true,
+            "mobile_horizontal_alignment_flex_direction_column": "center",
+            "mobile_vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 40,
+            "use_mobile_gap": true,
+            "mobile_gap": 16,
+            "width": "custom",
+            "custom_width": 45,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "use_mobile_padding": false,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_copy_cta": {
+              "type": "group",
+              "name": "t:names.group",
+              "settings": {
+                "content_direction": "column",
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "use_mobile_alignment": true,
+                "mobile_horizontal_alignment_flex_direction_column": "center",
+                "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 25,
+                "use_mobile_gap": true,
+                "mobile_gap": 18,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "group_heading_body": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "column",
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "flex-start",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                    "gap": 5,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "heading": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<p>Here begins the portrait of your</p><p><em>Best Friend</em></p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-heading--family)",
+                        "font_size": "3.5625rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.17,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "2.25rem",
+                        "mobile_custom_line_height": 1.22,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "body": {
+                      "type": "text",
+                      "name": "t:names.text",
+                      "settings": {
+                        "text": "<p>Upload one photo of your pup. Choose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.375,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "0.875rem",
+                        "mobile_custom_line_height": 1.43,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "heading",
+                    "body"
+                  ]
+                },
+                "buttons": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": false,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "gap": 15,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "button_primary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "Start free preview",
+                        "link": "shopify://collections/all",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "#321c41",
+                        "custom_button_text": "#fefefd",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      },
+                      "blocks": {}
+                    },
+                    "button_secondary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "See how it works",
+                        "link": "shopify://pages/about-us",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "rgba(0,0,0,0)",
+                        "custom_button_text": "#321c41",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "button_primary",
+                    "button_secondary"
+                  ]
+                }
+              },
+              "block_order": [
+                "group_heading_body",
+                "buttons"
+              ]
+            },
+            "social_proof": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<p>★★★★★ Loved by 40,000+ readers · Ships worldwide</p>",
+                "width": "100%",
+                "max_width": "none",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.6875rem",
+                "line_height": "custom",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "uppercase",
+                "wrap": "pretty",
+                "type_preset_mobile": "custom",
+                "mobile_font_size": "0.4375rem",
+                "mobile_custom_line_height": 2.14,
+                "text_color": "#605c64",
+                "padding-block-start": 16,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "group_copy_cta",
+            "social_proof"
+          ]
+        },
+        "hero_badge_preview": {
+          "type": "hero-badge",
+          "name": "Pups hero badge",
+          "settings": {
+            "variant": "preview",
+            "line_1": "PREVIEW IN MINUTES",
+            "line_2": "SEE IT BEFORE YOU PAY"
           },
           "blocks": {}
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "hero_badge_style": {
+          "type": "hero-badge",
+          "name": "Pups hero badge",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0, 0, 0, 0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
+            "variant": "style",
+            "line_1": "SOFT IMPRESSIONIST STYLE",
+            "line_2": "READY IN MOMENTS"
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
+        "group_content",
+        "hero_badge_preview",
+        "hero_badge_style"
       ],
-      "name": "t:names.hero",
+      "name": "Pups hero home",
       "settings": {
         "media_type_1": "image",
         "parallax_effect": false,
         "hide_media_on_mobile": false,
         "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": false,
         "link": "",
         "open_in_new_tab": false,
         "content_direction": "column",
         "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_width-mobile": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "toggle_overlay": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 0,
+        "use_mobile_gap": false,
+        "mobile_gap": 12,
+        "section_width": "full-width",
+        "section_width-mobile": "full-width",
+        "section_height": "full-screen",
+        "section_height_custom": 49,
+        "background_color": "#fffdf8",
+        "toggle_overlay": false,
         "overlay_color": "#12121266",
         "overlay_style": "solid",
         "gradient_direction": "to bottom",
         "blurred_reflection": false,
         "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72,
-        "use_mobile_padding": false,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0
+        "padding-block-start": 48,
+        "padding-block-end": 48,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 24,
+        "padding-block-end-mobile": 32
       }
     },
     "product_list_fa6P9H": {
@@ -291,10 +530,188 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "step_by_step_home": {
+      "type": "step-by-step",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-1.svg",
+            "title": "Pick a scene",
+            "description": "Choose from 40+ destinations, browsed by place or by mood."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-2.svg",
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-3.svg",
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-4.svg",
+            "title": "Pick a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ],
+      "name": "t:names.steps",
+      "settings": {
+        "image_asset": "step-by-step-portrait.jpg",
+        "image_alt": "Custom pup portrait",
+        "background_color": "#FFFDF8",
+        "wave_color": "#E8DFF1",
+        "card_background": "#FFFFFF",
+        "title_color": "#242027",
+        "text_color": "#605C64",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "featured_collections_home": {
+      "type": "featured-collections",
+      "blocks": {
+        "filter_all": {
+          "type": "filter",
+          "settings": {
+            "label": "All destinations",
+            "value": "all"
+          }
+        },
+        "filter_playful": {
+          "type": "filter",
+          "settings": {
+            "label": "Playful",
+            "value": "playful"
+          }
+        },
+        "filter_elegant": {
+          "type": "filter",
+          "settings": {
+            "label": "Elegant",
+            "value": "elegant"
+          }
+        },
+        "filter_cosy": {
+          "type": "filter",
+          "settings": {
+            "label": "Cosy",
+            "value": "cosy"
+          }
+        },
+        "collection_paris": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-paris.jpg",
+            "title": "Paris",
+            "scenes_label": "10 scenes",
+            "category": "elegant"
+          }
+        },
+        "collection_provence": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-provence.jpg",
+            "title": "Provence",
+            "scenes_label": "10 scenes",
+            "category": "playful"
+          }
+        },
+        "collection_italy": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-italy.jpg",
+            "title": "Italy",
+            "scenes_label": "10 scenes",
+            "category": "cosy"
+          }
+        },
+        "collection_england": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-england.jpg",
+            "title": "England",
+            "scenes_label": "10 scenes",
+            "category": "elegant"
+          }
+        },
+        "collection_riviera": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-riviera.jpg",
+            "title": "The Riviera",
+            "scenes_label": "10 scenes",
+            "category": "playful"
+          }
+        },
+        "collection_tokyo": {
+          "type": "collection",
+          "settings": {
+            "image_asset": "featured-collection-tokyo.jpg",
+            "title": "Tokyo",
+            "scenes_label": "10 scenes",
+            "category": "cosy"
+          }
+        }
+      },
+      "block_order": [
+        "filter_all",
+        "filter_playful",
+        "filter_elegant",
+        "filter_cosy",
+        "collection_paris",
+        "collection_provence",
+        "collection_italy",
+        "collection_england",
+        "collection_riviera",
+        "collection_tokyo"
+      ],
+      "name": "Featured collections",
+      "settings": {
+        "eyebrow": "DISCOVER",
+        "heading": "Our collections",
+        "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
+        "button_label": "See all 40+ scenes",
+        "button_link": "",
+        "filters_label": "Collection filters",
+        "background_color": "#FFFDF8",
+        "brand_color": "#321C41",
+        "accent_color": "#8855AA",
+        "card_bar_color": "#FAF8F0",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 25,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
+    "step_by_step_home",
+    "featured_collections_home",
     "product_list_fa6P9H"
   ]
 }

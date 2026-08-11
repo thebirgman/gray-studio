@@ -1,0 +1,673 @@
+{% liquid
+  assign background_color = section.settings.background_color
+  assign portrait = section.settings.image
+  assign portrait_asset = section.settings.image_asset | default: 'step-by-step-portrait.jpg'
+  assign wave_color = section.settings.wave_color | default: '#E8DFF1'
+%}
+
+{% if background_color != blank %}
+  {% render 'contrast-override', background_color: background_color, section_id: section.id %}
+{% endif %}
+
+<div class="section-background{% if background_color != blank %} color-custom-{{ section.id }}{% endif %}"></div>
+
+<div
+  class="
+    section
+    section--full-width
+    step-by-step
+    spacing-style
+    {% if background_color != blank %}color-custom-{{ section.id }}{% endif %}
+  "
+  data-step-by-step
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --step-by-step-wave: {{ wave_color }};
+    --step-by-step-card-bg: {{ section.settings.card_background | default: '#ffffff' }};
+    --step-by-step-title: {{ section.settings.title_color | default: '#242027' }};
+    --step-by-step-text: {{ section.settings.text_color | default: '#605C64' }};
+  "
+>
+  <div class="step-by-step__stage">
+    <div class="step-by-step__wave" aria-hidden="true">
+      <svg
+        class="step-by-step__wave-svg"
+        viewBox="0 0 1635.53 683.163"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+      >
+        <path
+          class="step-by-step__wave-path"
+          d="M63.014 389.42C281.014 338.92 934.409 -57.2029 1068.01 99.42C1201.51 255.92 502.514 397.225 567.514 561.42C653.146 777.733 1310.51 322.92 1572.51 377.92"
+          pathLength="1"
+          stroke="currentColor"
+          stroke-width="126"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+
+    <div class="step-by-step__portrait">
+      {%- if portrait != blank -%}
+        {%- assign portrait_alt = portrait.alt | default: section.settings.image_alt -%}
+        {{
+          portrait
+          | image_url: width: 1200
+          | image_tag:
+            class: 'step-by-step__portrait-img',
+            widths: '340, 462, 680, 924, 1200',
+            sizes: '(max-width: 749px) 86vw, 32vw',
+            loading: 'lazy',
+            alt: portrait_alt
+        }}
+      {%- else -%}
+        <img
+          class="step-by-step__portrait-img"
+          src="{{ portrait_asset | asset_url }}"
+          alt="{{ section.settings.image_alt | escape }}"
+          width="1024"
+          height="1024"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+
+    <ol class="step-by-step__steps">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign step_number = forloop.index
+          assign icon = block.settings.icon
+          assign icon_asset = block.settings.icon_asset
+          if icon_asset == blank
+            assign icon_asset = 'step-by-step-icon-' | append: step_number | append: '.svg'
+          endif
+        -%}
+        <li
+          class="step-by-step__card step-by-step__card--{{ step_number }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="step-by-step__card-inner">
+            <div class="step-by-step__icon" aria-hidden="true">
+              {%- if icon != blank -%}
+                {{
+                  icon
+                  | image_url: width: 200
+                  | image_tag:
+                    class: 'step-by-step__icon-img',
+                    widths: '80, 120, 200',
+                    sizes: '87px',
+                    loading: 'lazy',
+                    alt: ''
+                }}
+              {%- else -%}
+                <img
+                  class="step-by-step__icon-img"
+                  src="{{ icon_asset | asset_url }}"
+                  alt=""
+                  width="87"
+                  height="54"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </div>
+            <div class="step-by-step__copy">
+              {%- if block.settings.title != blank -%}
+                <p class="step-by-step__title">
+                  <span class="step-by-step__number">{{ step_number }}.</span>
+                  {{ block.settings.title }}
+                </p>
+              {%- endif -%}
+              {%- if block.settings.description != blank -%}
+                <p class="step-by-step__description">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.querySelector('#shopify-section-{{ section.id }} [data-step-by-step]');
+    if (!root || root.dataset.animated === 'true') return;
+
+    const path = root.querySelector('.step-by-step__wave-path');
+    if (!path) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const markDone = () => {
+      root.dataset.animated = 'true';
+      root.classList.add('step-by-step--wave-drawn');
+    };
+
+    if (reduceMotion) {
+      markDone();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          markDone();
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(root);
+  })();
+</script>
+
+{% stylesheet %}
+  .step-by-step {
+    position: relative;
+    overflow: hidden;
+    background: #fffdf8;
+  }
+
+  .step-by-step__stage {
+    position: relative;
+    width: min(100%, 90rem);
+    margin-inline: auto;
+    aspect-ratio: 392 / 765;
+    container-type: inline-size;
+    container-name: step-by-step;
+  }
+
+  @media screen and (min-width: 750px) {
+    .step-by-step__stage {
+      aspect-ratio: 1440 / 694;
+    }
+  }
+
+  .step-by-step__wave {
+    position: absolute;
+    inset: 10.9% -2.4% auto;
+    width: 104.8%;
+    height: 80.3%;
+    color: var(--step-by-step-wave, #e8dff1);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .step-by-step__wave {
+      inset: 10.9% auto auto -133.7%;
+      width: 270.5%;
+      height: 82.9%;
+    }
+  }
+
+  .step-by-step__wave-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .step-by-step__wave-path {
+    stroke-dasharray: 0 1;
+    visibility: hidden;
+  }
+
+  .step-by-step--wave-drawn .step-by-step__wave-path {
+    visibility: visible;
+    animation:
+      step-by-step-wave-fade 0.98s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+      step-by-step-wave-draw 3.9s cubic-bezier(0.25, 0.05, 0.25, 1) forwards;
+  }
+
+  @keyframes step-by-step-wave-fade {
+    0% {
+      opacity: 0;
+    }
+    24% {
+      opacity: 0.88;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes step-by-step-wave-draw {
+    0% {
+      stroke-dasharray: 0 1;
+    }
+    100% {
+      stroke-dasharray: 1 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step-by-step__wave-path,
+    .step-by-step--wave-drawn .step-by-step__wave-path {
+      visibility: visible;
+      opacity: 1;
+      stroke-dasharray: 1 1;
+      animation: none;
+    }
+  }
+
+  .step-by-step__portrait {
+    position: absolute;
+    left: 6.63%;
+    top: 26%;
+    width: 86.73%;
+    aspect-ratio: 340 / 393;
+    z-index: 1;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .step-by-step__portrait {
+      left: 34%;
+      top: 10.95%;
+      width: 32.08%;
+      aspect-ratio: 462 / 533;
+    }
+  }
+
+  .step-by-step__portrait-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .step-by-step__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .step-by-step__card {
+    position: absolute;
+    z-index: 2;
+    background: var(--step-by-step-card-bg, #fff);
+    border-radius: 14px;
+    box-shadow: 1px 8px 34px -14px rgba(58, 55, 51, 0.4);
+    padding: 15px;
+  }
+
+  .step-by-step__card-inner {
+    position: relative;
+    display: flex;
+    gap: 11px;
+    align-items: center;
+  }
+
+  .step-by-step__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: clip;
+  }
+
+  .step-by-step__icon-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .step-by-step__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+  }
+
+  .step-by-step__title {
+    margin: 0 0 -2px;
+    font-family: var(--font-paragraph--family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25rem;
+    color: var(--step-by-step-title, #242027);
+  }
+
+  .step-by-step__number {
+    font-weight: 700;
+  }
+
+  .step-by-step__description {
+    margin: 0;
+    font-family: var(--font-paragraph--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    color: var(--step-by-step-text, #605c64);
+  }
+
+  /* Mobile card positions + stacked icon/title layout */
+  @media screen and (max-width: 749px) {
+    .step-by-step__card-inner {
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .step-by-step__copy {
+      align-items: center;
+      width: 100%;
+    }
+
+    .step-by-step__title {
+      text-align: center;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+
+    .step-by-step__card--3 .step-by-step__title,
+    .step-by-step__card--4 .step-by-step__title {
+      font-size: 1rem;
+      line-height: 1.375rem;
+    }
+
+    .step-by-step__description {
+      display: none;
+    }
+
+    .step-by-step__card--1 {
+      left: 10.46%;
+      top: 10.33%;
+      width: 36.73%;
+      min-height: 100px;
+    }
+
+    .step-by-step__card--1 .step-by-step__icon {
+      width: 98px;
+      height: 60px;
+      max-width: 100%;
+    }
+
+    .step-by-step__card--2 {
+      left: 56.63%;
+      top: 18.17%;
+      width: 36.73%;
+      min-height: 100px;
+    }
+
+    .step-by-step__card--2 .step-by-step__icon {
+      width: 87px;
+      height: 36px;
+      max-width: 100%;
+    }
+
+    .step-by-step__card--2 .step-by-step__card-inner {
+      gap: 14px;
+    }
+
+    .step-by-step__card--3 {
+      left: 10.2%;
+      top: 71%;
+      width: 37%;
+      min-height: 119px;
+    }
+
+    .step-by-step__card--3 .step-by-step__icon {
+      width: 53px;
+      height: 48px;
+    }
+
+    .step-by-step__card--3 .step-by-step__card-inner {
+      gap: 5px;
+    }
+
+    .step-by-step__card--4 {
+      left: 55.61%;
+      top: 80.39%;
+      width: 37%;
+      min-height: 116px;
+    }
+
+    .step-by-step__card--4 .step-by-step__icon {
+      width: 65px;
+      height: 51px;
+    }
+
+    .step-by-step__card--4 .step-by-step__card-inner {
+      gap: 11px;
+    }
+  }
+
+  /* Desktop card positions + horizontal icon/copy layout */
+  @media screen and (min-width: 750px) {
+    .step-by-step__card {
+      padding: clamp(0.625rem, 1.04cqi, 0.9375rem);
+    }
+
+    .step-by-step__card-inner {
+      gap: clamp(0.5rem, 0.76cqi, 0.6875rem);
+    }
+
+    .step-by-step__title {
+      font-size: clamp(0.8125rem, 1.11cqi, 1rem);
+      line-height: 1.375;
+    }
+
+    .step-by-step__description {
+      font-size: clamp(0.8125rem, 1.11cqi, 1rem);
+      line-height: 1.375;
+    }
+
+    .step-by-step__card--1 {
+      left: 16.49%;
+      top: 16%;
+      width: 24.17%;
+    }
+
+    .step-by-step__card--1 .step-by-step__icon {
+      width: clamp(3.25rem, 6.04cqi, 5.4375rem);
+      height: clamp(2rem, 3.75cqi, 3.375rem);
+    }
+
+    .step-by-step__card--2 {
+      left: 59.76%;
+      top: 33.14%;
+      width: 24.17%;
+    }
+
+    .step-by-step__card--2 .step-by-step__icon {
+      width: clamp(3.25rem, 6.04cqi, 5.4375rem);
+      height: clamp(1.5rem, 2.51cqi, 2.25rem);
+    }
+
+    .step-by-step__card--3 {
+      left: 12.88%;
+      top: 50.29%;
+      width: 24.58%;
+    }
+
+    .step-by-step__card--3 .step-by-step__icon {
+      width: clamp(2.75rem, 4.72cqi, 4.25rem);
+      height: clamp(2.5rem, 4.24cqi, 3.8125rem);
+    }
+
+    .step-by-step__card--4 {
+      left: 62.81%;
+      top: 70.61%;
+      width: 26.94%;
+    }
+
+    .step-by-step__card--4 .step-by-step__icon {
+      width: clamp(2.5rem, 4.51cqi, 4.0625rem);
+      height: clamp(2rem, 3.54cqi, 3.1875rem);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.steps",
+  "tag": "section",
+  "class": "step-by-step-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Portrait image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Portrait asset fallback",
+      "default": "step-by-step-portrait.jpg",
+      "info": "Filename in the assets folder. Used when no image is selected."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Custom pup portrait"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "wave_color",
+      "label": "Wave color",
+      "default": "#E8DFF1"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description color",
+      "default": "#605C64"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset fallback",
+          "info": "Filename in the assets folder. Used when no icon is selected."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Pick a scene"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Choose from 40+ destinations, browsed by place or by mood.",
+          "info": "Shown on desktop only."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.steps",
+      "category": "t:categories.other_sections",
+      "settings": {
+        "image_asset": "step-by-step-portrait.jpg",
+        "background_color": "#FFFDF8",
+        "wave_color": "#E8DFF1",
+        "card_background": "#FFFFFF",
+        "title_color": "#242027",
+        "text_color": "#605C64",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      },
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-1.svg",
+            "title": "Pick a scene",
+            "description": "Choose from 40+ destinations, browsed by place or by mood."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-2.svg",
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-3.svg",
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-4.svg",
+            "title": "Pick a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
