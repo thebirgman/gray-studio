@@ -1,0 +1,813 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign button_label = section.settings.button_label
+  assign button_link = section.settings.button_link
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign brand_color = section.settings.brand_color | default: '#321C41'
+  assign badge_color = section.settings.badge_color | default: '#8855AA'
+  assign star_color = section.settings.star_color | default: '#F5CD72'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign muted_color = section.settings.muted_color | default: '#605C64'
+
+  assign product_blocks = section.blocks | where: 'type', 'product'
+  assign placeholder_titles = 'Digital Download,Watercolour Poster,Giclée Canvas,Framed Canvas' | split: ','
+  assign placeholder_prices = '29,79,149,194' | split: ','
+-%}
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="section-background color-custom-{{ section.id }}"
+  style="background-color: {{ background_color }};"
+></div>
+
+<div
+  class="
+    section
+    featured-prints
+    color-custom-{{ section.id }}
+    spacing-style
+  "
+  id="FeaturedPrints-{{ section.id }}"
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    --fp-bg: {{ background_color }};
+    --fp-text: {{ text_color }};
+    --fp-muted: {{ muted_color }};
+    --fp-brand: {{ brand_color }};
+    --fp-badge: {{ badge_color }};
+    --fp-star: {{ star_color }};
+    --fp-on-brand: #FEFEFD;
+    background-color: {{ background_color }};
+  "
+>
+  <div class="featured-prints__layout">
+    <div class="featured-prints__header">
+      {%- if eyebrow != blank -%}
+        <p class="featured-prints__eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+      {%- if heading != blank -%}
+        <h2 class="featured-prints__heading">{{ heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="featured-prints__grid">
+      {%- if product_blocks.size > 0 -%}
+        {%- for block in product_blocks -%}
+          {%- liquid
+            assign product = block.settings.product
+            assign card_title = block.settings.title
+            assign card_image = block.settings.image
+            assign image_asset = block.settings.image_asset
+            assign show_badge = block.settings.show_badge
+            assign badge_label = block.settings.badge_label | default: 'Most loved'
+            assign fallback_rating_count = block.settings.rating_count | default: 49
+            assign fallback_price = block.settings.price
+
+            if card_title == blank and product != blank
+              assign card_title = product.title
+            endif
+
+            if card_title == blank
+              assign placeholder_index = forloop.index0 | modulo: placeholder_titles.size
+              assign card_title = placeholder_titles[placeholder_index]
+            endif
+
+            if card_image == blank and product != blank and product.featured_media != blank
+              assign card_image = product.featured_media.preview_image
+            endif
+
+            if image_asset == blank
+              assign asset_index = forloop.index0 | modulo: 4 | plus: 1
+              assign image_asset = 'featured-prints-product-' | append: asset_index | append: '.jpg'
+            endif
+
+            assign card_url = block.settings.link
+            if card_url == blank and product != blank
+              assign card_url = product.url
+            endif
+
+            assign rating_value = blank
+            assign rating_count = blank
+            if product != blank
+              assign rating_value = product.metafields.reviews.rating.value.rating
+              assign rating_count = product.metafields.reviews.rating_count.value
+            endif
+            if rating_value == blank
+              assign rating_value = 5
+            endif
+            if rating_count == blank
+              assign rating_count = fallback_rating_count
+            endif
+
+            assign display_price = blank
+            if product != blank
+              assign display_price = product.price | money_without_trailing_zeros
+            elsif fallback_price != blank
+              assign display_price = fallback_price | times: 100 | money_without_trailing_zeros
+            else
+              assign placeholder_index = forloop.index0 | modulo: placeholder_prices.size
+              assign display_price = placeholder_prices[placeholder_index] | times: 100 | money_without_trailing_zeros
+            endif
+          -%}
+
+          <a
+            class="featured-prints__card"
+            {% if card_url != blank %}
+              href="{{ card_url }}"
+            {% else %}
+              role="link"
+              aria-disabled="true"
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <div class="featured-prints__media">
+              {%- if show_badge and badge_label != blank -%}
+                <span class="featured-prints__badge">
+                  <span class="featured-prints__badge-icon" aria-hidden="true">
+                    {{ 'featured-prints-badge-heart.svg' | inline_asset_content }}
+                  </span>
+                  <span class="featured-prints__badge-label">{{ badge_label }}</span>
+                </span>
+              {%- endif -%}
+
+              {%- if card_image != blank -%}
+                {{
+                  card_image
+                  | image_url: width: 800
+                  | image_tag:
+                    class: 'featured-prints__image',
+                    loading: 'lazy',
+                    widths: '282, 400, 564, 800',
+                    sizes: '(min-width: 750px) 282px, 70vw',
+                    alt: card_title
+                }}
+              {%- else -%}
+                <img
+                  class="featured-prints__image"
+                  src="{{ image_asset | asset_url }}"
+                  alt="{{ card_title | escape }}"
+                  width="800"
+                  height="800"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </div>
+
+            <div class="featured-prints__meta">
+              <h3 class="featured-prints__title">{{ card_title }}</h3>
+
+              <div
+                class="featured-prints__rating"
+                aria-label="{{ rating_value }} out of 5 stars, {{ rating_count }} reviews"
+              >
+                <div class="featured-prints__stars" aria-hidden="true">
+                  {%- for i in (1..5) -%}
+                    <span class="featured-prints__star">
+                      {{ 'featured-prints-star.svg' | inline_asset_content }}
+                    </span>
+                  {%- endfor -%}
+                </div>
+                <span class="featured-prints__rating-count">({{ rating_count }})</span>
+              </div>
+
+              <p class="featured-prints__price">{{ display_price }}</p>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for title in placeholder_titles -%}
+          {%- liquid
+            assign asset_index = forloop.index
+            assign image_asset = 'featured-prints-product-' | append: asset_index | append: '.jpg'
+            assign display_price = placeholder_prices[forloop.index0] | times: 100 | money_without_trailing_zeros
+          -%}
+          <div class="featured-prints__card" aria-hidden="true">
+            <div class="featured-prints__media">
+              {%- if forloop.index == 3 -%}
+                <span class="featured-prints__badge">
+                  <span class="featured-prints__badge-icon" aria-hidden="true">
+                    {{ 'featured-prints-badge-heart.svg' | inline_asset_content }}
+                  </span>
+                  <span class="featured-prints__badge-label">Most loved</span>
+                </span>
+              {%- endif -%}
+              <img
+                class="featured-prints__image"
+                src="{{ image_asset | asset_url }}"
+                alt=""
+                width="800"
+                height="800"
+                loading="lazy"
+              >
+            </div>
+            <div class="featured-prints__meta">
+              <h3 class="featured-prints__title">{{ title }}</h3>
+              <div class="featured-prints__rating">
+                <div class="featured-prints__stars" aria-hidden="true">
+                  {%- for i in (1..5) -%}
+                    <span class="featured-prints__star">
+                      {{ 'featured-prints-star.svg' | inline_asset_content }}
+                    </span>
+                  {%- endfor -%}
+                </div>
+                <span class="featured-prints__rating-count">(49)</span>
+              </div>
+              <p class="featured-prints__price">{{ display_price }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if button_label != blank -%}
+      <div class="featured-prints__cta-wrap">
+        <a
+          class="featured-prints__cta"
+          {% if button_link != blank %}
+            href="{{ button_link }}"
+          {% else %}
+            role="link"
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{ button_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .featured-prints {
+    color: var(--fp-text);
+  }
+
+  .featured-prints__layout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.125rem;
+    width: 100%;
+  }
+
+  .featured-prints__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3125rem;
+    color: var(--fp-text);
+  }
+
+  .featured-prints__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+  }
+
+  .featured-prints__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    color: inherit;
+  }
+
+  .featured-prints__grid {
+    display: flex;
+    gap: 0.9375rem;
+    width: calc(
+      100% + var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) +
+        var(--padding-inline-end-mobile, var(--padding-inline-end, 0px))
+    );
+    margin-inline: calc(var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) * -1)
+      calc(var(--padding-inline-end-mobile, var(--padding-inline-end, 0px)) * -1);
+    padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start, 1.5625rem))
+      var(--padding-inline-end-mobile, var(--padding-inline-end, 1.5625rem));
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .featured-prints__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .featured-prints__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 0 0 17.625rem;
+    width: 17.625rem;
+    gap: 0.9375rem;
+    color: inherit;
+    text-decoration: none;
+    scroll-snap-align: start;
+  }
+
+  .featured-prints__card[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .featured-prints__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 282 / 288;
+    overflow: hidden;
+  }
+
+  .featured-prints__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .featured-prints__badge {
+    position: absolute;
+    top: 0.625rem;
+    left: 0.625rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 1.1875rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--fp-badge);
+    color: var(--fp-on-brand);
+  }
+
+  .featured-prints__badge-icon {
+    display: inline-flex;
+    width: 0.75rem;
+    height: 0.75rem;
+    overflow: clip;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .featured-prints__badge-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .featured-prints__badge-label {
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .featured-prints__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3125rem;
+    width: 100%;
+  }
+
+  .featured-prints__title {
+    margin: 0;
+    width: 100%;
+    font-family: var(--font-accent--family, var(--font-body--family));
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.06875rem;
+    text-transform: uppercase;
+    color: var(--fp-text);
+  }
+
+  .featured-prints__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .featured-prints__stars {
+    display: flex;
+    align-items: center;
+    gap: 0.1875rem;
+  }
+
+  .featured-prints__star {
+    display: inline-flex;
+    width: 0.625rem;
+    height: 0.625rem;
+    overflow: clip;
+    flex-shrink: 0;
+    color: var(--fp-star);
+  }
+
+  .featured-prints__star svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .featured-prints__rating-count {
+    font-family: var(--font-body--family);
+    font-size: 0.4375rem;
+    font-weight: 400;
+    line-height: 0.9375rem;
+    text-transform: uppercase;
+    color: var(--fp-muted);
+  }
+
+  .featured-prints__price {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.6875rem;
+    color: var(--fp-text);
+  }
+
+  .featured-prints__cta-wrap {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 0.25rem;
+  }
+
+  .featured-prints__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 0.5px solid var(--fp-brand);
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--fp-brand);
+    font-family: var(--font-accent--family, var(--font-body--family));
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    text-align: center;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .featured-prints__cta:hover {
+    background-color: var(--fp-brand);
+    color: #fffdf8;
+  }
+
+  .featured-prints__cta[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .featured-prints__cta:focus-visible {
+    outline: 2px solid var(--fp-brand);
+    outline-offset: 2px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .featured-prints__heading {
+      font-size: 2.5rem;
+      line-height: 1.08;
+      letter-spacing: -0.0125rem;
+    }
+
+    .featured-prints__grid {
+      justify-content: space-between;
+      width: 100%;
+      margin-inline: 0;
+      padding-inline: 0;
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+
+    .featured-prints__card {
+      flex: 0 1 17.625rem;
+      width: 17.625rem;
+      max-width: 17.625rem;
+      scroll-snap-align: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.featured_prints",
+  "tag": "section",
+  "class": "featured-prints-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Optional. Defaults to the product image, then the asset below."
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Fallback image asset",
+          "info": "Theme asset filename, e.g. featured-prints-product-1.jpg"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Optional. Defaults to the product title."
+        },
+        {
+          "type": "number",
+          "id": "price",
+          "label": "Fallback price",
+          "info": "Used when no product is selected. Enter dollars, e.g. 29."
+        },
+        {
+          "type": "number",
+          "id": "rating_count",
+          "label": "Fallback review count",
+          "default": 49
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge label",
+          "default": "Most loved"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional. Defaults to the product URL."
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "PRINTS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Prints that actually last"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Browse the full catalogue"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#605C64"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Brand",
+      "default": "#321C41"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge",
+      "default": "#8855AA"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Stars",
+      "default": "#F5CD72"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "Mobile padding"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_padding",
+      "label": "Use mobile padding",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start-mobile",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end-mobile",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.featured_prints",
+      "category": "t:categories.products",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "title": "Digital Download",
+            "price": 29,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-1.jpg"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Watercolour Poster",
+            "price": 79,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-2.jpg"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Giclée Canvas",
+            "price": 149,
+            "rating_count": 49,
+            "show_badge": true,
+            "badge_label": "Most loved",
+            "image_asset": "featured-prints-product-3.jpg"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "title": "Framed Canvas",
+            "price": 194,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-4.jpg"
+          }
+        }
+      ],
+      "settings": {
+        "eyebrow": "PRINTS",
+        "heading": "Prints that actually last",
+        "button_label": "Browse the full catalogue",
+        "background_color": "#FFFDF8",
+        "text_color": "#242027",
+        "muted_color": "#605C64",
+        "brand_color": "#321C41",
+        "badge_color": "#8855AA",
+        "star_color": "#F5CD72",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 60,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
+    }
+  ]
+}
+{% endschema %}

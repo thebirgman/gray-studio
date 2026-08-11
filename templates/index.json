@@ -10,31 +10,27 @@
 {
   "sections": {
     "hero_jVaWmY": {
-      "type": "pups-hero-image",
-      "settings": {
-        "desktop_image_asset": "figma-hero-desktop.png",
-        "mobile_image_asset": "figma-hero-mobile.png",
-        "image_alt": "Pups Around the World hero"
-      }
-    },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+      "type": "hero",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "group_content": {
+          "type": "group",
+          "name": "t:names.group",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "use_mobile_alignment": true,
+            "mobile_horizontal_alignment_flex_direction_column": "center",
+            "mobile_vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 40,
+            "use_mobile_gap": true,
+            "mobile_gap": 16,
+            "width": "custom",
+            "custom_width": 45,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
             "height": "fit",
@@ -52,72 +48,28 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
+            "group_copy_cta": {
+              "type": "group",
+              "name": "t:names.group",
               "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "width": "fit-content",
+                "content_direction": "column",
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "flex-start",
+                "use_mobile_alignment": true,
+                "mobile_horizontal_alignment_flex_direction_column": "center",
+                "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                "gap": 25,
+                "use_mobile_gap": true,
+                "mobile_gap": 18,
+                "width": "fill",
                 "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
-        },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 4,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
@@ -127,48 +79,224 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+              "blocks": {
+                "group_heading_body": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "column",
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "flex-start",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "mobile_vertical_alignment_flex_direction_column": "flex-start",
+                    "gap": 5,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "heading_line_1": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<p>Here begins the portrait of your</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-heading--family)",
+                        "font_size": "3.5625rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.17,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "2.25rem",
+                        "mobile_custom_line_height": 1.22,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "heading_line_2": {
+                      "type": "text",
+                      "name": "t:names.heading",
+                      "settings": {
+                        "text": "<p><em>Best Friend</em></p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-heading--family)",
+                        "font_size": "3.5625rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.17,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "2.25rem",
+                        "mobile_custom_line_height": 1.22,
+                        "text_color": "#ce6911",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "body": {
+                      "type": "text",
+                      "name": "t:names.text",
+                      "settings": {
+                        "text": "<p>Upload one photo of your pup. Choose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "custom",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "custom",
+                        "custom_line_height": 1.375,
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "type_preset_mobile": "custom",
+                        "mobile_font_size": "0.875rem",
+                        "mobile_custom_line_height": 1.43,
+                        "text_color": "#242027",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "heading_line_1",
+                    "heading_line_2",
+                    "body"
+                  ]
+                },
+                "buttons": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": false,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "use_mobile_alignment": true,
+                    "mobile_horizontal_alignment_flex_direction_column": "center",
+                    "gap": 15,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "button_primary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "Start free preview",
+                        "link": "shopify://collections/all",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "#321c41",
+                        "custom_button_text": "#fefefd",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      },
+                      "blocks": {}
+                    },
+                    "button_secondary": {
+                      "type": "button",
+                      "name": "t:names.button",
+                      "settings": {
+                        "label": "See how it works",
+                        "link": "shopify://pages/about-us",
+                        "open_in_new_tab": false,
+                        "style_class": "button-custom",
+                        "custom_button_background": "rgba(0,0,0,0)",
+                        "custom_button_text": "#321c41",
+                        "custom_button_border": "#321c41",
+                        "width": "fit-content",
+                        "custom_width": 100,
+                        "width_mobile": "fit-content",
+                        "custom_width_mobile": 100
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "button_primary",
+                    "button_secondary"
+                  ]
+                }
               },
-              "blocks": {}
+              "block_order": [
+                "group_heading_body",
+                "buttons"
+              ]
             },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
+            "social_proof": {
+              "type": "text",
+              "name": "t:names.text",
               "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
+                "text": "<p>★★★★★ Loved by 40,000+ readers · Ships worldwide</p>",
                 "width": "100%",
+                "max_width": "none",
                 "alignment": "left",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
+                "font_size": "0.6875rem",
+                "line_height": "custom",
+                "custom_line_height": 1.5,
                 "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
+                "case": "uppercase",
+                "wrap": "pretty",
+                "type_preset_mobile": "custom",
+                "mobile_font_size": "0.4375rem",
+                "mobile_custom_line_height": 2.14,
+                "text_color": "#605c64",
+                "padding-block-start": 16,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -177,30 +305,152 @@
             }
           },
           "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
+            "group_copy_cta",
+            "social_proof"
           ]
+        },
+        "hero_badge_preview": {
+          "type": "hero-badge",
+          "name": "Pups hero badge",
+          "settings": {
+            "variant": "preview",
+            "line_1": "PREVIEW IN MINUTES",
+            "line_2": "SEE IT BEFORE YOU PAY"
+          },
+          "blocks": {}
+        },
+        "hero_badge_style": {
+          "type": "hero-badge",
+          "name": "Pups hero badge",
+          "settings": {
+            "variant": "style",
+            "line_1": "SOFT IMPRESSIONIST STYLE",
+            "line_2": "READY IN MOMENTS"
+          },
+          "blocks": {}
         }
       },
-      "name": "t:names.featured_collection",
+      "block_order": [
+        "group_content",
+        "hero_badge_preview",
+        "hero_badge_style"
+      ],
+      "name": "Pups hero home",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
+        "media_type_1": "image",
+        "image_1_asset": "hero-pups-desktop.png",
+        "image_1_mobile_asset": "hero-pups-mobile.png",
+        "parallax_effect": false,
+        "hide_media_on_mobile": false,
+        "media_type_2": "image",
+        "stack_media_on_mobile": false,
+        "custom_mobile_media": false,
+        "link": "",
+        "open_in_new_tab": false,
+        "content_direction": "column",
+        "vertical_on_mobile": true,
         "horizontal_alignment": "flex-start",
-        "gap": 28,
+        "vertical_alignment": "flex-start",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "flex-start",
+        "use_mobile_alignment": true,
+        "mobile_horizontal_alignment_flex_direction_column": "center",
+        "mobile_vertical_alignment_flex_direction_column": "flex-start",
+        "gap": 0,
+        "use_mobile_gap": false,
+        "mobile_gap": 12,
+        "section_width": "full-width",
+        "section_width-mobile": "full-width",
+        "section_height": "full-screen",
+        "section_height_custom": 49,
+        "hero_style": "pups-home",
+        "background_color": "#fffdf8",
+        "toggle_overlay": false,
+        "overlay_color": "#12121266",
+        "overlay_style": "solid",
+        "gradient_direction": "to bottom",
+        "blurred_reflection": false,
+        "reflection_opacity": 75,
         "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-end": 48,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 24,
+        "padding-block-end-mobile": 32
+      }
+    },
+    "featured_prints_home": {
+      "type": "featured-prints",
+      "name": "t:names.featured_prints",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "title": "Digital Download",
+            "price": 29,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-1.jpg",
+            "show_badge": false
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "title": "Watercolour Poster",
+            "price": 79,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-2.jpg",
+            "show_badge": false
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "title": "Giclée Canvas",
+            "price": 149,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-3.jpg",
+            "show_badge": true,
+            "badge_label": "Most loved"
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "title": "Framed Canvas",
+            "price": 194,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-4.jpg",
+            "show_badge": false
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
+      "settings": {
+        "eyebrow": "PRINTS",
+        "heading": "Prints that actually last",
+        "button_label": "Browse the full catalogue",
+        "button_link": "",
+        "background_color": "#FFFDF8",
+        "text_color": "#242027",
+        "muted_color": "#605C64",
+        "brand_color": "#321C41",
+        "badge_color": "#8855AA",
+        "star_color": "#F5CD72",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 60,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
       }
     },
     "step_by_step_home": {
@@ -427,6 +677,36 @@
         "padding-inline-end-mobile": 25
       }
     },
+    "our_craft_home": {
+      "type": "our-craft",
+      "name": "Our craft",
+      "settings": {
+        "eyebrow": "OUR CRAFT",
+        "heading": "The idea behind every portrait",
+        "description": "<p>Pups Around the World began with a simple, joyful idea: every dog deserves to be the star of their own adventure. We take a single photo and reimagine your pup in the soft, dreamy style of the great impressionists, somewhere beautiful in the world.</p><p>From Paris and Provence to Venice, London and the Scottish glens, there's a scene for every character, and a few chosen with the golfers in mind. Not quite right? Try another photo or scene, free, until it's unmistakably them.</p>",
+        "button_label": "BOOK A PORTRAIT",
+        "button_link": "",
+        "stat_number": "40+",
+        "stat_label": "scenes around the world",
+        "primary_image_asset": "our-craft-primary.jpg",
+        "secondary_image_asset": "our-craft-secondary.jpg",
+        "primary_image_alt": "Impressionist portrait of a dog on an ornate sofa",
+        "secondary_image_alt": "Impressionist portrait of a dog by the fireplace",
+        "background_color": "#FFFDF8",
+        "text_color": "#242027",
+        "brand_color": "#321C41",
+        "badge_color": "#C8AFDE",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 40,
+        "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
+    },
     "gifts_image_text_home": {
       "type": "gifts-image-text",
       "name": "Gifts image + text",
@@ -443,6 +723,59 @@
         "text_color": "#242027",
         "brand_color": "#321C41"
       }
+    },
+    "testimonials_home": {
+      "type": "testimonials",
+      "name": "Testimonials",
+      "blocks": {
+        "testimonial_maria": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The free preview sold me instantly. I saw my Luna in the Provence scene and knew it had to be real.",
+            "author": "Maria S.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_james": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Gave this as a gift and my sister cried, in a good way. The packaging alone felt like a real gift.",
+            "author": "James O.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_priya": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Ordered from Australia, shipped without a hitch. The “mood” browsing made it so much easier to pick.",
+            "author": "Priya K.",
+            "meta": "Verified buyer · Coastal Morning"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_maria",
+        "testimonial_james",
+        "testimonial_priya"
+      ],
+      "settings": {
+        "eyebrow": "Testimonials",
+        "heading": "What our lovely humans say",
+        "marquee_text": "Soft impressionist style   ·   Free preview, always   ·   Ships worldwide   ·   Scenes from around the world",
+        "button_label": "See all reviews",
+        "button_link": "",
+        "dots_label": "Review slides",
+        "star_asset": "testimonials-star.svg",
+        "background_color": "#F2F7FC",
+        "text_color": "#242027",
+        "muted_color": "#605C64",
+        "card_border": "#C9DEF4",
+        "button_color": "#212C4A",
+        "marquee_color": "#C9DEF4"
+      }
     }
   },
   "order": [
@@ -450,7 +783,9 @@
     "step_by_step_home",
     "trust_strip_home",
     "featured_collections_home",
+    "our_craft_home",
     "gifts_image_text_home",
-    "product_list_fa6P9H"
+    "testimonials_home",
+    "featured_prints_home"
   ]
 }

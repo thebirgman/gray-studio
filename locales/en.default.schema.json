@@ -462,6 +462,7 @@
     // UI component name for step-by-step process display
     "steps": "Steps",
     "trust_strip": "Trust strip",
+    "our_craft": "Our craft",
     "styles": "Styles",
     "subheading": "Subheading",
     "submit_button": "Submit button",
@@ -568,6 +569,7 @@
     "eye": "Eye",
     "facebook": "Facebook",
     "featured_collections": "Featured collections",
+    "featured_prints": "Featured prints",
     "featured_products": "Featured products",
     "fill": "Fill",
     "fire": "Fire",
