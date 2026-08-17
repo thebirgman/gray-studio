@@ -40,7 +40,12 @@
 %}
 
 <div
-  class="hero-banner color-custom-{{ section.id }}"
+  class="section-background color-custom-{{ section.id }}"
+  style="background-color: {{ background_color }};"
+></div>
+
+<div
+  class="hero-banner section color-custom-{{ section.id }}"
   id="HeroBanner-{{ section.id }}"
   style="
     --hb-bg: {{ background_color }};
@@ -54,7 +59,7 @@
     --hb-divider: #8b7c96;
   "
 >
-  <div class="hero-banner__media" aria-hidden="{% if image_alt == blank %}true{% else %}false{% endif %}">
+  <div class="hero-banner__media force-full-width" aria-hidden="{% if image_alt == blank %}true{% else %}false{% endif %}">
     <picture>
       {%- if mobile_image != blank -%}
         <source
@@ -186,67 +191,73 @@
     {%- endif -%}
   </div>
 
-  {%- if badge_1_line_1 != blank or badge_1_line_2 != blank -%}
-    <div class="hero-banner__badge hero-banner__badge--preview">
-      <div class="hero-banner__badge-icon" aria-hidden="true">
-        <img
-          src="{{ badge_1_icon | asset_url }}"
-          alt=""
-          width="41"
-          height="35"
-          loading="lazy"
-        >
+  <div class="hero-banner__overlays force-full-width">
+    {%- if badge_1_line_1 != blank or badge_1_line_2 != blank -%}
+      <div class="hero-banner__badge hero-banner__badge--preview">
+        <div class="hero-banner__badge-icon" aria-hidden="true">
+          <img
+            src="{{ badge_1_icon | asset_url }}"
+            alt=""
+            width="41"
+            height="35"
+            loading="lazy"
+          >
+        </div>
+        <div class="hero-banner__badge-copy">
+          {%- if badge_1_line_1 != blank -%}
+            <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_1_line_1 }}</p>
+          {%- endif -%}
+          {%- if badge_1_line_2 != blank -%}
+            <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_1_line_2 }}</p>
+          {%- endif -%}
+        </div>
       </div>
-      <div class="hero-banner__badge-copy">
-        {%- if badge_1_line_1 != blank -%}
-          <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_1_line_1 }}</p>
-        {%- endif -%}
-        {%- if badge_1_line_2 != blank -%}
-          <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_1_line_2 }}</p>
-        {%- endif -%}
-      </div>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
 
-  {%- if badge_2_line_1 != blank or badge_2_line_2 != blank -%}
-    <div class="hero-banner__badge hero-banner__badge--style">
-      <div class="hero-banner__badge-icon" aria-hidden="true">
-        <img
-          src="{{ badge_2_icon | asset_url }}"
-          alt=""
-          width="35"
-          height="36"
-          loading="lazy"
-        >
+    {%- if badge_2_line_1 != blank or badge_2_line_2 != blank -%}
+      <div class="hero-banner__badge hero-banner__badge--style">
+        <div class="hero-banner__badge-icon" aria-hidden="true">
+          <img
+            src="{{ badge_2_icon | asset_url }}"
+            alt=""
+            width="35"
+            height="36"
+            loading="lazy"
+          >
+        </div>
+        <div class="hero-banner__badge-copy">
+          {%- if badge_2_line_1 != blank -%}
+            <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_2_line_1 }}</p>
+          {%- endif -%}
+          {%- if badge_2_line_2 != blank -%}
+            <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_2_line_2 }}</p>
+          {%- endif -%}
+        </div>
       </div>
-      <div class="hero-banner__badge-copy">
-        {%- if badge_2_line_1 != blank -%}
-          <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_2_line_1 }}</p>
-        {%- endif -%}
-        {%- if badge_2_line_2 != blank -%}
-          <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_2_line_2 }}</p>
-        {%- endif -%}
-      </div>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
 </div>
 
 {% stylesheet %}
   .hero-banner {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
     min-height: 49.75rem;
     overflow: hidden;
-    background-color: var(--hb-bg, #fffdf8);
     color: var(--hb-text, #242027);
   }
 
   .hero-banner__media {
+    grid-column: 1 / -1;
     position: absolute;
     inset: 0;
     z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-banner__overlays {
+    grid-column: 1 / -1;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
     pointer-events: none;
   }
 
@@ -272,7 +283,10 @@
     width: 100%;
     max-width: 21.25rem;
     margin: 0 auto;
-    padding: calc(var(--header-group-height, 5.5rem) + 1rem) 1.5625rem 0;
+    padding: calc(
+        (var(--header-height, 5.5rem) * var(--transparent-header-offset-boolean, 0)) + 1rem
+      )
+      0 0;
     text-align: center;
   }
 
@@ -512,7 +526,6 @@
   @media screen and (min-width: 750px) {
     .hero-banner {
       min-height: 43.75rem;
-      justify-content: flex-start;
     }
 
     .hero-banner__img {
@@ -524,8 +537,10 @@
       gap: 2.5rem;
       max-width: 25.4375rem;
       margin: 0;
-      margin-left: clamp(1.5rem, 8.4vw, 7.5625rem);
-      padding: calc(var(--header-group-height, 6rem) + 4.25rem) 0 3rem;
+      padding: calc(
+          (var(--header-height, 6rem) * var(--transparent-header-offset-boolean, 0)) + 4.25rem
+        )
+        0 3rem;
       text-align: left;
     }
 
