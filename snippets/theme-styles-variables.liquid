@@ -123,21 +123,6 @@
     {{ accent_font_bold_italic | font_face: font_display: 'swap' }}
   {% endif %}
 
-  {% if settings.type_button_font != settings.type_body_font and settings.type_button_font != settings.type_subheading_font and settings.type_button_font != settings.type_heading_font and settings.type_button_font != settings.type_accent_font %}
-    {%- liquid
-      assign button_font_regular = settings.type_button_font | font_modify: 'weight', '400'
-      assign button_font_medium = settings.type_button_font | font_modify: 'weight', '500'
-      assign button_font_semibold = settings.type_button_font | font_modify: 'weight', '600'
-      assign button_font_bold = settings.type_button_font | font_modify: 'weight', 'bold'
-    %}
-
-    {{ settings.type_button_font | font_face: font_display: 'swap' }}
-    {{ button_font_regular | font_face: font_display: 'swap' }}
-    {{ button_font_medium | font_face: font_display: 'swap' }}
-    {{ button_font_semibold | font_face: font_display: 'swap' }}
-    {{ button_font_bold | font_face: font_display: 'swap' }}
-  {% endif %}
-
   @media only screen and (max-width: 1440px) and (min-width: 750px) { 
     html {
       font-size: calc(16 * 100vw / 1440);
@@ -194,9 +179,6 @@
     --font-accent--family: {{ settings.type_accent_font.family }}, {{ settings.type_accent_font.fallback_families }};
     --font-accent--style: {{ settings.type_accent_font.style }};
     --font-accent--weight: {{ settings.type_accent_font.weight }};
-    --font-button--family: {{ settings.type_button_font.family }}, {{ settings.type_button_font.fallback_families }};
-    --font-button--style: {{ settings.type_button_font.style }};
-    --font-button--weight: {{ settings.type_button_font.weight }};
 
     /* Margin sizes */
     --font-h1--spacing: 0.25em;

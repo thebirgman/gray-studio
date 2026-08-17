@@ -9,6 +9,7 @@
   @param {string} [logo] - Captured HTML for the logo element
   @param {string} [menu] - Captured HTML for the menu navigation
   @param {string} [actions] - Captured HTML for header actions (cart, account buttons, etc.)
+  @param {string} [cta] - Captured HTML for the header CTA button
   @param {string} [localization] - Captured HTML for language/country selector
   @param {string} [search] - Captured HTML for search input
   @param {string} [drawer_search] - Captured HTML for drawer-based search
@@ -33,6 +34,9 @@
     case item
       when 'actions'
         assign item_column = 'right'
+      when 'cta'
+        assign item_column = 'right'
+        assign item_row = 'top'
     endcase
 
     if item_row == row
@@ -84,6 +88,8 @@
               {{ search }}
             {% when 'drawer_search' %}
               {{ drawer_search }}
+            {% when 'cta' %}
+              {{ cta }}
             {% when 'actions' %}
               {{ actions }}
           {% endcase %}

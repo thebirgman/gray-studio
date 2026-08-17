@@ -22,7 +22,7 @@
         "button_secondary_link": "shopify://pages/about-us",
         "show_stars": true,
         "star_count": 5,
-        "social_proof": "Loved by 40,000+ readers  · Ships worldwide",
+        "social_proof": "Loved by 40,000+ readers  \u00b7 Ships worldwide",
         "badge_1_line_1": "Preview in minutes",
         "badge_1_line_2": "See it before you pay",
         "badge_1_icon_asset": "pups-badge-preview-icon.svg",
@@ -32,149 +32,91 @@
         "desktop_image_asset": "hero-pups-desktop.png",
         "mobile_image_asset": "hero-pups-mobile.png",
         "image_alt": "Framed impressionist portrait of a French Bulldog",
-        "background_color": "#fffdf8",
+        "background_color": "#FFFDF8",
         "text_color": "#242027",
-        "accent_color": "#ce6911",
-        "brand_color": "#321c41",
-        "muted_color": "#605c64",
-        "badge_background": "#faf8f0"
+        "accent_color": "#CE6911",
+        "brand_color": "#321C41",
+        "muted_color": "#605C64",
+        "badge_background": "#FAF8F0"
       }
     },
-    "featured_collections_home": {
-      "type": "featured-collections",
+    "featured_prints_home": {
+      "type": "featured-prints",
+      "name": "t:names.featured_prints",
       "blocks": {
-        "filter_all": {
-          "type": "filter",
+        "product_1": {
+          "type": "product",
           "settings": {
-            "label": "All destinations",
-            "value": "all"
+            "title": "Digital Download",
+            "price": 29,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-1.jpg",
+            "show_badge": false
           }
         },
-        "filter_playful": {
-          "type": "filter",
+        "product_2": {
+          "type": "product",
           "settings": {
-            "label": "Playful",
-            "value": "playful"
+            "title": "Watercolour Poster",
+            "price": 79,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-2.jpg",
+            "show_badge": false
           }
         },
-        "filter_elegant": {
-          "type": "filter",
+        "product_3": {
+          "type": "product",
           "settings": {
-            "label": "Elegant",
-            "value": "elegant"
+            "title": "Gicl\u00e9e Canvas",
+            "price": 149,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-3.jpg",
+            "show_badge": true,
+            "badge_label": "Most loved"
           }
         },
-        "filter_cosy": {
-          "type": "filter",
+        "product_4": {
+          "type": "product",
           "settings": {
-            "label": "Cosy",
-            "value": "cosy"
-          }
-        },
-        "collection_paris": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-paris.jpg",
-            "title": "Paris",
-            "scenes_label": "10 scenes",
-            "category": "elegant",
-            "link": ""
-          }
-        },
-        "collection_provence": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-provence.jpg",
-            "title": "Provence",
-            "scenes_label": "10 scenes",
-            "category": "playful",
-            "link": ""
-          }
-        },
-        "collection_italy": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-italy.jpg",
-            "title": "Italy",
-            "scenes_label": "10 scenes",
-            "category": "cosy",
-            "link": ""
-          }
-        },
-        "collection_england": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-england.jpg",
-            "title": "England",
-            "scenes_label": "10 scenes",
-            "category": "elegant",
-            "link": ""
-          }
-        },
-        "collection_riviera": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-riviera.jpg",
-            "title": "The Riviera",
-            "scenes_label": "10 scenes",
-            "category": "playful",
-            "link": ""
-          }
-        },
-        "collection_tokyo": {
-          "type": "collection",
-          "settings": {
-            "collection": "",
-            "image_asset": "featured-collection-tokyo.jpg",
-            "title": "Tokyo",
-            "scenes_label": "10 scenes",
-            "category": "cosy",
-            "link": ""
+            "title": "Framed Canvas",
+            "price": 194,
+            "rating_count": 49,
+            "image_asset": "featured-prints-product-4.jpg",
+            "show_badge": false
           }
         }
       },
       "block_order": [
-        "filter_all",
-        "filter_playful",
-        "filter_elegant",
-        "filter_cosy",
-        "collection_paris",
-        "collection_provence",
-        "collection_italy",
-        "collection_england",
-        "collection_riviera",
-        "collection_tokyo"
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
       ],
-      "name": "Featured collections",
       "settings": {
-        "eyebrow": "DISCOVER",
-        "heading": "Our collections",
-        "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
-        "button_label": "See all 40+ scenes",
+        "eyebrow": "PRINTS",
+        "heading": "Prints that actually last",
+        "button_label": "Browse the full catalogue",
         "button_link": "",
-        "filters_label": "Collection filters",
-        "background_color": "#fffdf8",
-        "brand_color": "#321c41",
-        "accent_color": "#8855aa",
-        "card_bar_color": "#faf8f0",
+        "background_color": "#FFFDF8",
+        "text_color": "#242027",
+        "muted_color": "#605C64",
+        "brand_color": "#321C41",
+        "badge_color": "#8855AA",
+        "star_color": "#F5CD72",
         "padding-block-start": 80,
         "padding-block-end": 80,
         "padding-inline-start": 120,
         "padding-inline-end": 120,
         "use_mobile_padding": true,
         "padding-block-start-mobile": 60,
-        "padding-block-end-mobile": 25,
+        "padding-block-end-mobile": 60,
         "padding-inline-start-mobile": 25,
         "padding-inline-end-mobile": 25
       }
     },
     "step_by_step_home": {
       "type": "step-by-step",
+      "name": "t:names.steps",
       "blocks": {
         "step_1": {
           "type": "step",
@@ -215,38 +157,21 @@
         "step_3",
         "step_4"
       ],
-      "name": "t:names.steps",
       "settings": {
         "image_asset": "step-by-step-portrait.jpg",
         "image_alt": "Custom pup portrait",
-        "background_color": "#fffdf8",
-        "wave_color": "#e8dff1",
-        "card_background": "#ffffff",
+        "background_color": "#FFFDF8",
+        "wave_color": "#E8DFF1",
+        "card_background": "#FFFFFF",
         "title_color": "#242027",
-        "text_color": "#605c64",
+        "text_color": "#605C64",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
-    "gifts_image_text_home": {
-      "type": "gifts-image-text",
-      "name": "Gifts image + text",
-      "settings": {
-        "eyebrow": "gifts",
-        "heading": "As often given as it's kept",
-        "description": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order.",
-        "button_label": "Start yours",
-        "button_link": "",
-        "desktop_image_asset": "gifts-image-text-desktop.png",
-        "mobile_image_asset": "gifts-image-text-mobile.png",
-        "image_alt": "Framed pup portrait ready for gifting",
-        "panel_color": "#fbeeca",
-        "text_color": "#242027",
-        "brand_color": "#321c41"
-      }
-    },
     "trust_strip_home": {
       "type": "trust-strip",
+      "name": "t:names.trust_strip",
       "blocks": {
         "trust_item_1": {
           "type": "trust_item",
@@ -278,10 +203,9 @@
         "trust_item_2",
         "trust_item_3"
       ],
-      "name": "t:names.trust_strip",
       "settings": {
-        "background_color": "#c8afde",
-        "text_color": "#321c41",
+        "background_color": "#C8AFDE",
+        "text_color": "#321C41",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-inline-start": 120,
@@ -289,6 +213,127 @@
         "use_mobile_padding": true,
         "padding-block-start-mobile": 18,
         "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
+    },
+    "featured_collections_home": {
+      "type": "featured-collections",
+      "name": "Featured collections",
+      "blocks": {
+        "filter_all": {
+          "type": "filter",
+          "settings": {
+            "label": "All destinations",
+            "value": "all"
+          }
+        },
+        "filter_playful": {
+          "type": "filter",
+          "settings": {
+            "label": "Playful",
+            "value": "playful"
+          }
+        },
+        "filter_elegant": {
+          "type": "filter",
+          "settings": {
+            "label": "Elegant",
+            "value": "elegant"
+          }
+        },
+        "filter_cosy": {
+          "type": "filter",
+          "settings": {
+            "label": "Cosy",
+            "value": "cosy"
+          }
+        },
+        "collection_paris": {
+          "type": "collection",
+          "settings": {
+            "title": "Paris",
+            "scenes_label": "10 scenes",
+            "category": "elegant",
+            "image_asset": "featured-collection-paris.jpg"
+          }
+        },
+        "collection_provence": {
+          "type": "collection",
+          "settings": {
+            "title": "Provence",
+            "scenes_label": "10 scenes",
+            "category": "playful",
+            "image_asset": "featured-collection-provence.jpg"
+          }
+        },
+        "collection_italy": {
+          "type": "collection",
+          "settings": {
+            "title": "Italy",
+            "scenes_label": "10 scenes",
+            "category": "cosy",
+            "image_asset": "featured-collection-italy.jpg"
+          }
+        },
+        "collection_england": {
+          "type": "collection",
+          "settings": {
+            "title": "England",
+            "scenes_label": "10 scenes",
+            "category": "elegant",
+            "image_asset": "featured-collection-england.jpg"
+          }
+        },
+        "collection_riviera": {
+          "type": "collection",
+          "settings": {
+            "title": "The Riviera",
+            "scenes_label": "10 scenes",
+            "category": "playful",
+            "image_asset": "featured-collection-riviera.jpg"
+          }
+        },
+        "collection_tokyo": {
+          "type": "collection",
+          "settings": {
+            "title": "Tokyo",
+            "scenes_label": "10 scenes",
+            "category": "cosy",
+            "image_asset": "featured-collection-tokyo.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "filter_all",
+        "filter_playful",
+        "filter_elegant",
+        "filter_cosy",
+        "collection_paris",
+        "collection_provence",
+        "collection_italy",
+        "collection_england",
+        "collection_riviera",
+        "collection_tokyo"
+      ],
+      "settings": {
+        "eyebrow": "DISCOVER",
+        "heading": "Our collections",
+        "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
+        "button_label": "See all 40+ scenes",
+        "button_link": "",
+        "filters_label": "Collection filters",
+        "background_color": "#FFFDF8",
+        "brand_color": "#321C41",
+        "accent_color": "#8855AA",
+        "card_bar_color": "#FAF8F0",
+        "padding-block-start": 80,
+        "padding-block-end": 80,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 25,
         "padding-inline-start-mobile": 25,
         "padding-inline-end-mobile": 25
       }
@@ -308,10 +353,10 @@
         "secondary_image_asset": "our-craft-secondary.jpg",
         "primary_image_alt": "Impressionist portrait of a dog on an ornate sofa",
         "secondary_image_alt": "Impressionist portrait of a dog by the fireplace",
-        "background_color": "#fffdf8",
+        "background_color": "#FFFDF8",
         "text_color": "#242027",
-        "brand_color": "#321c41",
-        "badge_color": "#c8afde",
+        "brand_color": "#321C41",
+        "badge_color": "#C8AFDE",
         "padding-block-start": 80,
         "padding-block-end": 80,
         "padding-inline-start": 120,
@@ -323,93 +368,26 @@
         "padding-inline-end-mobile": 25
       }
     },
-    "featured_prints_home": {
-      "type": "featured-prints",
-      "blocks": {
-        "product_1": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-1.jpg",
-            "title": "Digital Download",
-            "price": 29,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-2.jpg",
-            "title": "Watercolour Poster",
-            "price": 79,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-3.jpg",
-            "title": "Giclée Canvas",
-            "price": 149,
-            "rating_count": 49,
-            "show_badge": true,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_4": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-4.jpg",
-            "title": "Framed Canvas",
-            "price": 194,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_1",
-        "product_2",
-        "product_3",
-        "product_4"
-      ],
-      "name": "t:names.featured_prints",
+    "gifts_image_text_home": {
+      "type": "gifts-image-text",
+      "name": "Gifts image + text",
       "settings": {
-        "eyebrow": "PRINTS",
-        "heading": "Prints that actually last",
-        "button_label": "Browse the full catalogue",
+        "eyebrow": "gifts",
+        "heading": "As often given as it's kept",
+        "description": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order.",
+        "button_label": "Start yours",
         "button_link": "",
-        "background_color": "#fffdf8",
+        "desktop_image_asset": "gifts-image-text-desktop.png",
+        "mobile_image_asset": "gifts-image-text-mobile.png",
+        "image_alt": "Framed pup portrait ready for gifting",
+        "panel_color": "#FBEECA",
         "text_color": "#242027",
-        "muted_color": "#605c64",
-        "brand_color": "#321c41",
-        "badge_color": "#8855aa",
-        "star_color": "#f5cd72",
-        "padding-block-start": 80,
-        "padding-block-end": 80,
-        "padding-inline-start": 120,
-        "padding-inline-end": 120,
-        "use_mobile_padding": true,
-        "padding-block-start-mobile": 60,
-        "padding-block-end-mobile": 60,
-        "padding-inline-start-mobile": 25,
-        "padding-inline-end-mobile": 25
+        "brand_color": "#321C41"
       }
     },
     "testimonials_home": {
       "type": "testimonials",
+      "name": "Testimonials",
       "blocks": {
         "testimonial_maria": {
           "type": "testimonial",
@@ -417,7 +395,7 @@
             "rating": 5,
             "quote": "The free preview sold me instantly. I saw my Luna in the Provence scene and knew it had to be real.",
             "author": "Maria S.",
-            "meta": "Verified buyer · Lavender Fields"
+            "meta": "Verified buyer \u00b7 Lavender Fields"
           }
         },
         "testimonial_james": {
@@ -426,16 +404,16 @@
             "rating": 5,
             "quote": "Gave this as a gift and my sister cried, in a good way. The packaging alone felt like a real gift.",
             "author": "James O.",
-            "meta": "Verified buyer · Lavender Fields"
+            "meta": "Verified buyer \u00b7 Lavender Fields"
           }
         },
         "testimonial_priya": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Ordered from Australia, shipped without a hitch. The “mood” browsing made it so much easier to pick.",
+            "quote": "Ordered from Australia, shipped without a hitch. The \u201cmood\u201d browsing made it so much easier to pick.",
             "author": "Priya K.",
-            "meta": "Verified buyer · Coastal Morning"
+            "meta": "Verified buyer \u00b7 Coastal Morning"
           }
         }
       },
@@ -444,25 +422,25 @@
         "testimonial_james",
         "testimonial_priya"
       ],
-      "name": "Testimonials",
       "settings": {
         "eyebrow": "Testimonials",
         "heading": "What our lovely humans say",
-        "marquee_text": "Soft impressionist style   ·   Free preview, always   ·   Ships worldwide   ·   Scenes from around the world",
+        "marquee_text": "Soft impressionist style   \u00b7   Free preview, always   \u00b7   Ships worldwide   \u00b7   Scenes from around the world",
         "button_label": "See all reviews",
         "button_link": "",
         "dots_label": "Review slides",
         "star_asset": "testimonials-star.svg",
-        "background_color": "#f2f7fc",
+        "background_color": "#F2F7FC",
         "text_color": "#242027",
-        "muted_color": "#605c64",
-        "card_border": "#c9def4",
-        "button_color": "#212c4a",
-        "marquee_color": "#c9def4"
+        "muted_color": "#605C64",
+        "card_border": "#C9DEF4",
+        "button_color": "#212C4A",
+        "marquee_color": "#C9DEF4"
       }
     },
     "faqs_home": {
       "type": "faqs",
+      "name": "FAQs",
       "blocks": {
         "faq_1": {
           "type": "faq",
@@ -507,15 +485,14 @@
         "faq_4",
         "faq_5"
       ],
-      "name": "FAQs",
       "settings": {
         "heading": "Frequently asked questions",
         "button_label": "Read all FAQ",
         "button_link": "",
-        "background_color": "#fffdf8",
+        "background_color": "#FFFDF8",
         "text_color": "#242027",
-        "brand_color": "#321c41",
-        "border_color": "#d9d6db"
+        "brand_color": "#321C41",
+        "border_color": "#D9D6DB"
       }
     },
     "join_the_pack_home": {
@@ -526,16 +503,14 @@
         "description": "Collect a daisy stamp with every commission. The sixth portrait is on us, plus early access to new scenes.",
         "placeholder": "Email address",
         "button_label": "Subscribe",
-        "background_image": "shopify://shop_images/Frame_2147228212.png",
-        "inset_image": "shopify://shop_images/Rectangle_5.png",
         "background_image_asset": "join-the-pack-bg.jpg",
         "inset_image_asset": "join-the-pack-inset.jpg",
         "inset_image_alt": "Pup sitting on a fountain with a croissant and coffee",
-        "panel_color": "#faf8f0",
+        "panel_color": "#FAF8F0",
         "text_color": "#242027",
-        "brand_color": "#321c41",
-        "input_border": "#d9d6db",
-        "placeholder_color": "#918d95"
+        "brand_color": "#321C41",
+        "input_border": "#D9D6DB",
+        "placeholder_color": "#918D95"
       }
     }
   },

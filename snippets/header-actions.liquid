@@ -28,23 +28,10 @@
     </span>
 
     <span
-      class="svg-wrapper header-actions__icon header-actions__icon--cart {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+      class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}"
       aria-hidden="true"
     >
-      <img
-        class="header-actions__icon-img header-actions__icon-img--cart-desktop"
-        src="{{ 'header-icon-cart.svg' | asset_url }}"
-        alt=""
-        width="19"
-        height="19"
-      >
-      <img
-        class="header-actions__icon-img header-actions__icon-img--cart-mobile"
-        src="{{ 'header-icon-cart-mobile.svg' | asset_url }}"
-        alt=""
-        width="29"
-        height="29"
-      >
+      {{ 'icon-cart.svg' | inline_asset_content }}
     </span>
 
     {% render 'cart-bubble', limit: 100 %}
@@ -52,13 +39,27 @@
 {% endcapture %}
 
 {% capture account_icon %}
-  <img
-    class="header-actions__icon-img header-actions__icon-img--account"
-    src="{{ 'header-icon-account.svg' | asset_url }}"
-    alt=""
-    width="15"
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
     height="19"
+    viewBox="0 0 16 19"
+    fill="none"
+    slot="signed-out-avatar"
+    class="account-button__icon"
   >
+    <path
+      stroke="currentColor"
+      stroke-width="var(--icon-stroke-width)"
+      d="M7.697 7.697a3.474 3.474 0 1 0 0-6.947 3.474 3.474 0 0 0 0 6.947Z"
+    />
+    <path
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-width="var(--icon-stroke-width)"
+      d="M14.642 14.644c.001-.143.002-.287.002-.434 0-2.158-3.11-3.908-6.947-3.908S.75 12.052.75 14.21c0 2.158 0 3.907 6.947 3.907 1.937 0 3.334-.136 4.342-.379"
+    />
+  </svg>
 {% endcapture %}
 
 <header-actions
@@ -107,7 +108,7 @@
 
           <span
             slot="signed-out-avatar"
-            class="header-actions__icon header-actions__icon--account {% if display_style != 'icon' %}desktop:hidden{% endif %}"
+            class="{% if display_style != 'icon' %}desktop:hidden{% endif %}"
             aria-hidden="true"
           >
             {{ account_icon }}
@@ -172,7 +173,6 @@
   }
 
   .account-button__icon,
-  .account-button .header-actions__icon,
   .account-button__text {
     color: var(--color-account-icon);
     transition: color var(--header-content-transition-timing);
@@ -195,21 +195,13 @@
     --shopify-account-dialog-position-top: var(--account-offset-top);
 
     &:not(:defined) {
-      min-width: 24px;
-      height: 24px;
+      min-width: 44px;
+      height: 44px;
       display: flex;
       justify-content: center;
       align-items: center;
       /* Match the line height of the other buttons */
       line-height: normal;
-    }
-
-    &:defined {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 24px;
-      height: 24px;
     }
   }
 
@@ -260,19 +252,20 @@
 
   @media screen and (min-width: 750px) {
     .header__column--right header-actions {
-      margin-inline-start: 0;
+      margin-inline-start: calc(var(--gap-md) * -1);
     }
   }
 
   .header-actions__cart-icon {
     --cart-bubble-size: 11px;
-    --cart-bubble-top: 4px;
+    --cart-bubble-top: 2px;
     --cart-bubble-right: 0px;
 
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  }
+
+  .header-actions__cart-icon:has(.cart-bubble__text-count:not(:empty)) {
+    --cart-bubble-size: 16px;
   }
 
   .header-actions__cart-icon .cart-bubble {
@@ -294,6 +287,15 @@
     font-weight: var(--font-paragraph--weight);
   }
 
+  .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
+    /* Create donut mask where the cart bubble sits */
+    mask: radial-gradient(
+      calc(var(--cart-bubble-size) + 2px) at calc(100% - var(--cart-bubble-right)) var(--cart-bubble-top),
+      transparent 45.45%,
+      #fff 45.45%,
+      #fff 100%
+    );
+  }
 
   .cart-bubble.cart-bubble--animating .cart-bubble__background {
     animation: grow var(--animation-speed) var(--animation-easing);
@@ -309,17 +311,13 @@
   }
 
   cart-icon:has(.cart-bubble__text-count:empty) {
-    --cart-bubble-size: 11px;
-    --cart-bubble-top: 4px;
-    --cart-bubble-right: 0px;
-  }
+    --cart-bubble-size: 10px;
+    --cart-bubble-top: 9px;
+    --cart-bubble-right: 9px;
 
-  @media screen and (max-width: 749px) {
-    .header-actions__cart-icon,
-    cart-icon:has(.cart-bubble__text-count:empty) {
-      --cart-bubble-size: 13px;
-      --cart-bubble-top: 3px;
-      --cart-bubble-right: 0px;
+    .svg-wrapper {
+      --cart-bubble-top: 4px;
+      --cart-bubble-right: 4px;
     }
   }
 

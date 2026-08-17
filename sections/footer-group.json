@@ -11,53 +11,30 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
-    "footer": {
-      "type": "footer",
-      "blocks": {
-        "menu_shop": {
-          "type": "menu_column",
-          "settings": {
-            "heading": "Shop"
-          }
-        },
-        "menu_about": {
-          "type": "menu_column",
-          "settings": {
-            "heading": "About"
-          }
-        },
-        "menu_help": {
-          "type": "menu_column",
-          "settings": {
-            "heading": "Help"
-          }
-        }
-      },
-      "block_order": [
-        "menu_shop",
-        "menu_about",
-        "menu_help"
-      ],
-      "name": "t:names.footer",
+    "pups_footer": {
+      "type": "pups-footer",
       "settings": {
-        "contact_label": "Contact us",
-        "contact_email": "info@pupsaroundtheworld.com",
-        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world.",
-        "instagram_handle": "@pupsaroundtheworld",
-        "pinterest_handle": "@pupsaroundtheworld",
-        "tiktok_handle": "@pupsaroundtheworld",
-        "privacy_label": "Privacy",
-        "terms_label": "Terms",
-        "shipping_label": "Shipping & Returns",
-        "designer_name": "Lantern Sol",
-        "marquee_speed": 2,
         "background_color": "#F5CD72",
         "text_color": "#733014",
-        "accent_color": "#CE6911"
+        "accent_color": "#CE6911",
+        "logo_asset": "footer-logo.svg",
+        "contact_label": "Contact us",
+        "contact_email": "info@pupsaroundtheworld.com",
+        "shop_heading": "Shop",
+        "shop_fallback": "Collections|/\nCustom portrait|/\nPrints & sizes|/\nGift cards|/",
+        "about_heading": "About",
+        "about_fallback": "About us|/\nReviews|/\nContact|/\nHow it works|/",
+        "help_heading": "Help",
+        "help_fallback": "FAQ|/\nTrack my order|/\nData policy|/",
+        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world.",
+        "social_handle": "@pupsaroundtheworld",
+        "instagram_url": "https://www.instagram.com/pupsaroundtheworld",
+        "pinterest_url": "https://www.pinterest.com/pupsaroundtheworld",
+        "tiktok_url": "https://www.tiktok.com/@pupsaroundtheworld",
+        "designer_label": "Lantern Sol",
+        "marquee_asset": "footer-marquee-script.svg"
       }
     }
   },
-  "order": [
-    "footer"
-  ]
+  "order": ["pups_footer"]
 }

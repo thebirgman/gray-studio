@@ -141,6 +141,9 @@
     "section_size": "Section size",
     // Section header for width and height controls
     "size": "Size",
+    "show_cta": "Show header button",
+    "cta_label": "Header button label",
+    "cta_link": "Header button link",
     "slideshow_width": "Slide width",
     "social_media": "Social media",
     "submit_button": "Submit button",

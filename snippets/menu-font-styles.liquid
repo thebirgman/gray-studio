@@ -8,13 +8,14 @@
 --menu-top-level-font-family: var(--font-{{ settings.type_font_primary_link }}--family);
 --menu-top-level-font-size-desktop: {{ settings.type_font_primary_size }}; --menu-top-level-font-style: var(--font-
 {{- settings.type_font_primary_link -}}
---style); --menu-top-level-font-weight: {% if menu_type == 'drawer' %}700{% else %}400{% endif %}; --menu-top-level-font-case:
+--style); --menu-top-level-font-weight: 700; --menu-top-level-font-case:
 {%- if settings.type_case_primary_link == 'uppercase' %}uppercase{% else %}none{% endif -%}
 ;
 {% if menu_type == 'drawer' %}
   --menu-top-level-font-size: var(--menu-font-md--size); --menu-top-level-font-line-height:
   var(--menu-font-2xl--line-height);
 {% else %}
-  --menu-top-level-font-size: 16px; --menu-top-level-font-line-height: 22px;
+  --menu-top-level-font-size: var(--menu-font-sm--size); --menu-top-level-font-line-height:
+  var(--menu-font-sm--line-height);
 {% endif %}
 --menu-top-level-font-color: var(--color-foreground); --menu-top-level-font-color-rgb: var(--color-foreground-rgb);
