@@ -11,6 +11,10 @@
   assign muted_color = section.settings.muted_color | default: '#605C64'
 
   assign product_blocks = section.blocks | where: 'type', 'product'
+  assign fp_columns = product_blocks.size
+  if fp_columns < 1
+    assign fp_columns = 4
+  endif
   assign placeholder_titles = 'Digital Download,Watercolour Poster,Giclée Canvas,Framed Canvas' | split: ','
   assign placeholder_prices = '29,79,149,194' | split: ','
 -%}
@@ -30,6 +34,7 @@
 <div
   class="
     section
+    section--full-width
     featured-prints
     color-custom-{{ section.id }}
     spacing-style
@@ -44,6 +49,8 @@
     --fp-badge: {{ badge_color }};
     --fp-star: {{ star_color }};
     --fp-on-brand: #FEFEFD;
+    --fp-columns: {{ fp_columns }};
+    --fp-gap: 20px;
     background-color: {{ background_color }};
   "
 >
@@ -145,7 +152,7 @@
                     class: 'featured-prints__image',
                     loading: 'lazy',
                     widths: '282, 400, 564, 800',
-                    sizes: '(min-width: 750px) 282px, 70vw',
+                    sizes: '(min-width: 750px) 25vw, 75vw',
                     alt: card_title
                 }}
               {%- else -%}
@@ -287,7 +294,7 @@
 
   .featured-prints__grid {
     display: flex;
-    gap: 0.9375rem;
+    gap: var(--fp-gap, 20px);
     width: calc(
       100% + var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) +
         var(--padding-inline-end-mobile, var(--padding-inline-end, 0px))
@@ -310,8 +317,9 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    flex: 0 0 17.625rem;
-    width: 17.625rem;
+    flex: 0 0 75%;
+    width: 75%;
+    min-width: 0;
     gap: 0.9375rem;
     color: inherit;
     text-decoration: none;
@@ -494,7 +502,9 @@
     }
 
     .featured-prints__grid {
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(var(--fp-columns, 4), minmax(0, 1fr));
+      gap: var(--fp-gap, 20px);
       width: 100%;
       margin-inline: 0;
       padding-inline: 0;
@@ -503,9 +513,9 @@
     }
 
     .featured-prints__card {
-      flex: 0 1 17.625rem;
-      width: 17.625rem;
-      max-width: 17.625rem;
+      flex: none;
+      width: 100%;
+      max-width: none;
       scroll-snap-align: none;
     }
   }
