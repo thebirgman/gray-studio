@@ -366,6 +366,12 @@
         "label": "t:options.accent"
       },
       {
+        "type": "font_picker",
+        "id": "type_button_font",
+        "default": "host_grotesk_n4",
+        "label": "t:options.buttons"
+      },
+      {
         "type": "header",
         "content": "t:content.text_presets"
       },
@@ -1820,6 +1826,10 @@
         "label": "t:settings.font",
         "options": [
           {
+            "value": "button",
+            "label": "t:options.buttons"
+          },
+          {
             "value": "body",
             "label": "t:options.body"
           },
@@ -1828,7 +1838,7 @@
             "label": "t:options.accent"
           }
         ],
-        "default": "body"
+        "default": "button"
       },
       {
         "type": "select",
@@ -2175,6 +2185,10 @@
         "label": "t:settings.font",
         "options": [
           {
+            "value": "button",
+            "label": "t:options.buttons"
+          },
+          {
             "value": "body",
             "label": "t:options.body"
           },
@@ -2183,7 +2197,7 @@
             "label": "t:options.accent"
           }
         ],
-        "default": "body"
+        "default": "button"
       },
       {
         "type": "select",
