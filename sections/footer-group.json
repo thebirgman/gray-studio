@@ -50,6 +50,7 @@
         "terms_label": "Terms",
         "shipping_label": "Shipping & Returns",
         "designer_name": "Lantern Sol",
+        "marquee_speed": 2,
         "background_color": "#F5CD72",
         "text_color": "#733014",
         "accent_color": "#CE6911"

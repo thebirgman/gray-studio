@@ -64,7 +64,13 @@
       on:click="/toggle"
     >
       <span class="svg-wrapper header-drawer-icon header-drawer-icon--open">
-        {{- 'icon-menu.svg' | inline_asset_content -}}
+        <img
+          class="header-drawer-icon__img"
+          src="{{ 'header-icon-menu.svg' | asset_url }}"
+          alt=""
+          width="33"
+          height="33"
+        >
       </span>
       <span class="svg-wrapper header-drawer-icon header-drawer-icon--close">
         {{- 'icon-close.svg' | inline_asset_content -}}
@@ -686,13 +692,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--padding-lg);
+    padding: 0;
+    min-width: 33px;
+    min-height: 33px;
   }
 
   .header__icon--summary .header-drawer-icon {
     margin: auto;
-    width: var(--icon-size-xs);
-    height: var(--icon-size-xs);
+    width: 33px;
+    height: 33px;
+  }
+
+  .header-drawer-icon__img {
+    display: block;
+    width: 33px;
+    height: 33px;
+    object-fit: contain;
+  }
+
+  .header-drawer-icon--open {
+    transform: rotate(180deg);
   }
 
   .menu-drawer__featured-content {

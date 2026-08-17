@@ -70,9 +70,9 @@
           "static": true,
           "settings": {
             "menu": "main-menu",
-            "inherit_header_color_scheme": false,
+            "inherit_header_color_scheme": true,
             "background_color": "{{ settings.color_palette.background }}",
-            "text_color": "",
+            "text_color": "#321C41",
             "type_font_primary_size": "1rem",
             "menu_font_style": "inverse",
             "type_font_primary_link": "body",

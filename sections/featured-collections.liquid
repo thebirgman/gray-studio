@@ -266,6 +266,7 @@
     flex-direction: column;
     gap: 1.5625rem;
     width: 100%;
+    min-width: 0;
   }
 
   .featured-collections__intro {
@@ -320,6 +321,7 @@
     display: flex;
     gap: 0.875rem;
     align-items: center;
+    align-self: flex-start;
     width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
@@ -377,7 +379,7 @@
     border-bottom: 0.5px solid var(--fc-brand);
     color: var(--fc-brand);
     text-decoration: none;
-    font-family: var(--font-body--family);
+    font-family: var(--font-button--family, var(--font-body--family));
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1;
@@ -406,14 +408,7 @@
   .featured-collections__grid {
     display: flex;
     gap: 0.625rem;
-    width: calc(
-      100% + var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) +
-        var(--padding-inline-end-mobile, var(--padding-inline-end, 0px))
-    );
-    margin-inline: calc(var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) * -1)
-      calc(var(--padding-inline-end-mobile, var(--padding-inline-end, 0px)) * -1);
-    padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start, 1.5625rem))
-      var(--padding-inline-end-mobile, var(--padding-inline-end, 1.5625rem));
+    width: 100%;
     padding-block-end: 0.25rem;
     overflow-x: auto;
     scrollbar-width: none;
@@ -502,6 +497,31 @@
     color: var(--fc-accent);
   }
 
+  .featured-collections__filters::after,
+  .featured-collections__grid::after {
+    content: '';
+    flex: 0 0 calc(
+      var(--padding-inline-end-mobile, var(--padding-inline-end, 0px)) + var(--page-margin, 0px)
+    );
+  }
+
+  @media screen and (max-width: 749px) {
+    .featured-collections.spacing-style {
+      padding-inline-end: 0;
+    }
+
+    .featured-collections > .featured-collections__layout {
+      grid-column: 2 / -1;
+    }
+
+    .featured-collections__header,
+    .featured-collections__cta-wrap {
+      padding-inline-end: calc(
+        var(--padding-inline-end-mobile, var(--padding-inline-end, 0px)) + var(--page-margin, 0px)
+      );
+    }
+  }
+
   @media screen and (min-width: 750px) {
     .featured-collections__layout {
       flex-direction: row;
@@ -528,12 +548,18 @@
     }
 
     .featured-collections__filters {
+      align-self: center;
       justify-content: center;
       width: auto;
       max-width: 100%;
       overflow: visible;
       flex-wrap: wrap;
       gap: 0.625rem;
+    }
+
+    .featured-collections__filters::after,
+    .featured-collections__grid::after {
+      content: none;
     }
 
     .featured-collections__grid {
