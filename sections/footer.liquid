@@ -1,98 +1,791 @@
-{% liquid
-  if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+{%- liquid
+  assign background_color = section.settings.background_color | default: '#F5CD72'
+  assign text_color = section.settings.text_color | default: '#733014'
+  assign accent_color = section.settings.accent_color | default: '#CE6911'
+  assign contact_label = section.settings.contact_label | default: 'Contact us'
+  assign contact_email = section.settings.contact_email | default: 'info@pupsaroundtheworld.com'
+  assign tagline = section.settings.tagline
+  assign designer_name = section.settings.designer_name | default: 'Lantern Sol'
+  assign designer_url = section.settings.designer_url
+  assign year = 'now' | date: '%Y'
+  assign logo_image = settings.logo
+  assign logo_alt = shop.name | escape
+
+  assign instagram_url = section.settings.instagram_url | default: settings.social_instagram_link
+  assign pinterest_url = section.settings.pinterest_url | default: settings.social_pinterest_link
+  assign tiktok_url = section.settings.tiktok_url | default: settings.social_tiktok_link
+  assign instagram_handle = section.settings.instagram_handle | default: '@pupsaroundtheworld'
+  assign pinterest_handle = section.settings.pinterest_handle | default: '@pupsaroundtheworld'
+  assign tiktok_handle = section.settings.tiktok_handle | default: '@pupsaroundtheworld'
+
+  assign privacy_label = section.settings.privacy_label | default: 'Privacy'
+  assign terms_label = section.settings.terms_label | default: 'Terms'
+  assign shipping_label = section.settings.shipping_label | default: 'Shipping & Returns'
+  assign privacy_url = section.settings.privacy_url | default: shop.privacy_policy.url
+  assign terms_url = section.settings.terms_url | default: shop.terms_of_service.url
+  assign shipping_url = section.settings.shipping_url | default: shop.shipping_policy.url
+  if shipping_url == blank
+    assign shipping_url = shop.refund_policy.url
   endif
+-%}
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
 %}
 
 <div
-  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
-></div>
-<div
-  class="section section--{{ section.settings.section_width }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="pups-footer color-custom-{{ section.id }}"
+  style="
+    --pups-footer-bg: {{ background_color }};
+    --pups-footer-text: {{ text_color }};
+    --pups-footer-accent: {{ accent_color }};
+  "
 >
-  {% liquid
-    assign total_blocks = section.blocks.size
+  <div class="pups-footer__inner">
+    <div class="pups-footer__main">
+      <div class="pups-footer__top">
+        <div class="pups-footer__brand">
+          <a
+            class="pups-footer__logo"
+            href="{{ routes.root_url }}"
+            aria-label="{{ 'accessibility.home_logo_alt' | t: shop_name: shop.name }}"
+          >
+            {%- if logo_image != blank -%}
+              {{
+                logo_image
+                | image_url: width: 224
+                | image_tag:
+                  class: 'pups-footer__logo-img',
+                  widths: '112, 224, 336',
+                  sizes: '112px',
+                  width: 112,
+                  height: 36,
+                  alt: logo_alt,
+                  loading: 'lazy'
+              }}
+            {%- else -%}
+              <img
+                class="pups-footer__logo-img"
+                src="{{ 'footer-logo.svg' | asset_url }}"
+                alt="{{ logo_alt }}"
+                width="112"
+                height="36"
+                loading="lazy"
+              >
+            {%- endif -%}
+          </a>
 
-    # Grid layout calculations
-    assign grid_columns = total_blocks | at_most: 4
+          <div class="pups-footer__contact">
+            <p class="pups-footer__contact-label">
+              <span class="pups-footer__icon pups-footer__icon--mail" aria-hidden="true">
+                <img
+                  src="{{ 'footer-icon-mail.svg' | asset_url }}"
+                  alt=""
+                  width="12"
+                  height="9"
+                  loading="lazy"
+                >
+              </span>
+              <span>{{ contact_label }}</span>
+            </p>
+            {%- if contact_email != blank -%}
+              <a class="pups-footer__contact-email" href="mailto:{{ contact_email }}">
+                {{- contact_email -}}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
 
-    # Calculate last row counts using modulo arithmetic
-    # last_row_count = (total_blocks - 1) % N + 1
-    assign last_row_count = total_blocks | minus: 1 | modulo: 4 | plus: 1
-    assign tablet_last_row_count = total_blocks | minus: 1 | modulo: 2 | plus: 1
+        {%- if section.blocks.size > 0 -%}
+          <nav class="pups-footer__nav" aria-label="Footer">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'menu_column' -%}
+                {%- liquid
+                  assign column_heading = block.settings.heading
+                  assign column_menu = block.settings.menu
+                  assign heading_handle = column_heading | handle
+                -%}
+                <div
+                  class="pups-footer__column"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if column_heading != blank -%}
+                    <p class="pups-footer__column-heading">{{ column_heading }}</p>
+                  {%- endif -%}
 
-    # Check if there are orphaned elements (single item in last row)
-    assign has_isolated_grid_item_desktop = false
-    assign has_isolated_grid_item_tablet = false
+                  <ul class="pups-footer__column-links" role="list">
+                    {%- if column_menu != blank -%}
+                      {%- for link in column_menu.links -%}
+                        <li>
+                          <a class="pups-footer__link" href="{{ link.url }}">{{ link.title }}</a>
+                        </li>
+                      {%- endfor -%}
+                    {%- else -%}
+                      {%- case heading_handle -%}
+                        {%- when 'shop' -%}
+                          <li>
+                            <a class="pups-footer__link" href="{{ routes.collections_url }}">Collections</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['custom-portrait'].url | default: '/pages/custom-portrait' }}">Custom portrait</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['prints-sizes'].url | default: '/pages/prints-sizes' }}">Prints &amp; sizes</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['gift-cards'].url | default: '/pages/gift-cards' }}">Gift cards</a>
+                          </li>
+                        {%- when 'about' -%}
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['about-us'].url | default: '/pages/about-us' }}">About us</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['reviews'].url | default: '/pages/reviews' }}">Reviews</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['contact'].url | default: '/pages/contact' }}">Contact</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['how-it-works'].url | default: '/pages/how-it-works' }}">How it works</a>
+                          </li>
+                        {%- when 'help' -%}
+                          <li>
+                            {%- liquid
+                              assign faq_url = pages['faq'].url
+                              if faq_url == blank
+                                assign faq_url = pages['faqs'].url | default: '/pages/faq'
+                              endif
+                            -%}
+                            <a class="pups-footer__link" href="{{ faq_url }}">FAQ</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ pages['track-my-order'].url | default: '/pages/track-my-order' }}">Track my order</a>
+                          </li>
+                          <li>
+                            <a class="pups-footer__link" href="{{ shop.privacy_policy.url | default: pages['data-policy'].url | default: '/pages/data-policy' }}">Data policy</a>
+                          </li>
+                      {%- endcase -%}
+                    {%- endif -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
+        {%- endif -%}
+      </div>
 
-    if total_blocks > 4 and last_row_count == 1
-      assign has_isolated_grid_item_desktop = true
-    endif
+      <div class="pups-footer__middle">
+        {%- if tagline != blank -%}
+          <p class="pups-footer__tagline">{{ tagline }}</p>
+        {%- endif -%}
 
-    if total_blocks == 5
-      assign has_isolated_grid_item_tablet = true
-    endif
-  %}
-  <div
-    class="
-      footer-content
-      spacing-style
-      {% if has_isolated_grid_item_desktop %}footer-content--isolated-grid-item-desktop{% endif %}
-      {% if has_isolated_grid_item_tablet %}footer-content--isolated-grid-item-tablet{% endif %}
-    "
-    style="
-      {%  render 'spacing-style', settings: section.settings %}
-      --footer-gap: {{ section.settings.gap }}px;
-      --grid-columns: {{ grid_columns }};
-      --last-row-count: {{ last_row_count }};
-      --tablet-last-row-count: {{ tablet_last_row_count }};
-    "
-  >
-    {% content_for 'blocks' %}
+        <div class="pups-footer__socials">
+          {%- if instagram_url != blank or instagram_handle != blank -%}
+            <a
+              class="pups-footer__social"
+              href="{{ instagram_url | default: 'https://www.instagram.com/pupsaroundtheworld' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="pups-footer__social-name">
+                <span class="pups-footer__icon pups-footer__icon--instagram" aria-hidden="true">
+                  <img
+                    src="{{ 'footer-icon-instagram.svg' | asset_url }}"
+                    alt=""
+                    width="16"
+                    height="16"
+                    loading="lazy"
+                  >
+                </span>
+                <span>Instagram</span>
+              </span>
+              <span class="pups-footer__social-handle">{{ instagram_handle }}</span>
+            </a>
+          {%- endif -%}
+
+          {%- if pinterest_url != blank or pinterest_handle != blank -%}
+            <a
+              class="pups-footer__social"
+              href="{{ pinterest_url | default: 'https://www.pinterest.com/pupsaroundtheworld' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="pups-footer__social-name">
+                <span class="pups-footer__icon pups-footer__icon--pinterest" aria-hidden="true">
+                  <img
+                    src="{{ 'footer-icon-pinterest.svg' | asset_url }}"
+                    alt=""
+                    width="11"
+                    height="14"
+                    loading="lazy"
+                  >
+                </span>
+                <span>Pinterest</span>
+              </span>
+              <span class="pups-footer__social-handle">{{ pinterest_handle }}</span>
+            </a>
+          {%- endif -%}
+
+          {%- if tiktok_url != blank or tiktok_handle != blank -%}
+            <a
+              class="pups-footer__social"
+              href="{{ tiktok_url | default: 'https://www.tiktok.com/@pupsaroundtheworld' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="pups-footer__social-name">
+                <span class="pups-footer__icon pups-footer__icon--tiktok" aria-hidden="true">
+                  <img
+                    src="{{ 'footer-icon-tiktok.svg' | asset_url }}"
+                    alt=""
+                    width="12"
+                    height="14"
+                    loading="lazy"
+                  >
+                </span>
+                <span>TikTok</span>
+              </span>
+              <span class="pups-footer__social-handle">{{ tiktok_handle }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="pups-footer__bottom">
+        <ul class="pups-footer__legal" role="list">
+          {%- if privacy_label != blank -%}
+            <li>
+              {%- if privacy_url != blank -%}
+                <a class="pups-footer__legal-link" href="{{ privacy_url }}">{{ privacy_label }}</a>
+              {%- else -%}
+                <span class="pups-footer__legal-link">{{ privacy_label }}</span>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+          {%- if terms_label != blank -%}
+            <li>
+              {%- if terms_url != blank -%}
+                <a class="pups-footer__legal-link" href="{{ terms_url }}">{{ terms_label }}</a>
+              {%- else -%}
+                <span class="pups-footer__legal-link">{{ terms_label }}</span>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+          {%- if shipping_label != blank -%}
+            <li>
+              {%- if shipping_url != blank -%}
+                <a class="pups-footer__legal-link" href="{{ shipping_url }}">{{ shipping_label }}</a>
+              {%- else -%}
+                <span class="pups-footer__legal-link">{{ shipping_label }}</span>
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+        </ul>
+
+        <p class="pups-footer__copyright">
+          <span class="pups-footer__copyright-copy">
+            &copy; {{ year }} {{ shop.name }}. All rights reserved
+          </span>
+          {%- if designer_name != blank -%}
+            <span class="pups-footer__copyright-sep"> | </span>
+            <span class="pups-footer__designed">
+              Designed by
+              {% if designer_url != blank %}
+                <a
+                  class="pups-footer__designed-link"
+                  href="{{ designer_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{- designer_name -}}
+                </a>
+              {% else %}
+                <span class="pups-footer__designed-link">{{ designer_name }}</span>
+              {% endif %}
+            </span>
+          {%- endif -%}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pups-footer__marquee" aria-hidden="true">
+    <div class="pups-footer__marquee-track">
+      <img
+        class="pups-footer__marquee-img"
+        src="{{ 'footer-marquee.svg' | asset_url }}"
+        alt=""
+        width="8187"
+        height="370"
+        loading="lazy"
+      >
+      <img
+        class="pups-footer__marquee-img"
+        src="{{ 'footer-marquee.svg' | asset_url }}"
+        alt=""
+        width="8187"
+        height="370"
+        loading="lazy"
+      >
+    </div>
   </div>
 </div>
 
 {% stylesheet %}
-  .footer-content {
-    contain: content;
-    content-visibility: auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--footer-gap);
-    align-items: start;
+  footer:has(.pups-footer) {
+    background-color: var(--pups-footer-bg, #f5cd72);
   }
 
-  .footer-content .menu__heading__default {
-    font-weight: var(--font-heading--weight);
+  .pups-footer {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    color: var(--pups-footer-text, #733014);
+    background-color: var(--pups-footer-bg, #f5cd72);
   }
 
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    .footer-content {
-      grid-template-columns: repeat(min(var(--grid-columns), 3), 1fr);
-      grid-auto-flow: row;
-    }
+  .pups-footer__inner {
+    width: 100%;
+    padding: 2.8125rem 1.5625rem 0;
+  }
 
-    .footer-content[style*='--grid-columns: 4'] {
-      grid-template-columns: repeat(2, 1fr);
-    }
+  .pups-footer__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3.75rem;
+    width: 100%;
+    max-width: 21.3125rem;
+    margin-inline: auto;
+  }
 
-    .footer-content--isolated-grid-item-tablet > :last-child {
-      grid-column: 1 / -1;
+  .pups-footer__top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    width: 100%;
+  }
+
+  .pups-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .pups-footer__logo {
+    display: block;
+    width: 7.015rem;
+    height: 2.264rem;
+    overflow: clip;
+  }
+
+  .pups-footer__logo-img {
+    display: block;
+    width: 7.015rem;
+    height: 2.264rem;
+    object-fit: contain;
+    object-position: left center;
+  }
+
+  .pups-footer__contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1875rem;
+  }
+
+  .pups-footer__contact-label,
+  .pups-footer__contact-email,
+  .pups-footer__link,
+  .pups-footer__tagline,
+  .pups-footer__social-name,
+  .pups-footer__social-handle {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    color: var(--pups-footer-text, #733014);
+  }
+
+  .pups-footer__contact-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5625rem;
+  }
+
+  .pups-footer__contact-email,
+  .pups-footer__social-handle {
+    color: var(--pups-footer-accent, #ce6911);
+    text-decoration: none;
+  }
+
+  .pups-footer__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: clip;
+  }
+
+  .pups-footer__icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .pups-footer__icon--mail {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .pups-footer__icon--mail img {
+    width: 0.75rem;
+    height: 0.5625rem;
+  }
+
+  .pups-footer__icon--instagram {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .pups-footer__icon--pinterest {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .pups-footer__icon--pinterest img {
+    width: 0.668rem;
+    height: 0.879rem;
+  }
+
+  .pups-footer__icon--tiktok {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .pups-footer__icon--tiktok img {
+    width: 0.747rem;
+    height: 0.875rem;
+  }
+
+  .pups-footer__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3.5625rem;
+    width: 100%;
+  }
+
+  .pups-footer__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9375rem;
+    width: 15rem;
+  }
+
+  .pups-footer__column-heading {
+    margin: 0;
+    width: 100%;
+    font-family: var(--font-accent--family);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.055rem;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--pups-footer-text, #733014);
+  }
+
+  .pups-footer__column-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+  }
+
+  .pups-footer__link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .pups-footer__link:hover,
+  .pups-footer__contact-email:hover,
+  .pups-footer__social:hover,
+  .pups-footer__legal-link:hover,
+  .pups-footer__designed-link:hover {
+    opacity: 0.72;
+  }
+
+  .pups-footer a:focus-visible {
+    outline: 2px solid var(--pups-footer-text, #733014);
+    outline-offset: 2px;
+  }
+
+  .pups-footer__middle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5625rem;
+    width: 100%;
+    padding-block: 1.5625rem;
+    border-top: 0.5px solid var(--pups-footer-text, #733014);
+  }
+
+  .pups-footer__tagline {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pups-footer__socials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+  }
+
+  .pups-footer__social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1875rem;
+    text-decoration: none;
+  }
+
+  .pups-footer__social-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5625rem;
+  }
+
+  .pups-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding-top: 0.78125rem;
+    border-top: 0.5px solid var(--pups-footer-text, #733014);
+  }
+
+  .pups-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pups-footer__legal li:not(:last-child)::after {
+    content: '·';
+    margin-inline: 0.625rem;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--pups-footer-text, #733014);
+  }
+
+  .pups-footer__legal-link,
+  .pups-footer__copyright,
+  .pups-footer__designed,
+  .pups-footer__designed-link {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--pups-footer-text, #733014);
+    text-decoration: none;
+  }
+
+  .pups-footer__copyright {
+    margin: 0;
+    text-align: center;
+  }
+
+  .pups-footer__copyright-sep {
+    display: none;
+  }
+
+  .pups-footer__designed {
+    display: block;
+  }
+
+  .pups-footer__designed-link {
+    text-decoration: underline;
+    text-underline-offset: 0.125rem;
+  }
+
+  .pups-footer__marquee {
+    position: relative;
+    width: 100%;
+    height: 4.125rem;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .pups-footer__marquee-track {
+    display: flex;
+    width: max-content;
+    height: 4.125rem;
+  }
+
+  .pups-footer__marquee-img {
+    display: block;
+    width: 511.6875rem;
+    height: 23.125rem;
+    flex-shrink: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pups-footer__marquee-track {
+      animation: pups-footer-marquee 80s linear infinite;
     }
   }
 
-  @media screen and (min-width: 990px) {
-    .footer-content {
-      grid-template-columns: repeat(var(--grid-columns), 1fr);
+  @keyframes pups-footer-marquee {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .pups-footer__inner {
+      padding: 4.625rem 7.5rem 0;
     }
 
-    /* Single item centered */
-    .footer-content[style*='--grid-columns: 1'] {
-      justify-items: center;
+    .pups-footer__main {
+      align-items: stretch;
+      max-width: 75rem;
     }
 
-    .footer-content--isolated-grid-item-desktop > :last-child {
-      grid-column: 1 / -1;
+    .pups-footer__top {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2.5rem;
+    }
+
+    .pups-footer__brand {
+      align-items: flex-start;
+    }
+
+    .pups-footer__logo-img {
+      object-position: left center;
+    }
+
+    .pups-footer__contact {
+      align-items: flex-start;
+    }
+
+    .pups-footer__contact-label {
+      justify-content: flex-start;
+    }
+
+    .pups-footer__nav {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 3.5625rem;
+      width: auto;
+    }
+
+    .pups-footer__column {
+      align-items: flex-start;
+    }
+
+    .pups-footer__column-heading,
+    .pups-footer__link {
+      text-align: left;
+    }
+
+    .pups-footer__column-links {
+      align-items: flex-start;
+    }
+
+    .pups-footer__middle {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5625rem;
+      padding-block: 1.875rem;
+    }
+
+    .pups-footer__tagline {
+      max-width: 21.5625rem;
+      text-align: left;
+    }
+
+    .pups-footer__socials {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 1.5625rem;
+      width: auto;
+      max-width: 36.25rem;
+    }
+
+    .pups-footer__social {
+      align-items: flex-start;
+      min-width: 10.375rem;
+    }
+
+    .pups-footer__social-name {
+      justify-content: flex-start;
+    }
+
+    .pups-footer__bottom {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.28125rem;
+    }
+
+    .pups-footer__legal {
+      order: 2;
+      justify-content: flex-end;
+    }
+
+    .pups-footer__copyright {
+      order: 1;
+      text-align: left;
+    }
+
+    .pups-footer__copyright-sep {
+      display: inline;
+    }
+
+    .pups-footer__designed {
+      display: inline;
+    }
+
+    .pups-footer__marquee {
+      height: 12rem;
+    }
+
+    .pups-footer__marquee-track {
+      height: 12rem;
     }
   }
 {% endstylesheet %}
@@ -100,110 +793,160 @@
 {% schema %}
 {
   "name": "t:names.footer",
+  "tag": "div",
   "class": "section-wrapper",
-  "blocks": [
-    {
-      "type": "_divider"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "follow-on-shop"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "menu"
-    },
-    {
-      "type": "payment-icons"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "logo"
-    },
-    {
-      "type": "jumbo-text"
-    },
-    {
-      "type": "social-links"
-    },
-    {
-      "type": "email-signup"
-    }
-  ],
   "enabled_on": {
     "groups": ["footer"]
   },
+  "max_blocks": 4,
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
+      "type": "header",
+      "content": "Brand"
     },
     {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact label",
+      "default": "Contact us"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "info@pupsaroundtheworld.com"
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world."
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram handle",
+      "default": "@pupsaroundtheworld"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest"
+    },
+    {
+      "type": "text",
+      "id": "pinterest_handle",
+      "label": "Pinterest handle",
+      "default": "@pupsaroundtheworld"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_handle",
+      "label": "TikTok handle",
+      "default": "@pupsaroundtheworld"
+    },
+    {
+      "type": "header",
+      "content": "Legal"
+    },
+    {
+      "type": "text",
+      "id": "privacy_label",
+      "label": "Privacy label",
+      "default": "Privacy"
+    },
+    {
+      "type": "url",
+      "id": "privacy_url",
+      "label": "Privacy link"
+    },
+    {
+      "type": "text",
+      "id": "terms_label",
+      "label": "Terms label",
+      "default": "Terms"
+    },
+    {
+      "type": "url",
+      "id": "terms_url",
+      "label": "Terms link"
+    },
+    {
+      "type": "text",
+      "id": "shipping_label",
+      "label": "Shipping label",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "url",
+      "id": "shipping_url",
+      "label": "Shipping link"
+    },
+    {
+      "type": "text",
+      "id": "designer_name",
+      "label": "Designer name",
+      "default": "Lantern Sol"
+    },
+    {
+      "type": "url",
+      "id": "designer_url",
+      "label": "Designer link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "t:settings.background_color",
-      "default": "{{ settings.color_palette.foreground }}"
+      "label": "Background",
+      "default": "#F5CD72"
     },
     {
-      "type": "header",
-      "content": "t:content.padding"
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#733014"
     },
     {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 20
-    },
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#CE6911"
+    }
+  ],
+  "blocks": [
     {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 20
+      "type": "menu_column",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
     }
   ],
   "presets": [
@@ -211,51 +954,40 @@
       "name": "t:names.footer",
       "category": "t:categories.footer",
       "settings": {
-        "gap": 20,
-        "padding-block-start": 36,
-        "padding-block-end": 36
+        "contact_label": "Contact us",
+        "contact_email": "info@pupsaroundtheworld.com",
+        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world.",
+        "instagram_handle": "@pupsaroundtheworld",
+        "pinterest_handle": "@pupsaroundtheworld",
+        "tiktok_handle": "@pupsaroundtheworld",
+        "privacy_label": "Privacy",
+        "terms_label": "Terms",
+        "shipping_label": "Shipping & Returns",
+        "designer_name": "Lantern Sol",
+        "background_color": "#F5CD72",
+        "text_color": "#733014",
+        "accent_color": "#CE6911"
       },
-      "blocks": {
-        "newsletter-group": {
-          "type": "group",
+      "blocks": [
+        {
+          "type": "menu_column",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "gap": 6,
-            "width": "fill"
-          },
-          "blocks": {
-            "newsletter-heading": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.join_our_email_list",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "h3"
-              }
-            },
-            "newsletter-text": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.get_exclusive_deals_and_early_access_to_new_products",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["newsletter-heading", "newsletter-text"]
+            "heading": "Shop"
+          }
         },
-        "newsletter-form": {
-          "type": "email-signup",
+        {
+          "type": "menu_column",
           "settings": {
-            "width": "fill"
+            "heading": "About"
+          }
+        },
+        {
+          "type": "menu_column",
+          "settings": {
+            "heading": "Help"
           }
         }
-      },
-      "block_order": ["newsletter-group", "newsletter-form"]
+      ]
     }
   ]
 }

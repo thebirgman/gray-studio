@@ -149,15 +149,16 @@
 
 {% stylesheet %}
   .testimonials {
+    --testimonials-pad-x: 1.5625rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.625rem;
     width: 100%;
-    padding: 3.75rem 1.5625rem 2.1875rem;
+    padding: 3.75rem 0 2.1875rem;
     color: var(--testimonials-text, #242027);
     background-color: var(--testimonials-bg, #f2f7fc);
-    overflow: clip;
+    overflow-x: clip;
   }
 
   .testimonials__intro {
@@ -176,6 +177,7 @@
     align-items: center;
     gap: 0.3125rem;
     margin-bottom: -5rem;
+    padding-inline: var(--testimonials-pad-x);
     text-align: center;
     color: var(--testimonials-text, #242027);
   }
@@ -223,7 +225,7 @@
     font-family: 'Alex Brush', cursive;
     font-size: 8.6875rem;
     font-weight: 400;
-    line-height: 2.75rem;
+    line-height: 1;
     color: var(--testimonials-marquee, #c9def4);
     opacity: 0.35;
     white-space: nowrap;
@@ -252,6 +254,7 @@
     align-items: center;
     gap: 1.25rem;
     width: 100%;
+    padding-inline: var(--testimonials-pad-x);
   }
 
   .testimonials__track {
@@ -417,8 +420,9 @@
 
   @media screen and (min-width: 750px) {
     .testimonials {
+      --testimonials-pad-x: 8.125rem;
       gap: 1.5625rem;
-      padding: 5rem 8.125rem 2.1875rem;
+      padding: 5rem 0 2.1875rem;
     }
 
     .testimonials__copy {
