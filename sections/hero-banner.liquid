@@ -22,10 +22,20 @@
   assign image_alt = section.settings.image_alt | default: heading
   assign badge_1_line_1 = section.settings.badge_1_line_1
   assign badge_1_line_2 = section.settings.badge_1_line_2
-  assign badge_1_icon = section.settings.badge_1_icon_asset | default: 'pups-badge-preview-icon.svg'
+  assign badge_1_icon_image = section.settings.badge_1_icon
+  assign badge_1_icon_asset = section.settings.badge_1_icon_asset | default: 'pups-badge-preview-icon.svg'
   assign badge_2_line_1 = section.settings.badge_2_line_1
   assign badge_2_line_2 = section.settings.badge_2_line_2
-  assign badge_2_icon = section.settings.badge_2_icon_asset | default: 'pups-badge-style-icon.svg'
+  assign badge_2_icon_image = section.settings.badge_2_icon
+  assign badge_2_icon_asset = section.settings.badge_2_icon_asset | default: 'pups-badge-style-icon.svg'
+  assign show_badge_1 = false
+  assign show_badge_2 = false
+  if badge_1_line_1 != blank or badge_1_line_2 != blank
+    assign show_badge_1 = true
+  endif
+  if badge_2_line_1 != blank or badge_2_line_2 != blank
+    assign show_badge_2 = true
+  endif
   assign fetch_priority = 'auto'
   if section.index == 1
     assign fetch_priority = 'high'
@@ -59,8 +69,9 @@
     --hb-divider: #8b7c96;
   "
 >
-  <div class="hero-banner__media force-full-width" aria-hidden="{% if image_alt == blank %}true{% else %}false{% endif %}">
-    <picture>
+  <div class="hero-banner__media force-full-width">
+    <div class="hero-banner__media-stage">
+      <picture aria-hidden="{% if image_alt == blank %}true{% else %}false{% endif %}">
       {%- if mobile_image != blank -%}
         <source
           media="(max-width: 749px)"
@@ -103,7 +114,86 @@
         >
       {%- endif -%}
     </picture>
+    </div>
   </div>
+
+  {%- if show_badge_1 or show_badge_2 -%}
+    <div class="hero-banner__overlays force-full-width">
+      <div class="hero-banner__media-stage">
+        {%- if show_badge_1 -%}
+          <div class="hero-banner__badge hero-banner__badge--preview">
+            <div class="hero-banner__badge-icon" aria-hidden="true">
+              {%- if badge_1_icon_image != blank -%}
+                {{
+                  badge_1_icon_image
+                  | image_url: width: 120
+                  | image_tag:
+                    class: 'hero-banner__badge-icon-img',
+                    widths: '40, 80, 120',
+                    sizes: '41px',
+                    alt: '',
+                    loading: 'lazy'
+                }}
+              {%- else -%}
+                <img
+                  class="hero-banner__badge-icon-img"
+                  src="{{ badge_1_icon_asset | asset_url }}"
+                  alt=""
+                  width="41"
+                  height="35"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </div>
+            <div class="hero-banner__badge-copy">
+              {%- if badge_1_line_1 != blank -%}
+                <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_1_line_1 }}</p>
+              {%- endif -%}
+              {%- if badge_1_line_2 != blank -%}
+                <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_1_line_2 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if show_badge_2 -%}
+          <div class="hero-banner__badge hero-banner__badge--style">
+            <div class="hero-banner__badge-icon" aria-hidden="true">
+              {%- if badge_2_icon_image != blank -%}
+                {{
+                  badge_2_icon_image
+                  | image_url: width: 120
+                  | image_tag:
+                    class: 'hero-banner__badge-icon-img',
+                    widths: '40, 80, 120',
+                    sizes: '36px',
+                    alt: '',
+                    loading: 'lazy'
+                }}
+              {%- else -%}
+                <img
+                  class="hero-banner__badge-icon-img"
+                  src="{{ badge_2_icon_asset | asset_url }}"
+                  alt=""
+                  width="35"
+                  height="36"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </div>
+            <div class="hero-banner__badge-copy">
+              {%- if badge_2_line_1 != blank -%}
+                <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_2_line_1 }}</p>
+              {%- endif -%}
+              {%- if badge_2_line_2 != blank -%}
+                <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_2_line_2 }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
 
   <div class="hero-banner__content">
     <div class="hero-banner__intro">
@@ -190,56 +280,14 @@
       </div>
     {%- endif -%}
   </div>
-
-  <div class="hero-banner__overlays force-full-width">
-    {%- if badge_1_line_1 != blank or badge_1_line_2 != blank -%}
-      <div class="hero-banner__badge hero-banner__badge--preview">
-        <div class="hero-banner__badge-icon" aria-hidden="true">
-          <img
-            src="{{ badge_1_icon | asset_url }}"
-            alt=""
-            width="41"
-            height="35"
-            loading="lazy"
-          >
-        </div>
-        <div class="hero-banner__badge-copy">
-          {%- if badge_1_line_1 != blank -%}
-            <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_1_line_1 }}</p>
-          {%- endif -%}
-          {%- if badge_1_line_2 != blank -%}
-            <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_1_line_2 }}</p>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endif -%}
-
-    {%- if badge_2_line_1 != blank or badge_2_line_2 != blank -%}
-      <div class="hero-banner__badge hero-banner__badge--style">
-        <div class="hero-banner__badge-icon" aria-hidden="true">
-          <img
-            src="{{ badge_2_icon | asset_url }}"
-            alt=""
-            width="35"
-            height="36"
-            loading="lazy"
-          >
-        </div>
-        <div class="hero-banner__badge-copy">
-          {%- if badge_2_line_1 != blank -%}
-            <p class="hero-banner__badge-line hero-banner__badge-line--primary">{{ badge_2_line_1 }}</p>
-          {%- endif -%}
-          {%- if badge_2_line_2 != blank -%}
-            <p class="hero-banner__badge-line hero-banner__badge-line--secondary">{{ badge_2_line_2 }}</p>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endif -%}
-  </div>
 </div>
 
 {% stylesheet %}
   .hero-banner {
+    --hb-media-width: 1440;
+    --hb-media-height: 700;
+    --hb-media-pos-x: 70%;
+    --hb-media-pos-y: 50%;
     min-height: 49.75rem;
     overflow: hidden;
     color: var(--hb-text, #242027);
@@ -250,27 +298,47 @@
     position: absolute;
     inset: 0;
     z-index: 0;
+    overflow: hidden;
+    container-type: size;
     pointer-events: none;
+  }
+
+  .hero-banner__media-stage {
+    position: absolute;
+    width: max(100cqw, calc(100cqh * var(--hb-media-width) / var(--hb-media-height)));
+    height: max(100cqh, calc(100cqw * var(--hb-media-height) / var(--hb-media-width)));
+    left: var(--hb-media-pos-x);
+    top: var(--hb-media-pos-y);
+    translate: calc(-1 * var(--hb-media-pos-x)) calc(-1 * var(--hb-media-pos-y));
+    container-type: size;
+    container-name: hero-stage;
   }
 
   .hero-banner__overlays {
     grid-column: 1 / -1;
     position: absolute;
     inset: 0;
-    z-index: 2;
+    z-index: 1;
+    overflow: hidden;
+    container-type: size;
     pointer-events: none;
   }
 
-  .hero-banner__media picture,
+  .hero-banner__media-stage picture,
   .hero-banner__img {
     display: block;
     width: 100%;
     height: 100%;
   }
 
+  .hero-banner__media-stage picture {
+    position: absolute;
+    inset: 0;
+  }
+
   .hero-banner__img {
     object-fit: cover;
-    object-position: center 85%;
+    object-position: center;
   }
 
   .hero-banner__content {
@@ -451,46 +519,44 @@
     z-index: 2;
     display: flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.6875rem 0.9375rem;
-    border-radius: 0.625rem;
+    gap: calc(11 / 1440 * 100cqw);
+    padding: calc(11 / 700 * 100cqh) calc(15 / 1440 * 100cqw);
+    border-radius: calc(14 / 1440 * 100cqw);
     background-color: var(--hb-badge-bg, #faf8f0);
     box-shadow: 0 14px 34px -14px rgba(58, 55, 51, 0.4);
     pointer-events: none;
   }
 
   .hero-banner__badge--preview {
-    left: 0.8125rem;
-    bottom: 18.3125rem;
-    width: 10.9375rem;
+    left: calc(740 / 1440 * 100%);
+    top: calc(208 / 700 * 100%);
+    width: calc(193 / 1440 * 100%);
   }
 
   .hero-banner__badge--style {
-    left: 11.3125rem;
-    bottom: 1.3125rem;
-    width: 11.9375rem;
-    gap: 0.6875rem;
+    left: calc(1164 / 1440 * 100%);
+    top: calc(402 / 700 * 100%);
+    width: calc(201 / 1440 * 100%);
     box-shadow: 0 14px 17px rgba(58, 55, 51, 0.4);
   }
 
   .hero-banner__badge-icon {
     flex-shrink: 0;
-    width: 1.75rem;
-    height: 1.75rem;
     overflow: clip;
   }
 
   .hero-banner__badge--preview .hero-banner__badge-icon {
-    width: 1.727rem;
-    height: 1.47rem;
+    width: calc(40.54 / 1440 * 100cqw);
+    height: calc(34.49 / 1440 * 100cqw);
   }
 
   .hero-banner__badge--style .hero-banner__badge-icon {
-    width: 1.833rem;
-    height: 1.875rem;
+    width: calc(35.2 / 1440 * 100cqw);
+    height: calc(36 / 1440 * 100cqw);
   }
 
-  .hero-banner__badge-icon img {
+  .hero-banner__badge-icon img,
+  .hero-banner__badge-icon-img {
     display: block;
     width: 100%;
     height: 100%;
@@ -507,9 +573,9 @@
   .hero-banner__badge-line {
     margin: 0;
     font-family: var(--font-body--family);
-    font-size: 0.4375rem;
+    font-size: calc(7 / 1440 * 100cqw);
     font-weight: 400;
-    line-height: 0.9375rem;
+    line-height: calc(15 / 1440 * 100cqw);
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -519,17 +585,13 @@
   }
 
   .hero-banner__badge-line--secondary {
-    margin-top: -0.125rem;
+    margin-top: calc(-2 / 1440 * 100cqw);
     color: var(--hb-badge-secondary, #918d95);
   }
 
   @media screen and (min-width: 750px) {
     .hero-banner {
       min-height: 43.75rem;
-    }
-
-    .hero-banner__img {
-      object-position: 70% center;
     }
 
     .hero-banner__content {
@@ -579,49 +641,6 @@
       height: 3.3125rem;
       padding-top: 0;
       align-items: flex-end;
-    }
-
-    .hero-banner__badge {
-      gap: 0.6875rem;
-      border-radius: 0.875rem;
-    }
-
-    .hero-banner__badge--preview {
-      left: clamp(28rem, 51.4vw, 46.25rem);
-      bottom: 27.1875rem;
-      width: auto;
-      min-width: 12.0625rem;
-    }
-
-    .hero-banner__badge--style {
-      left: clamp(42rem, 80.8vw, 72.75rem);
-      bottom: 15rem;
-      width: 12.5625rem;
-      padding: 0.875rem 0.9375rem;
-    }
-
-    .hero-banner__badge--preview .hero-banner__badge-icon {
-      width: 2.534rem;
-      height: 2.155rem;
-    }
-
-    .hero-banner__badge--style .hero-banner__badge-icon {
-      width: 2.2rem;
-      height: 2.25rem;
-    }
-  }
-
-  @media screen and (min-width: 750px) and (max-width: 1199px) {
-    .hero-banner__badge--preview {
-      left: auto;
-      right: 42%;
-      bottom: 55%;
-    }
-
-    .hero-banner__badge--style {
-      left: auto;
-      right: 4%;
-      bottom: 18%;
     }
   }
 {% endstylesheet %}
@@ -721,10 +740,16 @@
       "default": "See it before you pay"
     },
     {
+      "type": "image_picker",
+      "id": "badge_1_icon",
+      "label": "Badge 1 icon"
+    },
+    {
       "type": "text",
       "id": "badge_1_icon_asset",
-      "label": "Badge 1 icon asset",
-      "default": "pups-badge-preview-icon.svg"
+      "label": "Badge 1 icon asset filename",
+      "default": "pups-badge-preview-icon.svg",
+      "info": "Used when no badge 1 icon is selected"
     },
     {
       "type": "text",
@@ -739,10 +764,16 @@
       "default": "Ready in moments"
     },
     {
+      "type": "image_picker",
+      "id": "badge_2_icon",
+      "label": "Badge 2 icon"
+    },
+    {
       "type": "text",
       "id": "badge_2_icon_asset",
-      "label": "Badge 2 icon asset",
-      "default": "pups-badge-style-icon.svg"
+      "label": "Badge 2 icon asset filename",
+      "default": "pups-badge-style-icon.svg",
+      "info": "Used when no badge 2 icon is selected"
     },
     {
       "type": "header",
