@@ -103,8 +103,11 @@
     gap: 1.625rem;
     margin: 0;
     padding: 0;
+    width: 100%;
+    min-width: 0;
     list-style: none;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
@@ -117,14 +120,16 @@
   .trust-strip__item {
     display: flex;
     flex-direction: column;
-    flex: 0 0 min(21.375rem, 85vw);
+    flex: 0 0 100%;
     align-items: center;
     justify-content: center;
     gap: 0.9375rem;
-    width: min(21.375rem, 85vw);
+    width: 100%;
+    max-width: 100%;
     overflow: clip;
     text-align: center;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 
   .trust-strip__icon {
@@ -164,7 +169,7 @@
 
   .trust-strip__description {
     margin: 0;
-    max-width: 20.6875rem;
+    width: 100%;
     font-family: var(--font-body--family);
     font-size: 0.875rem;
     font-weight: 400;
@@ -185,6 +190,11 @@
       width: auto;
       max-width: 20.6875rem;
       scroll-snap-align: none;
+      scroll-snap-stop: normal;
+    }
+
+    .trust-strip__description {
+      max-width: 20.6875rem;
     }
   }
 {% endstylesheet %}
