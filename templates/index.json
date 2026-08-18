@@ -337,7 +337,7 @@
         "eyebrow": "PRINTS",
         "heading": "Prints that actually last",
         "button_label": "Browse the full catalogue",
-        "button_link": "shopify://collections",
+        "button_link": "",
         "background_color": "#fffdf8",
         "text_color": "#242027",
         "muted_color": "#605c64",

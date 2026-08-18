@@ -1,7 +1,17 @@
 {%- liquid
   assign background_color = section.settings.background_color | default: '#C8AFDE'
   assign text_color = section.settings.text_color | default: '#321C41'
+  assign show_dots = false
+  if section.blocks.size > 1
+    assign show_dots = true
+  endif
 -%}
+
+<script
+  src="{{ 'trust-strip.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
 
 {% render 'contrast-override',
   background_color: background_color,
@@ -15,7 +25,7 @@
   style="background-color: {{ background_color }};"
 ></div>
 
-<div
+<trust-strip-component
   class="
     section
     section--full-width
@@ -30,7 +40,11 @@
     background-color: {{ background_color }};
   "
 >
-  <ul class="trust-strip__list" role="list">
+  <ul
+    class="trust-strip__list"
+    role="list"
+    ref="track"
+  >
     {%- for block in section.blocks -%}
       {%- liquid
         assign icon = block.settings.icon
@@ -50,6 +64,7 @@
       -%}
       <li
         class="trust-strip__item"
+        data-trust-item
         {{ block.shopify_attributes }}
       >
         <div class="trust-strip__icon" aria-hidden="true">
@@ -87,7 +102,25 @@
       </li>
     {%- endfor -%}
   </ul>
-</div>
+
+  {%- if show_dots -%}
+    <div
+      class="trust-strip__dots"
+      ref="dots"
+      role="tablist"
+      aria-label="{{ section.settings.dots_label | default: 'Trust highlights' | escape }}"
+    >
+      {%- for block in section.blocks -%}
+        <button
+          type="button"
+          class="trust-strip__dot"
+          aria-label="Go to highlight {{ forloop.index }}"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</trust-strip-component>
 
 {% stylesheet %}
   .trust-strip {
@@ -177,6 +210,42 @@
     color: inherit;
   }
 
+  .trust-strip__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6875rem;
+    width: 100%;
+    height: 0.4375rem;
+    margin: 0.9375rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .trust-strip__dot {
+    appearance: none;
+    display: block;
+    flex-shrink: 0;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    margin: 0;
+    padding: 0;
+    border: 0.5px solid var(--trust-strip-text, #321c41);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .trust-strip__dot[aria-current='true'] {
+    border-color: transparent;
+    background: var(--trust-strip-text, #321c41);
+  }
+
+  .trust-strip__dot:focus-visible {
+    outline: 2px solid var(--trust-strip-text, #321c41);
+    outline-offset: 2px;
+  }
+
   @media screen and (min-width: 750px) {
     .trust-strip__list {
       justify-content: space-between;
@@ -195,6 +264,10 @@
 
     .trust-strip__description {
       max-width: 20.6875rem;
+    }
+
+    .trust-strip__dots {
+      display: none;
     }
   }
 {% endstylesheet %}
@@ -219,6 +292,12 @@
       "id": "text_color",
       "label": "Text color",
       "default": "#321C41"
+    },
+    {
+      "type": "text",
+      "id": "dots_label",
+      "label": "Carousel dots label",
+      "default": "Trust highlights"
     },
     {
       "type": "header",

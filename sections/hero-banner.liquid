@@ -592,34 +592,25 @@
   @media screen and (max-width: 749px) {
     .hero-banner {
       min-height: 100svh;
-      grid-template-rows: auto minmax(22.5rem, 1fr);
+      grid-template-rows: auto minmax(26.25rem, 1fr);
+      background-color: var(--hb-bg, #fffdf8);
     }
 
-    .hero-banner__media {
-      grid-row: 1 / -1;
-    }
-
-    .hero-banner__media .hero-banner__media-stage {
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      translate: none;
-    }
-
-    .hero-banner__img {
-      object-position: center bottom;
-    }
-
+    .hero-banner__media,
     .hero-banner__overlays {
       position: relative;
       inset: auto;
       grid-column: 1 / -1;
       grid-row: 2;
-      min-height: 22.5rem;
-      z-index: 2;
+      min-height: 26.25rem;
+      height: 100%;
     }
 
+    .hero-banner__media {
+      z-index: 0;
+    }
+
+    .hero-banner__media .hero-banner__media-stage,
     .hero-banner__overlays .hero-banner__media-stage {
       position: absolute;
       inset: 0;
@@ -631,17 +622,41 @@
       translate: none;
     }
 
+    .hero-banner__img {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .hero-banner__overlays {
+      z-index: 2;
+    }
+
     .hero-banner__content {
       grid-row: 1;
       grid-column: 1 / -1;
       max-width: none;
+      gap: 1rem;
       padding: calc(
           (var(--header-height, 6rem) * var(--transparent-header-offset-boolean, 0)) + 1rem
         )
-        1.5625rem 0;
+        1.5625rem 1rem;
+    }
+
+    .hero-banner__intro {
+      gap: 1.125rem;
+    }
+
+    .hero-banner__social {
+      justify-content: flex-start;
+      height: 1.875rem;
+      padding-top: 0;
+      align-items: flex-end;
     }
 
     .hero-banner__button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0.75rem 0.5rem;
       white-space: nowrap;
     }
 
@@ -652,9 +667,10 @@
     }
 
     .hero-banner__badge--preview {
-      top: 0.75rem;
+      top: 0;
       left: 0.8125rem;
       width: 10.9375rem;
+      box-shadow: 0 14px 34px -14px rgba(58, 55, 51, 0.4);
     }
 
     .hero-banner__badge--style {
@@ -663,6 +679,8 @@
       right: 1.125rem;
       bottom: 1.3125rem;
       width: 11.9375rem;
+      gap: 0.6875rem;
+      box-shadow: 0 14px 17px rgba(58, 55, 51, 0.4);
     }
 
     .hero-banner__badge--preview .hero-banner__badge-icon {
