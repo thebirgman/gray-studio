@@ -10,8 +10,34 @@
   assign text_color = section.settings.text_color | default: '#242027'
   assign muted_color = section.settings.muted_color | default: '#605C64'
 
+  assign featured_collection = section.settings.collection
+  assign max_products = section.settings.products_to_show | default: 4
   assign product_blocks = section.blocks | where: 'type', 'product'
-  assign fp_columns = product_blocks.size
+  assign use_collection = false
+  if featured_collection != blank
+    assign use_collection = true
+  endif
+
+  if heading == blank and featured_collection != blank
+    assign heading = featured_collection.title
+  endif
+  if button_link == blank and featured_collection != blank
+    assign button_link = featured_collection.url
+  endif
+
+  if use_collection
+    assign fp_columns = featured_collection.products_count
+    if fp_columns > max_products
+      assign fp_columns = max_products
+    endif
+  elsif product_blocks.size > 0
+    assign fp_columns = product_blocks.size
+  else
+    assign fp_columns = 4
+  endif
+  if fp_columns > 4
+    assign fp_columns = 4
+  endif
   if fp_columns < 1
     assign fp_columns = 4
   endif
@@ -65,7 +91,95 @@
     </div>
 
     <div class="featured-prints__grid">
-      {%- if product_blocks.size > 0 -%}
+      {%- if use_collection -%}
+        {%- for product in featured_collection.products limit: max_products -%}
+          {%- liquid
+            assign card_title = product.title
+            assign card_image = product.featured_image
+            assign card_url = product.url
+            assign show_badge = false
+            assign badge_position = section.settings.badge_position | plus: 0
+            if section.settings.show_badge and forloop.index == badge_position
+              assign show_badge = true
+            endif
+            assign badge_label = section.settings.badge_label | default: 'Most loved'
+
+            assign rating_value = product.metafields.reviews.rating.value.rating
+            assign rating_count = product.metafields.reviews.rating_count.value
+            if rating_value == blank
+              assign rating_value = 5
+            endif
+            if rating_count == blank
+              assign rating_count = 49
+            endif
+
+            assign display_price = product.price | money_without_trailing_zeros
+
+            if card_image == blank
+              assign asset_index = forloop.index0 | modulo: 4 | plus: 1
+              assign image_asset = 'featured-prints-product-' | append: asset_index | append: '.jpg'
+            endif
+          -%}
+
+          <a
+            class="featured-prints__card"
+            href="{{ card_url }}"
+          >
+            <div class="featured-prints__media">
+              {%- if show_badge and badge_label != blank -%}
+                <span class="featured-prints__badge">
+                  <span class="featured-prints__badge-icon" aria-hidden="true">
+                    {{ 'featured-prints-badge-heart.svg' | inline_asset_content }}
+                  </span>
+                  <span class="featured-prints__badge-label">{{ badge_label }}</span>
+                </span>
+              {%- endif -%}
+
+              {%- if card_image != blank -%}
+                {{
+                  card_image
+                  | image_url: width: 800
+                  | image_tag:
+                    class: 'featured-prints__image',
+                    loading: 'lazy',
+                    widths: '282, 400, 564, 800',
+                    sizes: '(min-width: 750px) 25vw, 75vw',
+                    alt: card_title
+                }}
+              {%- else -%}
+                <img
+                  class="featured-prints__image"
+                  src="{{ image_asset | asset_url }}"
+                  alt="{{ card_title | escape }}"
+                  width="800"
+                  height="800"
+                  loading="lazy"
+                >
+              {%- endif -%}
+            </div>
+
+            <div class="featured-prints__meta">
+              <h3 class="featured-prints__title">{{ card_title }}</h3>
+
+              <div
+                class="featured-prints__rating"
+                aria-label="{{ rating_value }} out of 5 stars, {{ rating_count }} reviews"
+              >
+                <div class="featured-prints__stars" aria-hidden="true">
+                  {%- for i in (1..5) -%}
+                    <span class="featured-prints__star">
+                      {{ 'featured-prints-star.svg' | inline_asset_content }}
+                    </span>
+                  {%- endfor -%}
+                </div>
+                <span class="featured-prints__rating-count">({{ rating_count }})</span>
+              </div>
+
+              <p class="featured-prints__price">{{ display_price }}</p>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- elsif product_blocks.size > 0 -%}
         {%- for block in product_blocks -%}
           {%- liquid
             assign product = block.settings.product
@@ -537,7 +651,8 @@
         {
           "type": "product",
           "id": "product",
-          "label": "Product"
+          "label": "Product",
+          "info": "Used only when no collection is selected."
         },
         {
           "type": "image_picker",
@@ -592,6 +707,51 @@
   ],
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Select a collection to fill this section with its product images and titles. Product blocks are used only when no collection is selected."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:settings.collection",
+      "info": "Product images, titles, prices, and links are pulled from this collection."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:settings.product_count",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ section.settings.collection != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true,
+      "visible_if": "{{ section.settings.collection != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "badge_label",
+      "label": "Badge label",
+      "default": "Most loved",
+      "visible_if": "{{ section.settings.collection != blank and section.settings.show_badge }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_position",
+      "label": "Badge product",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3,
+      "info": "Which product in the collection shows the badge (1 = first).",
+      "visible_if": "{{ section.settings.collection != blank and section.settings.show_badge }}"
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
@@ -612,7 +772,8 @@
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link"
+      "label": "Button link",
+      "info": "Leave blank to link to the selected collection."
     },
     {
       "type": "header",
@@ -798,6 +959,10 @@
         }
       ],
       "settings": {
+        "products_to_show": 4,
+        "show_badge": true,
+        "badge_label": "Most loved",
+        "badge_position": 3,
         "eyebrow": "PRINTS",
         "heading": "Prints that actually last",
         "button_label": "Browse the full catalogue",

@@ -45,8 +45,9 @@
     --oc-text: {{ text_color }};
     --oc-brand: {{ brand_color }};
     --oc-badge: {{ badge_color }};
-    --oc-columns: 4;
-    --oc-gap: 20px;
+    --oc-gap: 15px;
+    --oc-layout-gap: 52px;
+    --oc-secondary-offset: 25px;
     background-color: {{ background_color }};
   "
 >
@@ -153,6 +154,7 @@
   .our-craft {
     color: var(--oc-text, #242027);
     background-color: var(--oc-bg, #fffdf8);
+    overflow: visible;
   }
 
   .our-craft__layout {
@@ -165,7 +167,7 @@
   .our-craft__media {
     display: flex;
     flex-direction: column;
-    gap: var(--oc-gap, 20px);
+    gap: var(--oc-gap, 15px);
     width: 100%;
     min-width: 0;
   }
@@ -174,8 +176,8 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    aspect-ratio: 498.59 / 398.88;
-    border-radius: 0 12.5rem 12.5rem 0;
+    aspect-ratio: 560 / 398.88;
+    border-radius: 0 50% 50% 0;
     box-shadow: 0 1.625rem 3.5rem -2.125rem rgba(107, 114, 168, 0.5);
   }
 
@@ -188,16 +190,20 @@
   }
 
   .our-craft__secondary {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
     align-items: stretch;
-    gap: var(--oc-gap, 20px);
+    gap: var(--oc-gap, 15px);
     width: 100%;
+  }
+
+  .our-craft__secondary-image,
+  .our-craft__stat {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .our-craft__secondary-image {
     position: relative;
-    width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: 1rem;
@@ -216,7 +222,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
     aspect-ratio: 1;
     padding: 0.625rem;
     border-radius: 1rem;
@@ -347,14 +352,19 @@
   @media screen and (min-width: 750px) {
     .our-craft__layout {
       display: grid;
-      grid-template-columns: repeat(var(--oc-columns, 4), minmax(0, 1fr));
+      grid-template-columns: minmax(0, 560fr) minmax(0, 588fr);
       align-items: center;
-      gap: var(--oc-gap, 20px);
+      column-gap: var(--oc-layout-gap, 52px);
+      row-gap: 0;
     }
 
     .our-craft__media {
-      grid-column: span 2;
-      gap: var(--oc-gap, 20px);
+      gap: var(--oc-gap, 15px);
+    }
+
+    .our-craft__secondary {
+      width: calc(100% * 447 / 560);
+      margin-inline-start: calc(var(--oc-secondary-offset, 25px) * -1);
     }
 
     .our-craft__stat-number {
@@ -375,11 +385,11 @@
     }
 
     .our-craft__content {
-      grid-column: span 2;
       min-height: 25rem;
       justify-content: space-between;
       gap: 0;
       padding-top: 2.0625rem;
+      padding-inline-start: 1.40625rem;
     }
 
     .our-craft__copy {

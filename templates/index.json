@@ -327,66 +327,6 @@
     },
     "featured_prints_home": {
       "type": "featured-prints",
-      "blocks": {
-        "product_1": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-1.jpg",
-            "title": "Digital Download",
-            "price": 29,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-2.jpg",
-            "title": "Watercolour Poster",
-            "price": 79,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-3.jpg",
-            "title": "Giclée Canvas",
-            "price": 149,
-            "rating_count": 49,
-            "show_badge": true,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        },
-        "product_4": {
-          "type": "product",
-          "settings": {
-            "product": "",
-            "image_asset": "featured-prints-product-4.jpg",
-            "title": "Framed Canvas",
-            "price": 194,
-            "rating_count": 49,
-            "show_badge": false,
-            "badge_label": "Most loved",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_1",
-        "product_2",
-        "product_3",
-        "product_4"
-      ],
       "name": "t:names.featured_prints",
       "settings": {
         "eyebrow": "PRINTS",
