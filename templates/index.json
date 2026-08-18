@@ -29,9 +29,11 @@
         "badge_2_line_1": "Soft impressionist style",
         "badge_2_line_2": "Ready in moments",
         "badge_2_icon_asset": "pups-badge-style-icon.svg",
+        "desktop_image": "shopify://shop_images/0dbdaf255d196cddc123a32172dbfac8a9107343_1.png",
+        "mobile_image": "shopify://shop_images/904d202476a15f719f0bbd3bfc77b85775cb63f3_1.png",
         "desktop_image_asset": "hero-pups-desktop.png",
         "mobile_image_asset": "hero-pups-mobile.png",
-        "image_alt": "Framed impressionist portrait of a French Bulldog",
+        "image_alt": "White fluffy dog wearing a beret at a Parisian café with the Eiffel Tower in the background",
         "background_color": "#fffdf8",
         "text_color": "#242027",
         "accent_color": "#ce6911",
@@ -74,7 +76,7 @@
         "collection_paris": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "paris",
             "image_asset": "featured-collection-paris.jpg",
             "title": "Paris",
             "scenes_label": "10 scenes",
@@ -85,7 +87,7 @@
         "collection_provence": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "provence",
             "image_asset": "featured-collection-provence.jpg",
             "title": "Provence",
             "scenes_label": "10 scenes",
@@ -96,7 +98,7 @@
         "collection_italy": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "italy",
             "image_asset": "featured-collection-italy.jpg",
             "title": "Italy",
             "scenes_label": "10 scenes",
@@ -107,7 +109,7 @@
         "collection_england": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "england",
             "image_asset": "featured-collection-england.jpg",
             "title": "England",
             "scenes_label": "10 scenes",
@@ -118,7 +120,7 @@
         "collection_riviera": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "the-riviera",
             "image_asset": "featured-collection-riviera.jpg",
             "title": "The Riviera",
             "scenes_label": "10 scenes",
@@ -129,7 +131,7 @@
         "collection_tokyo": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "tokyo",
             "image_asset": "featured-collection-tokyo.jpg",
             "title": "Tokyo",
             "scenes_label": "10 scenes",
@@ -156,7 +158,7 @@
         "heading": "Our collections",
         "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
         "button_label": "See all 40+ scenes",
-        "button_link": "",
+        "button_link": "shopify://collections",
         "filters_label": "Collection filters",
         "background_color": "#fffdf8",
         "brand_color": "#321c41",
