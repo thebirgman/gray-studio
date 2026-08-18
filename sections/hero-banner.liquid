@@ -72,10 +72,22 @@
   <div class="hero-banner__media force-full-width">
     <div class="hero-banner__media-stage">
       <picture aria-hidden="{% if image_alt == blank %}true{% else %}false{% endif %}">
-      {%- comment -%}
-        Mobile uses the same wide lifestyle image as desktop. CSS crops it
-        to match Figma Hero home (8182:27940).
-      {%- endcomment -%}
+      {%- if mobile_image != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ mobile_image | image_url: width: 750 }} 750w,
+            {{ mobile_image | image_url: width: 1100 }} 1100w,
+            {{ mobile_image | image_url: width: 1600 }} 1600w
+          "
+          sizes="100vw"
+        >
+      {%- else -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mobile_asset | asset_url }}"
+        >
+      {%- endif -%}
 
       {%- if desktop_image != blank -%}
         {{
@@ -580,58 +592,83 @@
 
   @media screen and (max-width: 749px) {
     .hero-banner {
-      min-height: max(49.75rem, 100svh);
-    }
-
-    .hero-banner__media,
-    .hero-banner__overlays {
-      position: absolute;
-      inset: 0;
-      grid-column: 1 / -1;
-      grid-row: 1 / -1;
+      position: relative;
+      display: grid;
       min-height: 0;
-      height: auto;
+      overflow: hidden;
     }
 
     .hero-banner__media {
+      position: relative;
+      inset: auto;
+      grid-row: 1;
+      grid-column: 1 / -1;
       z-index: 0;
+      overflow: visible;
+      container-type: inline-size;
     }
 
-    .hero-banner__media .hero-banner__media-stage,
+    .hero-banner__media .hero-banner__media-stage {
+      position: relative;
+      width: 100%;
+      height: auto;
+      left: auto;
+      top: auto;
+      translate: none;
+      container-type: inline-size;
+      container-name: hero-stage;
+    }
+
+    .hero-banner__media-stage picture {
+      position: relative;
+      inset: auto;
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero-banner__img {
+      position: static;
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      object-fit: unset;
+      object-position: center;
+    }
+
+    .hero-banner__overlays {
+      position: absolute;
+      inset: 0;
+      grid-row: 1;
+      grid-column: 1 / -1;
+      z-index: 2;
+      overflow: visible;
+      container-type: size;
+      pointer-events: none;
+    }
+
     .hero-banner__overlays .hero-banner__media-stage {
       position: absolute;
       inset: 0;
-      width: auto;
-      height: auto;
-      min-height: 0;
+      width: 100%;
+      height: 100%;
       left: 0;
       top: 0;
       translate: none;
     }
 
-    .hero-banner__media-stage picture,
-    .hero-banner__img {
-      position: absolute;
-      width: 232.68%;
-      height: 107.48%;
-      max-width: none;
-      left: -121.34%;
-      top: -7.46%;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    .hero-banner__overlays {
-      z-index: 2;
-    }
-
     .hero-banner__content {
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 1;
       grid-row: 1;
       grid-column: 1 / -1;
+      align-self: start;
       max-width: none;
       gap: 1rem;
+      margin: 0;
       padding: calc(
           (var(--header-height, 6rem) * var(--transparent-header-offset-boolean, 0)) + 1rem
         )
@@ -664,18 +701,20 @@
 
     .hero-banner__badge--preview {
       top: auto;
-      left: 0.8125rem;
+      left: 3.33%;
       bottom: 36.81%;
-      width: 10.9375rem;
+      width: 44.87%;
+      max-width: 10.9375rem;
       box-shadow: 0 14px 34px -14px rgba(58, 55, 51, 0.4);
     }
 
     .hero-banner__badge--style {
       top: auto;
-      left: 11.3125rem;
+      left: 46.41%;
       right: auto;
-      bottom: 1.3125rem;
-      width: 11.9375rem;
+      bottom: 2.64%;
+      width: 48.97%;
+      max-width: 11.9375rem;
       gap: 0.6875rem;
       box-shadow: 0 14px 17px rgba(58, 55, 51, 0.4);
     }

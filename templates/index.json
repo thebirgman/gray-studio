@@ -31,8 +31,8 @@
         "badge_2_icon_asset": "pups-badge-style-icon.svg",
         "desktop_image": "shopify://shop_images/0dbdaf255d196cddc123a32172dbfac8a9107343_1.png",
         "mobile_image": "shopify://shop_images/904d202476a15f719f0bbd3bfc77b85775cb63f3_1.png",
-        "desktop_image_asset": "",
-        "mobile_image_asset": "",
+        "desktop_image_asset": "hero-pups-desktop.png",
+        "mobile_image_asset": "hero-pups-mobile.png",
         "image_alt": "White fluffy dog wearing a beret at a Parisian café with the Eiffel Tower in the background",
         "background_color": "#fffdf8",
         "text_color": "#242027",
@@ -284,7 +284,6 @@
       "settings": {
         "background_color": "#c8afde",
         "text_color": "#321c41",
-        "dots_label": "Trust highlights",
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-inline-start": 120,
