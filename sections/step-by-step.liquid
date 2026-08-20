@@ -3,6 +3,13 @@
   assign portrait = section.settings.image
   assign portrait_asset = section.settings.image_asset | default: 'step-by-step-portrait.jpg'
   assign wave_color = section.settings.wave_color | default: '#E8DFF1'
+  assign heading = section.settings.heading
+  assign show_numbers = true
+  if section.settings.show_numbers == false
+    assign show_numbers = false
+  endif
+  assign image_shape = section.settings.image_shape | default: 'rectangle'
+  assign card_count = section.blocks.size
 %}
 
 {% if background_color != blank %}
@@ -16,8 +23,11 @@
     section
     section--full-width
     step-by-step
+    step-by-step--cards-{{ card_count }}
     spacing-style
     {% if background_color != blank %}color-custom-{{ section.id }}{% endif %}
+    {% if heading != blank %}step-by-step--has-heading{% endif %}
+    {% if image_shape == 'square' %}step-by-step--square{% endif %}
   "
   data-step-by-step
   style="
@@ -29,6 +39,10 @@
   "
 >
   <div class="step-by-step__stage">
+    {%- if heading != blank -%}
+      <h2 class="step-by-step__heading">{{ heading }}</h2>
+    {%- endif -%}
+
     <div class="step-by-step__wave" aria-hidden="true">
       <svg
         class="step-by-step__wave-svg"
@@ -74,7 +88,11 @@
       {%- endif -%}
     </div>
 
-    <ol class="step-by-step__steps">
+    {% if show_numbers %}
+      <ol class="step-by-step__steps">
+    {% else %}
+      <ul class="step-by-step__steps">
+    {% endif %}
       {%- for block in section.blocks -%}
         {%- liquid
           assign step_number = forloop.index
@@ -115,7 +133,9 @@
             <div class="step-by-step__copy">
               {%- if block.settings.title != blank -%}
                 <p class="step-by-step__title">
-                  <span class="step-by-step__number">{{ step_number }}.</span>
+                  {%- if show_numbers -%}
+                    <span class="step-by-step__number">{{ step_number }}.</span>
+                  {%- endif %}
                   {{ block.settings.title }}
                 </p>
               {%- endif -%}
@@ -126,7 +146,11 @@
           </div>
         </li>
       {%- endfor -%}
-    </ol>
+    {% if show_numbers %}
+      </ol>
+    {% else %}
+      </ul>
+    {% endif %}
   </div>
 </div>
 
@@ -503,6 +527,112 @@
       height: clamp(2rem, 3.54cqi, 3.1875rem);
     }
   }
+
+  .step-by-step__heading {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 3.5%;
+    z-index: 2;
+    margin: 0;
+    padding-inline: 1.25rem;
+    text-align: center;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    color: var(--step-by-step-title, #242027);
+  }
+
+  .step-by-step--square .step-by-step__portrait {
+    aspect-ratio: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .step-by-step--has-heading .step-by-step__stage {
+      aspect-ratio: 392 / 820;
+    }
+
+    .step-by-step--has-heading .step-by-step__card--1 {
+      top: 14.5%;
+    }
+
+    .step-by-step--has-heading .step-by-step__card--2 {
+      top: 22%;
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--3 {
+      left: 31.5%;
+      top: 76%;
+      width: 37%;
+    }
+
+    .step-by-step--square .step-by-step__portrait {
+      left: 10.2%;
+      top: 32%;
+      width: 79.6%;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .step-by-step--has-heading .step-by-step__heading {
+      top: 13.54%;
+      font-size: 2rem;
+      line-height: 1.12;
+      letter-spacing: 0.00625rem;
+    }
+
+    .step-by-step--has-heading .step-by-step__stage {
+      aspect-ratio: 1440 / 783;
+    }
+
+    .step-by-step--has-heading .step-by-step__wave {
+      inset: 17.9% -4.45% auto 0;
+      width: 108.9%;
+      height: 64.2%;
+    }
+
+    .step-by-step--has-heading.step-by-step--square .step-by-step__portrait {
+      left: 34.03%;
+      top: 20.69%;
+      width: 32.08%;
+      aspect-ratio: 1;
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--1 {
+      left: 9.1%;
+      top: 25.67%;
+      width: 27.5%;
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--1 .step-by-step__icon {
+      width: clamp(3.25rem, 6.04cqi, 5.4375rem);
+      height: clamp(2rem, 3.75cqi, 3.375rem);
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--2 {
+      left: 62.64%;
+      top: 45.34%;
+      width: 27.5%;
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--2 .step-by-step__icon {
+      width: clamp(2.5rem, 3.64cqi, 3.275rem);
+      height: clamp(2.75rem, 4.24cqi, 3.8125rem);
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--3 {
+      left: 12.22%;
+      top: 60.79%;
+      width: 27.5%;
+    }
+
+    .step-by-step--cards-3 .step-by-step__card--3 .step-by-step__icon {
+      width: clamp(2.25rem, 3.33cqi, 3rem);
+      height: clamp(3rem, 4.58cqi, 4.125rem);
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -531,6 +661,33 @@
       "id": "image_alt",
       "label": "Image alt text",
       "default": "Custom pup portrait"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "label": "Image shape",
+      "options": [
+        {
+          "value": "rectangle",
+          "label": "Rectangle"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "rectangle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show step numbers",
+      "default": true
     },
     {
       "type": "color",

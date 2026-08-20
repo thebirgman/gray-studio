@@ -187,6 +187,18 @@
             },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "show_option_descriptions": true,
+                "size_guide_label": "Size guide",
+                "size_guide_link": "",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
               "blocks": {
                 "desc_digital": {
                   "type": "_option-description",
@@ -246,19 +258,7 @@
                 "desc_small",
                 "desc_medium",
                 "desc_large"
-              ],
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "show_option_descriptions": true,
-                "size_guide_label": "Size guide",
-                "size_guide_link": "",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
+              ]
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -346,6 +346,52 @@
         "equal_columns": false,
         "limit_details_width": false,
         "gap": 48,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "why_youll_love_it": {
+      "type": "step-by-step",
+      "blocks": {
+        "benefit_materials": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-1.svg",
+            "title": "Archival-quality materials",
+            "description": "Matte archival paper on posters, gallery-wrapped canvas on the rest. Made to hold its color for years, not fade in a sunny room."
+          }
+        },
+        "benefit_frame": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-2.svg",
+            "title": "Frame it your way",
+            "description": "Canvas pieces can be framed in black, white, or oak, whichever actually matches the room it's going in."
+          }
+        },
+        "benefit_format": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-3.svg",
+            "title": "Rectangular by design",
+            "description": "Every scene is painted in a rectangular format, giving more size and framing options and a more natural fit on the wall."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_materials",
+        "benefit_frame",
+        "benefit_format"
+      ],
+      "name": "Why you'll love it",
+      "settings": {
+        "image_asset": "step-by-step-pdp-portrait.jpg",
+        "image_alt": "Impressionist portrait of a boxer in an ornate parlor",
+        "background_color": "#fffdf8",
+        "wave_color": "#c9def4",
+        "card_background": "#ffffff",
+        "title_color": "#242027",
+        "text_color": "#605c64",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -489,6 +535,7 @@
   "order": [
     "breadcrumbs",
     "main",
+    "why_youll_love_it",
     "product_recommendations_qggXJq"
   ]
 }
