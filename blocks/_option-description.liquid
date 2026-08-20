@@ -1,0 +1,44 @@
+{% doc %}
+  Stores a short description (and optional thumbnail) for a product option value.
+  Rendered settings are read by the variant picker; this block has no storefront markup.
+
+  @example
+  {% content_for 'block', type: '_option-description', id: 'desc-digital' %}
+{% enddoc %}
+
+{% schema %}
+{
+  "name": "Option description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "option_value",
+      "label": "Option value",
+      "info": "Must match the variant option name exactly, e.g. Digital Download or 12x16."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Short description",
+      "info": "Shown under the option name for Format. Size cards use a computed Save amount when the variant is on sale."
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "info": "Optional pill on the card, e.g. Most loved or Best value."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Optional thumbnail"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Option description"
+    }
+  ]
+}
+{% endschema %}

@@ -2,7 +2,7 @@
   Renders a default variant picker, used to display the variant picker in the variants block.
 
   @param {object} product_resource - The product object.
-  @param {object} [block] - The block object
+  @param {object} [block] - The variant picker block object.
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
 {%- enddoc -%}
@@ -27,18 +27,31 @@
 {% unless product_resource.has_only_default_variant %}
   {% liquid
     assign default_variant = product_resource.selected_or_first_available_variant
+    assign metafield_descriptions = product_resource.metafields.custom.option_descriptions.value
+    assign show_option_descriptions = false
+    if block_settings.show_option_descriptions
+      assign show_option_descriptions = true
+    endif
   %}
   {% if has_custom_variant_buttons %}
     {% render 'variant-button-custom-styles', block_settings: block_settings, block_id: block.id %}
   {% endif %}
   <variant-picker
-    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if show_option_descriptions %} variant-picker--described{% endif %}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
     style="
       {% render 'spacing-style', settings: block_settings %}
        {% if block_settings.option_label_text_color != blank %}
         --variant-option-label-color: rgba({{ block_settings.option_label_text_color.rgba }});
         --variant-option-label-color-subdued: rgba({{ block_settings.option_label_text_color.rgb }} / var(--opacity-subdued-text));
       {% endif %}
+      --vp-brand: #321c41;
+      --vp-accent: #8855aa;
+      --vp-text: #242027;
+      --vp-muted: #605c64;
+      --vp-border: #e8dff1;
+      --vp-card-bg: #fffefd;
+      --vp-link: #3b61ba;
+      --vp-badge: #f5cd72;
     "
     data-section-id="{{ section.id }}"
     data-product-id="{{ product_resource.id }}"
@@ -74,9 +87,20 @@
             assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
             assign longest_value = 0
           endif
+
+          assign option_handle = product_option.name | handleize
+          assign described_layout = ''
+          if show_option_descriptions and block_settings.variant_style == 'buttons'
+            assign described_layout = 'cards'
+            if option_handle == 'size' or option_handle contains 'size'
+              assign described_layout = 'size'
+            elsif option_handle == 'format' or option_handle contains 'format' or option_handle contains 'finish' or option_handle contains 'print'
+              assign described_layout = 'format'
+            endif
+          endif
         -%}
 
-        {%- if product_option.values.size == 1 and variant_style != 'swatch' -%}
+        {%- if product_option.values.size == 1 and variant_style != 'swatch' and described_layout == blank -%}
           <div
             class="variant-option"
             data-testid="variant-option-single"
@@ -95,17 +119,42 @@
             assign default_value_at_position = default_variant.options[default_option_index]
           -%}
           <fieldset
-            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% elsif described_layout != blank %} variant-option--described variant-option--{{ described_layout }}{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
             {{ option_id_attribute }}
           >
             <legend>
-              {{ product_option.name | escape -}}
-              {%- if variant_style == 'swatch' -%}
-                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
-              {%- endif %}
+              {%- if described_layout != blank -%}
+                <span class="variant-option__legend-text">Choose a {{ product_option.name | downcase | escape }}</span>
+              {%- else -%}
+                {{ product_option.name | escape -}}
+                {%- if variant_style == 'swatch' -%}
+                  <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+                {%- endif %}
+              {%- endif -%}
             </legend>
+            {%- if described_layout == 'size' -%}
+              {%- liquid
+                assign size_guide_label = block_settings.size_guide_label | default: 'Size guide'
+                assign size_guide_link = block_settings.size_guide_link
+              -%}
+              {%- if size_guide_label != blank -%}
+                <a
+                  class="variant-option__size-guide"
+                  {% if size_guide_link != blank %}
+                    href="{{ size_guide_link }}"
+                  {% else %}
+                    href="#sizing-guide"
+                  {% endif %}
+                >
+                  <span class="variant-option__size-guide-icon" aria-hidden="true">
+                    {{ 'variant-size-guide.svg' | inline_asset_content }}
+                  </span>
+                  <span class="variant-option__size-guide-label">{{ size_guide_label | escape }}</span>
+                </a>
+              {%- endif -%}
+            {%- endif -%}
             {%- for product_option_value in product_option.values -%}
               {% if product_option_value.size > longest_value and option_id_attribute %}
                 {% assign longest_value = product_option_value.size %}
@@ -116,15 +165,58 @@
                 else
                   assign is_selected_default = false
                 endif
+
+                assign option_description = blank
+                assign option_thumb = blank
+                assign option_badge = blank
+                assign option_variant = product_option_value.variant
+                assign option_price = blank
+                assign option_compare = blank
+                assign option_save = 0
+                if option_variant != blank
+                  assign option_price = option_variant.price
+                  assign option_compare = option_variant.compare_at_price
+                  if option_compare > option_price
+                    assign option_save = option_compare | minus: option_price
+                  endif
+                endif
+                if described_layout != blank
+                  if metafield_descriptions != blank
+                    assign option_description = metafield_descriptions[product_option_value.name]
+                    if option_description == blank
+                      assign option_key = product_option_value.name | handleize
+                      assign option_description = metafield_descriptions[option_key]
+                    endif
+                  endif
+                  if block != blank
+                    for desc_block in block.blocks
+                      if desc_block.type == '_option-description' or desc_block.type == 'option_description'
+                        assign desc_match = desc_block.settings.option_value | strip | downcase
+                        assign value_match = product_option_value.name | strip | downcase
+                        if desc_match == value_match
+                          if desc_block.settings.description != blank
+                            assign option_description = desc_block.settings.description
+                          endif
+                          if desc_block.settings.badge != blank
+                            assign option_badge = desc_block.settings.badge
+                          endif
+                          if desc_block.settings.image != blank
+                            assign option_thumb = desc_block.settings.image
+                          endif
+                        endif
+                      endif
+                    endfor
+                  endif
+                endif
               -%}
               <label
-                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if described_layout != blank %} variant-option__button-label--described{% endif %}{% if option_badge != blank %} variant-option__button-label--badged{% endif %}"
               >
                 <input
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ product_option_value.name | escape }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  aria-label="{{ product_option_value.name | escape }}{% if option_description != blank %} — {{ option_description | escape }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
                   {% if product_option_value.available == false %}
                     aria-disabled="true"
                   {% endif %}
@@ -162,6 +254,52 @@
                     variant_image: featured_media,
                     mode: 'unscaled'
                   %}
+                {% elsif described_layout != blank %}
+                  {%- if option_badge != blank -%}
+                    <span class="variant-option__card-badge">{{ option_badge | escape }}</span>
+                  {%- endif -%}
+                  <span class="variant-option__card">
+                    <span class="variant-option__card-radio" aria-hidden="true"></span>
+                    {%- if option_thumb != blank -%}
+                      <span class="variant-option__card-media">
+                        {{
+                          option_thumb
+                          | image_url: width: 160
+                          | image_tag:
+                            class: 'variant-option__card-image',
+                            loading: 'lazy',
+                            widths: '80, 120, 160',
+                            sizes: '48px',
+                            alt: ''
+                        }}
+                      </span>
+                    {%- endif -%}
+                    <span class="variant-option__card-copy">
+                      <span class="variant-option__card-row">
+                        <span
+                          class="variant-option__card-title"
+                          data-key="variant-option-text"
+                        >
+                          {{- product_option_value | escape -}}
+                        </span>
+                        {%- if option_price != blank -%}
+                          <span class="variant-option__card-price">
+                            {{- option_price | money_without_trailing_zeros -}}
+                          </span>
+                        {%- endif -%}
+                      </span>
+                      {%- if described_layout == 'size' and option_save > 0 -%}
+                        <span class="variant-option__card-row variant-option__card-row--meta">
+                          <span class="variant-option__card-desc">Save {{ option_save | money_without_trailing_zeros }}</span>
+                          <s class="variant-option__card-compare">{{ option_compare | money_without_trailing_zeros }}</s>
+                        </span>
+                      {%- elsif option_description != blank -%}
+                        <span class="variant-option__card-row variant-option__card-row--meta">
+                          <span class="variant-option__card-desc">{{ option_description | escape }}</span>
+                        </span>
+                      {%- endif -%}
+                    </span>
+                  </span>
                 {% else %}
                   {% if product_option_value.available == true %}
                     <span

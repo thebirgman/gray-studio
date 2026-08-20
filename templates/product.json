@@ -187,16 +187,78 @@
             },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
+              "blocks": {
+                "desc_digital": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Digital Download",
+                    "description": "High-res file, delivered in minutes"
+                  }
+                },
+                "desc_poster": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Watercolour Poster",
+                    "description": "Fine art matte paper, ships in 3–7 days"
+                  }
+                },
+                "desc_canvas": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Giclée Canvas",
+                    "description": "Gallery-wrapped, ships in 3–7 days",
+                    "badge": "Most loved"
+                  }
+                },
+                "desc_framed": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Framed Canvas",
+                    "description": "Canvas + wood frame, ships in 3–7 days"
+                  }
+                },
+                "desc_small": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Small - 12x18\""
+                  }
+                },
+                "desc_medium": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Medium - 24x36\"",
+                    "badge": "Most loved"
+                  }
+                },
+                "desc_large": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Large - 32x48\"",
+                    "badge": "Best value"
+                  }
+                }
+              },
+              "block_order": [
+                "desc_digital",
+                "desc_poster",
+                "desc_canvas",
+                "desc_framed",
+                "desc_small",
+                "desc_medium",
+                "desc_large"
+              ],
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": false,
+                "show_option_descriptions": true,
+                "size_guide_label": "Size guide",
+                "size_guide_link": "",
                 "alignment": "left",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              },
-              "blocks": {}
+              }
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",

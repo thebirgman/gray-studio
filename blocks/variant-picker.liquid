@@ -6,13 +6,23 @@
 -%}
 
 {% unless product_resource == blank %}
-  {% render 'variant-main-picker', product_resource: product_resource, section: section, product: product %}
+  {% render 'variant-main-picker',
+    product_resource: product_resource,
+    section: section,
+    product: product,
+    block: block
+  %}
 {% endunless %}
 
 {% schema %}
 {
   "name": "t:names.product_variant_picker",
   "tag": null,
+  "blocks": [
+    {
+      "type": "_option-description"
+    }
+  ],
   "settings": [
     {
       "type": "header",
@@ -39,6 +49,27 @@
       "id": "show_swatches",
       "label": "t:settings.swatches",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_option_descriptions",
+      "label": "Show option descriptions",
+      "default": false,
+      "info": "Renders Format and Size as cards. Match each option value with an Option description block, or a product metafield custom.option_descriptions (JSON, keyed by option value name).",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' }}"
+    },
+    {
+      "type": "text",
+      "id": "size_guide_label",
+      "label": "Size guide label",
+      "default": "Size guide",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
+      "type": "url",
+      "id": "size_guide_link",
+      "label": "Size guide link",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
       "type": "header",
