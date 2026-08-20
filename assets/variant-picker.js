@@ -48,6 +48,7 @@ export default class VariantPicker extends Component {
     this.addEventListener('change', this.variantChanged.bind(this));
     this.#resizeObserver.observe(this);
     this.recomputeAvailability();
+    this.#syncDescribedSizeVisibility();
   }
 
   disconnectedCallback() {
@@ -68,6 +69,9 @@ export default class VariantPicker extends Component {
     if (!selectedOption) return;
 
     this.updateSelectedOption(event.target);
+    if (event.target instanceof HTMLInputElement) {
+      this.#reconcileDescribedSelection(event.target);
+    }
     this.recomputeAvailability();
 
     const isOnProductPage =
@@ -93,7 +97,8 @@ export default class VariantPicker extends Component {
 
     const url = new URL(window.location.href);
 
-    const variantId = selectedOption.dataset.variantId || null;
+    const resolvedVariant = this.#findSelectedVariant();
+    const variantId = resolvedVariant?.id != null ? String(resolvedVariant.id) : selectedOption.dataset.variantId || null;
 
     if (isOnProductPage) {
       if (variantId) {
@@ -471,6 +476,7 @@ export default class VariantPicker extends Component {
     // selection paths (see snippets/variant-main-picker.liquid for context).
     this.#refreshRadioCaches();
     this.recomputeAvailability();
+    this.#syncDescribedSizeVisibility();
 
     return newProduct;
   }
@@ -488,6 +494,123 @@ export default class VariantPicker extends Component {
   }
 
   /**
+   * Format/Size cards are not a strict Shopify combination grid. Digital
+   * Download only exists with a hidden "Digital file" size, so combination
+   * availability would strike every other card. When the clicked option has
+   * no variant with the current other selections, pick the best available
+   * variant that includes the new option (prefer keeping the other axis,
+   * then Medium).
+   * @param {HTMLInputElement} changedInput
+   */
+  #reconcileDescribedSelection(changedInput) {
+    if (!this.#isDescribedPicker()) return;
+
+    const variants = this.#readAllVariants();
+    if (!variants?.length) return;
+
+    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
+    const changedIndex = Number.parseInt(changedInput.dataset.fieldsetIndex || '', 10);
+    if (Number.isNaN(changedIndex)) return;
+
+    /** @type {(string | null)[]} */
+    const selectedByPosition = fieldsets.map((fieldset, index) => {
+      if (index === changedIndex) return changedInput.value;
+      const checked = fieldset.querySelector('input:checked');
+      return checked instanceof HTMLInputElement ? checked.value : null;
+    });
+
+    const matchesSelection = (/** @type {{options: string[]}} */ variant) =>
+      variant.options.every((option, index) => {
+        const selected = selectedByPosition[index];
+        return selected == null || option === selected;
+      });
+
+    const exact = variants.find((variant) => variant.available && matchesSelection(variant));
+    if (exact) {
+      this.#syncDescribedSizeVisibility();
+      return;
+    }
+
+    const candidates = variants.filter(
+      (variant) => variant.available && variant.options[changedIndex] === changedInput.value
+    );
+    if (candidates.length === 0) return;
+
+    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
+    const score = (/** @type {{options: string[]}} */ variant) => {
+      let total = 0;
+      variant.options.forEach((option, index) => {
+        if (index === changedIndex) return;
+        if (option === selectedByPosition[index]) total += 10;
+      });
+      if (sizeIndex >= 0 && changedIndex !== sizeIndex) {
+        const sizeValue = variant.options[sizeIndex] || '';
+        if (/medium/i.test(sizeValue)) total += 2;
+        else if (/small/i.test(sizeValue)) total += 1;
+      }
+      return total;
+    };
+
+    candidates.sort((a, b) => score(b) - score(a));
+    const best = candidates[0];
+    if (!best) return;
+
+    fieldsets.forEach((fieldset, index) => {
+      if (index === changedIndex) return;
+      const desired = best.options[index];
+      const input = Array.from(fieldset.querySelectorAll('input')).find(
+        (candidate) => candidate instanceof HTMLInputElement && candidate.value === desired
+      );
+      if (input instanceof HTMLInputElement && !input.checked) {
+        this.updateSelectedOption(input);
+      }
+    });
+
+    this.#syncDescribedSizeVisibility();
+  }
+
+  /**
+   * @returns {{id: number, available: boolean, options: string[]} | null}
+   */
+  #findSelectedVariant() {
+    const variants = this.#readAllVariants();
+    if (!variants?.length) return null;
+
+    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
+    const selected = fieldsets.map((fieldset) => {
+      const checked = fieldset.querySelector('input:checked');
+      return checked instanceof HTMLInputElement ? checked.value : null;
+    });
+
+    return (
+      variants.find((variant) => variant.options.every((option, index) => option === selected[index])) ?? null
+    );
+  }
+
+  /** @returns {boolean} */
+  #isDescribedPicker() {
+    return this.classList.contains('variant-picker--described');
+  }
+
+  /**
+   * @param {Element | null} input
+   * @returns {boolean}
+   */
+  #isDigitalOption(input) {
+    if (!(input instanceof HTMLInputElement)) return false;
+    return (input.dataset.optionHandle || '').includes('digital');
+  }
+
+  #syncDescribedSizeVisibility() {
+    if (!this.#isDescribedPicker()) return;
+    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
+    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
+    if (!sizeFieldset) return;
+    const checked = sizeFieldset.querySelector('input:checked');
+    sizeFieldset.toggleAttribute('hidden', this.#isDigitalOption(checked));
+  }
+
+  /**
    * Recomputes availability for every option value based on the full variants
    * table embedded in the picker, then updates each radio's
    * `data-option-available`, `aria-disabled`, and the strikethrough SVG.
@@ -496,6 +619,9 @@ export default class VariantPicker extends Component {
    * available iff some variant exists with options[P] === V AND options[Q] ===
    * currentlySelected[Q] for every other position Q AND that variant is
    * available.
+   *
+   * Described Format/Size cards skip combination checks on Format (so Digital
+   * vs poster stays clickable) and never draw strikethroughs.
    */
   recomputeAvailability() {
     const variants = this.#readAllVariants();
@@ -503,6 +629,8 @@ export default class VariantPicker extends Component {
 
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
     if (fieldsets.length === 0) return;
+
+    const described = this.#isDescribedPicker();
 
     // Collect the currently-selected value (string) at each option position.
     /** @type {(string | null)[]} */
@@ -512,22 +640,26 @@ export default class VariantPicker extends Component {
     });
 
     fieldsets.forEach((fieldset, fieldsetIndex) => {
+      const lockOtherAxes = !described || fieldset.classList.contains('variant-option--size');
       const inputs = fieldset.querySelectorAll('input');
       inputs.forEach((input) => {
-        const candidateValue = input.value;
         const isAvailable = variants.some((variant) => {
           if (!variant.available) return false;
-          if (variant.options[fieldsetIndex] !== candidateValue) return false;
-          for (let i = 0; i < selectedByPosition.length; i++) {
-            if (i === fieldsetIndex) continue;
-            const sel = selectedByPosition[i];
-            if (sel != null && variant.options[i] !== sel) return false;
+          if (variant.options[fieldsetIndex] !== input.value) return false;
+          if (lockOtherAxes) {
+            for (let i = 0; i < selectedByPosition.length; i++) {
+              if (i === fieldsetIndex) continue;
+              const sel = selectedByPosition[i];
+              if (sel != null && variant.options[i] !== sel) return false;
+            }
           }
           return true;
         });
-        this.#applyAvailability(input, isAvailable);
+        this.#applyAvailability(input, isAvailable, { strikethrough: !described });
       });
     });
+
+    if (described) this.#syncDescribedSizeVisibility();
   }
 
   /**
@@ -546,8 +678,9 @@ export default class VariantPicker extends Component {
   /**
    * @param {HTMLInputElement} input
    * @param {boolean} isAvailable
+   * @param {{ strikethrough?: boolean }} [options]
    */
-  #applyAvailability(input, isAvailable) {
+  #applyAvailability(input, isAvailable, { strikethrough = true } = {}) {
     input.dataset.optionAvailable = String(isAvailable);
     if (isAvailable) {
       input.removeAttribute('aria-disabled');
@@ -559,9 +692,11 @@ export default class VariantPicker extends Component {
     if (!label) return;
 
     const existingStrikethrough = label.querySelector('.variant-option__strikethrough');
-    if (isAvailable) {
+    if (isAvailable || !strikethrough) {
       existingStrikethrough?.remove();
-    } else if (!existingStrikethrough) {
+      return;
+    }
+    if (!existingStrikethrough) {
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('viewBox', '0 0 100 46');
       svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');

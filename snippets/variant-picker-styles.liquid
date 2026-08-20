@@ -122,9 +122,13 @@
     grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 0.625rem;
-    row-gap: 0.5rem;
+    row-gap: 0.75rem;
     width: 100%;
     overflow: visible;
+  }
+
+  .variant-option.variant-option--buttons.variant-option--described[hidden] {
+    display: none;
   }
 
   .variant-option--described + .variant-option--described {
@@ -140,7 +144,7 @@
     width: auto;
     min-width: 0;
     padding: 0;
-    margin: 0;
+    margin: 0 0 0.25rem;
     font-family: var(--font-body--family);
     font-size: 0.875rem;
     font-weight: 700;
@@ -169,6 +173,7 @@
     grid-column: 2;
     gap: 0.625rem;
     min-width: 0;
+    margin-block-end: 0.25rem;
     color: var(--vp-brand, #321c41);
     font-family: var(--font-body--family);
     font-size: 0.75rem;
@@ -373,6 +378,12 @@
   }
 
   .variant-option--described .variant-option__strikethrough {
-    z-index: 3;
+    display: none;
+  }
+
+  .variant-option--described.variant-option--size .variant-option__button-label[hidden],
+  .variant-option.variant-option--buttons.variant-option--described.variant-option--size
+    .variant-option__button-label:has([data-option-handle*='digital']) {
+    display: none;
   }
 {% endstylesheet %}

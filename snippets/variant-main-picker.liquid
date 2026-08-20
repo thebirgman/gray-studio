@@ -1,6 +1,10 @@
 {%- doc -%}
   Renders a default variant picker, used to display the variant picker in the variants block.
 
+  Format/Size card copy (description, badge, optional image) comes from global
+  `option_card` metaobjects: `metaobjects.option_card.values`, matched by
+  option_value, handle, or aliases. Prices and Size "Save" stay on the variant.
+
   @param {object} product_resource - The product object.
   @param {object} [block] - The variant picker block object.
   @param {object} section - The section object.
@@ -28,6 +32,7 @@
   {% liquid
     assign default_variant = product_resource.selected_or_first_available_variant
     assign metafield_descriptions = product_resource.metafields.custom.option_descriptions.value
+    assign option_cards = metaobjects.option_card.values
     assign show_option_descriptions = false
     if block_settings.show_option_descriptions
       assign show_option_descriptions = true
@@ -117,11 +122,21 @@
           {%- liquid
             assign default_option_index = product_option.position | minus: 1
             assign default_value_at_position = default_variant.options[default_option_index]
+            assign hide_size_axis = false
+            if described_layout == 'size'
+              assign selected_size_handle = product_option.selected_value | handleize
+              if selected_size_handle contains 'digital'
+                assign hide_size_axis = true
+              endif
+            endif
           -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% elsif described_layout != blank %} variant-option--described variant-option--{{ described_layout }}{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
+            {% if hide_size_axis %}
+              hidden
+            {% endif %}
             {{ option_id_attribute }}
           >
             <legend>
@@ -174,6 +189,29 @@
                 assign option_compare = blank
                 assign option_save = 0
                 assign value_handle = product_option_value.name | handleize
+                assign is_pairing_value = false
+                if described_layout == 'size' and value_handle contains 'digital'
+                  assign is_pairing_value = true
+                endif
+                assign option_selectable = product_option_value.available
+                if described_layout == 'format' or described_layout == 'cards'
+                  assign option_selectable = false
+                  for v in product_resource.variants
+                    if v.available == false
+                      continue
+                    endif
+                    if product_option.position == 1 and v.option1 == product_option_value.name
+                      assign option_selectable = true
+                    elsif product_option.position == 2 and v.option2 == product_option_value.name
+                      assign option_selectable = true
+                    elsif product_option.position == 3 and v.option3 == product_option_value.name
+                      assign option_selectable = true
+                    endif
+                    if option_selectable
+                      break
+                    endif
+                  endfor
+                endif
                 if option_variant != blank
                   assign option_price = option_variant.price
                   assign option_compare = option_variant.compare_at_price
@@ -182,39 +220,71 @@
                   endif
                 endif
                 if described_layout != blank
-                  if described_layout == 'format' or described_layout == 'cards'
-                    if value_handle == 'digital-download' or value_handle contains 'digital-download'
-                      assign option_description = 'High-res file, delivered in minutes'
-                    elsif value_handle == 'watercolour-poster' or value_handle == 'watercolor-poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
-                      assign option_description = 'Fine art matte paper, ships in 3–7 days'
-                    elsif value_handle == 'giclee-canvas' or value_handle contains 'giclee'
-                      assign option_description = 'Gallery-wrapped, ships in 3–7 days'
-                      assign option_badge = 'Most loved'
-                    elsif value_handle == 'framed-canvas' or value_handle contains 'framed-canvas' or value_handle contains 'framed'
-                      assign option_description = 'Canvas + wood frame, ships in 3–7 days'
-                    endif
-                  elsif described_layout == 'size'
-                    if value_handle contains 'medium' and value_handle contains '24'
-                      assign option_badge = 'Most loved'
-                    elsif value_handle contains 'large' and value_handle contains '32'
-                      assign option_badge = 'Best value'
-                    endif
+                  assign option_card_matched = false
+                  assign value_match = product_option_value.name | strip | downcase
+                  if option_cards != blank
+                    for card in option_cards
+                      assign card_value = card.option_value.value | strip
+                      assign card_value_handle = card_value | handleize
+                      assign card_value_match = card_value | downcase
+                      assign card_handle = card.system.handle
+                      if card_handle == value_handle or card_value_handle == value_handle or card_value_match == value_match
+                        assign option_card_matched = true
+                      endif
+                      if option_card_matched == false and card.aliases.value != blank
+                        assign alias_list = card.aliases.value | split: ','
+                        for alias in alias_list
+                          assign alias_handle = alias | strip | handleize
+                          assign alias_match = alias | strip | downcase
+                          if alias_handle == value_handle or alias_match == value_match
+                            assign option_card_matched = true
+                          endif
+                        endfor
+                      endif
+                      if option_card_matched
+                        assign option_description = card.description.value
+                        assign option_badge = card.badge.value
+                        if card.image.value != blank
+                          assign option_thumb = card.image.value
+                        endif
+                        break
+                      endif
+                    endfor
                   endif
-                  if metafield_descriptions != blank
-                    assign metafield_description = metafield_descriptions[product_option_value.name]
-                    if metafield_description == blank
-                      assign metafield_description = metafield_descriptions[value_handle]
+                  unless option_card_matched
+                    if described_layout == 'format' or described_layout == 'cards'
+                      if value_handle == 'digital-download' or value_handle contains 'digital-download'
+                        assign option_description = 'High-res file, delivered in minutes'
+                      elsif value_handle == 'watercolour-poster' or value_handle == 'watercolor-poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
+                        assign option_description = 'Fine art matte paper, ships in 3–7 days'
+                      elsif value_handle == 'giclee-canvas' or value_handle contains 'giclee'
+                        assign option_description = 'Gallery-wrapped, ships in 3–7 days'
+                        assign option_badge = 'Most loved'
+                      elsif value_handle == 'framed-canvas' or value_handle contains 'framed-canvas' or value_handle contains 'framed'
+                        assign option_description = 'Canvas + wood frame, ships in 3–7 days'
+                      endif
+                    elsif described_layout == 'size'
+                      if value_handle contains 'medium' and value_handle contains '24'
+                        assign option_badge = 'Most loved'
+                      elsif value_handle contains 'large' and value_handle contains '32'
+                        assign option_badge = 'Best value'
+                      endif
                     endif
-                    if metafield_description != blank
-                      assign option_description = metafield_description
+                    if metafield_descriptions != blank
+                      assign metafield_description = metafield_descriptions[product_option_value.name]
+                      if metafield_description == blank
+                        assign metafield_description = metafield_descriptions[value_handle]
+                      endif
+                      if metafield_description != blank
+                        assign option_description = metafield_description
+                      endif
                     endif
-                  endif
+                  endunless
                   if block != blank
                     for desc_block in block.blocks
                       if desc_block.type == '_option-description' or desc_block.type == 'option_description'
                         assign desc_handle = desc_block.settings.option_value | strip | handleize
                         assign desc_match = desc_block.settings.option_value | strip | downcase
-                        assign value_match = product_option_value.name | strip | downcase
                         if desc_handle == value_handle or desc_match == value_match
                           if desc_block.settings.description != blank
                             assign option_description = desc_block.settings.description
@@ -233,13 +303,16 @@
               -%}
               <label
                 class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if described_layout != blank %} variant-option__button-label--described{% endif %}{% if option_badge != blank %} variant-option__button-label--badged{% endif %}"
+                {% if is_pairing_value %}
+                  hidden
+                {% endif %}
               >
                 <input
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ product_option_value.name | escape }}{% if option_description != blank %} — {{ option_description | escape }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
-                  {% if product_option_value.available == false %}
+                  aria-label="{{ product_option_value.name | escape }}{% if option_description != blank %} — {{ option_description | escape }}{% endif %}{% if option_selectable == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  {% if option_selectable == false %}
                     aria-disabled="true"
                   {% endif %}
                   data-previous-checked="false"
@@ -247,8 +320,9 @@
                   data-input-index="{{ forloop.index0 }}"
                   data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
                   data-option-name="{{ product_option.name | escape }}"
+                  data-option-handle="{{ value_handle }}"
                   data-option-value-id="{{ product_option_value.id }}"
-                  data-option-available="{{ product_option_value.available }}"
+                  data-option-available="{{ option_selectable }}"
                   data-connected-product-url="{{ product_option_value.product_url }}"
                   {% if product_option_value.variant.id %}
                     data-variant-id="{{ product_option_value.variant.id }}"
@@ -336,7 +410,9 @@
                     {{- product_option_value | escape -}}
                   </span>
                 {% endif %}
-                {% render 'strikethrough-variant', product_option: product_option_value %}
+                {%- if described_layout == blank -%}
+                  {% render 'strikethrough-variant', product_option: product_option_value %}
+                {%- endif -%}
               </label>
             {%- endfor -%}
             {% if option_id_attribute %}

@@ -55,7 +55,7 @@
       "id": "show_option_descriptions",
       "label": "Show option descriptions",
       "default": false,
-      "info": "Renders Format and Size as cards. Match each option value with an Option description block, or a product metafield custom.option_descriptions (JSON, keyed by option value name).",
+      "info": "Renders Format and Size as cards. Copy comes from global option_card metaobjects (option value, description, badge). Option description blocks override a card if present.",
       "visible_if": "{{ block.settings.variant_style == 'buttons' }}"
     },
     {
