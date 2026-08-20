@@ -365,6 +365,12 @@
     {% endcapture %}
   {% endif %}
 
+  {%- liquid
+    assign pdp_mobile_slides = 1
+    if sorted_media.size > 1
+      assign pdp_mobile_slides = 2
+    endif
+  -%}
   {% render 'slideshow',
     ref: 'slideshow',
     class: slideshow_class,
@@ -372,7 +378,8 @@
     slide_count: sorted_media.size,
     slideshow_arrows: slideshow_arrows,
     arrows_position: icons_position,
-    controls: controls
+    controls: controls,
+    mobile_slides_to_show: pdp_mobile_slides
   %}
 
   {% if block_settings.media_presentation == 'grid' %}
@@ -863,7 +870,7 @@
       "id": "thumbnail_width",
       "label": "t:settings.width",
       "min": 44,
-      "max": 72,
+      "max": 80,
       "step": 1,
       "unit": "px",
       "default": 64,

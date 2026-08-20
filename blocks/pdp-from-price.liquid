@@ -1,0 +1,43 @@
+{%- liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign from_price = product.price_min | money
+-%}
+
+{%- if product != blank -%}
+  <p
+    class="pdp-from-price"
+    {{ block.shopify_attributes }}
+  >
+    From {{ from_price }}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .pdp-from-price {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #242027;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_from_price",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:names.pdp_from_price",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

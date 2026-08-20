@@ -1,0 +1,113 @@
+{%- doc -%}
+Renders a related product card with image, title, rating, and price.
+
+@param {product} [product] - The product to render
+@param {string} [title] - Fallback title when no product is selected
+@param {string} [price] - Fallback formatted price
+@param {boolean} [show_badge] - Whether to show the most-loved badge
+@param {string} [badge_label] - Badge text
+@param {boolean} [placeholder] - Whether this is an onboarding placeholder
+@example
+{% render 'related-prints-card', product: product, show_badge: true, badge_label: 'Most loved' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign card_product = product
+  assign card_title = title
+  assign card_url = blank
+  assign card_image = blank
+  assign is_placeholder = placeholder | default: false, allow_false: true
+  assign display_badge = show_badge | default: false, allow_false: true
+  assign display_badge_label = badge_label | default: 'Most loved'
+
+  if card_title == blank and card_product != blank
+    assign card_title = card_product.title
+  endif
+
+  if card_product != blank
+    assign card_url = card_product.url
+    assign card_image = card_product.featured_image
+  endif
+
+  assign rating_value = blank
+  assign rating_count = blank
+  if card_product != blank
+    assign rating_value = card_product.metafields.reviews.rating.value.rating
+    assign rating_count = card_product.metafields.reviews.rating_count.value
+  endif
+  if rating_value == blank
+    assign rating_value = 5
+  endif
+  if rating_count == blank
+    assign rating_count = 49
+  endif
+
+  assign display_price = price
+  if card_product != blank
+    assign display_price = card_product.price | money_without_trailing_zeros
+  endif
+-%}
+
+{%- if is_placeholder -%}
+  <div class="related-prints__card" aria-hidden="true">
+{%- else -%}
+  <a
+    class="related-prints__card"
+    {% if card_url != blank %}
+      href="{{ card_url }}"
+    {% else %}
+      role="link"
+      aria-disabled="true"
+    {% endif %}
+  >
+{%- endif -%}
+  <div class="related-prints__media">
+    {%- if display_badge and display_badge_label != blank -%}
+      <span class="related-prints__badge">
+        <span class="related-prints__badge-icon" aria-hidden="true">
+          {{ 'featured-prints-badge-heart.svg' | inline_asset_content }}
+        </span>
+        <span class="related-prints__badge-label">{{ display_badge_label }}</span>
+      </span>
+    {%- endif -%}
+
+    {%- if card_image != blank -%}
+      {{
+        card_image
+        | image_url: width: 800
+        | image_tag:
+          class: 'related-prints__image',
+          loading: 'lazy',
+          widths: '282, 400, 564, 800',
+          sizes: '(min-width: 750px) 25vw, 75vw',
+          alt: card_title
+      }}
+    {%- else -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'related-prints__image related-prints__image--placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="related-prints__meta">
+    <h3 class="related-prints__title">{{ card_title }}</h3>
+
+    <div
+      class="related-prints__rating"
+      aria-label="{{ rating_value }} out of 5 stars, {{ rating_count }} reviews"
+    >
+      <div class="related-prints__stars" aria-hidden="true">
+        {%- for i in (1..5) -%}
+          <span class="related-prints__star">
+            {{ 'featured-prints-star.svg' | inline_asset_content }}
+          </span>
+        {%- endfor -%}
+      </div>
+      <span class="related-prints__rating-count">({{ rating_count }})</span>
+    </div>
+
+    <p class="related-prints__price">{{ display_price }}</p>
+  </div>
+{%- if is_placeholder -%}
+  </div>
+{%- else -%}
+  </a>
+{%- endif -%}

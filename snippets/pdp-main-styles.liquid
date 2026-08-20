@@ -1,0 +1,173 @@
+{%- doc -%}
+  Figma PDP main-section styles for the product information section:
+  gallery, title, buttons, breadcrumbs, and layout.
+{%- enddoc -%}
+
+{% stylesheet %}
+  /* Breadcrumbs — Figma: Lato 15px #605C64 with | separators */
+  .shopify-section--breadcrumbs .breadcrumbs__list {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.4667;
+    color: #605c64;
+  }
+
+  .shopify-section--breadcrumbs .breadcrumbs__link,
+  .shopify-section--breadcrumbs .breadcrumbs__current {
+    opacity: 1;
+    font-weight: 400;
+    color: inherit;
+  }
+
+  .shopify-section--breadcrumbs .breadcrumbs__item + .breadcrumbs__item::before {
+    opacity: 1;
+  }
+
+  /* Right column: Figma 520px, 20px stack gap */
+  @media screen and (min-width: 750px) {
+    .product-information .product-details > .group-block {
+      max-width: 32.5rem;
+    }
+  }
+
+  /* Title — Playfair 34 / 28 */
+  .product-information .product-details h1 {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.010625rem;
+    color: #242027;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .product-details h1 {
+      font-size: 2.125rem;
+    }
+  }
+
+  .product-information slideshow-slide,
+  .product-information .product-media,
+  .product-information .product-media img,
+  .product-information .product-media .deferred-media__poster-image {
+    border-radius: var(--media-radius, 1rem);
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .media-gallery--carousel slideshow-container {
+      border-radius: var(--media-radius, 1rem);
+      overflow: hidden;
+    }
+  }
+  .product-information slideshow-arrows,
+  .product-information .media-gallery__mobile-controls {
+    display: none;
+  }
+
+  .product-information .slideshow-controls__thumbnail {
+    width: 4.875rem;
+    height: 4.75rem;
+    aspect-ratio: 78 / 76;
+    opacity: 1;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .product-information .slideshow-controls__thumbnail img {
+    object-fit: cover;
+  }
+
+  .product-information .slideshow-controls__thumbnail[aria-selected='true'] {
+    border-color: #321c41;
+    opacity: 1;
+  }
+
+  .product-information .slideshow-controls__thumbnail:not([aria-selected='true']) {
+    opacity: 1;
+  }
+
+  .product-information slideshow-controls[thumbnails] .slideshow-controls__thumbnails {
+    gap: 0.75rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .product-information .media-gallery--carousel slideshow-component:has(slideshow-controls[thumbnails]) {
+      column-gap: 0.9375rem;
+    }
+  }
+
+  /* Mobile: two images side by side, 16px radius already from --media-radius */
+  @media screen and (max-width: 749px) {
+    .product-information slideshow-component {
+      --pdp-gallery-gap: 0.5rem;
+    }
+
+    .product-information slideshow-container {
+      gap: var(--pdp-gallery-gap);
+    }
+
+    .product-information slideshow-component:not(.slideshow--single-media) slideshow-slide {
+      width: calc((100% - var(--pdp-gallery-gap, 0.5rem)) / 2);
+      flex: 0 0 calc((100% - var(--pdp-gallery-gap, 0.5rem)) / 2);
+    }
+  }
+
+  /* Quantity is not in the Figma PDP */
+  .product-information .quantity-selector-wrapper,
+  .product-information .quantity-label,
+  .product-information .quantity-rules {
+    display: none;
+  }
+
+  /* Add to cart + Buy now — Figma 46×256, 4px radius */
+  .product-information .pdp-buy-buttons .product-form-buttons {
+    gap: 0.5rem;
+  }
+
+  .product-information .pdp-buy-buttons .add-to-cart-button,
+  .product-information .pdp-buy-now__button {
+    height: 2.875rem;
+    min-height: 2.875rem;
+    padding-block: 0;
+    border-radius: 0.25rem;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .product-information .pdp-buy-buttons .add-to-cart-button {
+    background-color: #fffefd;
+    color: #321c41;
+    border: 1px solid #321c41;
+  }
+
+  .product-information .pdp-buy-now__button {
+    background-color: #321c41;
+    color: #fefefd;
+    border: 1px solid #321c41;
+  }
+
+  .product-information .pdp-buy-now {
+    display: flex;
+    flex: 1 1 11.5rem;
+    min-width: 0;
+  }
+
+  .product-information .pdp-buy-now__button {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-information .pdp-buy-buttons .product-form-buttons
+      > *:not(.quantity-selector-wrapper, .quantity-rules, .quantity-label, .volume-pricing, .product-form-text__error),
+    .product-information .pdp-buy-now {
+      flex-basis: 100%;
+    }
+  }
+{% endstylesheet %}

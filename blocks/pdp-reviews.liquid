@@ -1,0 +1,84 @@
+{%- liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign rating_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count
+  if rating_count == blank
+    assign rating_count = block.settings.fallback_count | default: 148
+  endif
+-%}
+
+{%- if rating_count != blank -%}
+  <div
+    class="pdp-reviews"
+    aria-label="{{ 'accessibility.rating' | t: rating: 5 }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="pdp-reviews__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        <span class="pdp-reviews__star">
+          {{ 'pdp-star.svg' | inline_asset_content }}
+        </span>
+      {%- endfor -%}
+    </div>
+    <span class="pdp-reviews__count">({{ rating_count }} reviews)</span>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .pdp-reviews {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .pdp-reviews__stars {
+    display: flex;
+    align-items: center;
+    gap: 0.125rem;
+  }
+
+  .pdp-reviews__star {
+    display: flex;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .pdp-reviews__star svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdp-reviews__count {
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #918d95;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_reviews",
+  "tag": null,
+  "settings": [
+    {
+      "type": "number",
+      "id": "fallback_count",
+      "label": "t:settings.pdp_reviews_fallback",
+      "default": 148
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.pdp_reviews",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

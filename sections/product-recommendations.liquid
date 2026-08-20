@@ -4,225 +4,544 @@
   fetchpriority="low"
 ></script>
 
-{% liquid
-  case section.settings.layout_type
-    when 'grid'
-      assign classes = 'resource-list--grid'
-    when 'carousel'
-      assign classes = 'resource-list__carousel'
-  endcase
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign button_label = section.settings.button_label
+  assign button_link = section.settings.button_link
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign brand_color = section.settings.brand_color | default: '#321C41'
+  assign badge_color = section.settings.badge_color | default: '#8855AA'
+  assign star_color = section.settings.star_color | default: '#F5CD72'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign muted_color = section.settings.muted_color | default: '#605C64'
+  assign max_products = section.settings.max_products | default: 4
 
-  capture styles
-    echo '--column-count-mobile: ' | append: section.settings.mobile_columns | append: ';'
-    echo '--resource-list-column-gap-desktop: ' | append: section.settings.columns_gap | append: 'px;'
-    echo '--resource-list-row-gap-desktop: ' | append: section.settings.rows_gap | append: 'px;'
-    echo '--resource-list-columns: repeat(' | append: section.settings.columns | append: ', 1fr);'
-    echo '--resource-list-columns-mobile: repeat(' | append: section.settings.mobile_columns | append: ', 1fr);'
-    echo '--resource-list-column-gap-desktop: ' | append: section.settings.columns_gap | append: 'px;'
-    echo '--column-count: ' | append: section.settings.columns | append: ';'
-    echo '--column-count-mobile: ' | append: section.settings.mobile_columns | append: ';'
-  endcapture
+  assign source_product = section.settings.product
+  if source_product == blank
+    assign source_product = product
+  endif
+
+  if button_link == blank and section.settings.collection != blank
+    assign button_link = section.settings.collection.url
+  endif
+
+  assign rec_products = null
+  assign show_placeholders = false
+  assign show_skeleton = false
+
+  if source_product == blank
+    assign show_placeholders = true
+  elsif recommendations.performed
+    if recommendations.products_count > 0
+      assign rec_products = recommendations.products
+    elsif section.settings.recommendation_type == 'related'
+      assign rec_products = collections.all.products | reject: 'id', source_product.id
+    endif
+  else
+    assign show_skeleton = true
+  endif
+
+  assign placeholder_titles = 'Digital Download,Watercolour Poster,Giclée Canvas,Framed Canvas' | split: ','
+  assign placeholder_prices = '29,79,149,194' | split: ','
+
+  if rec_products != blank
+    assign rp_columns = rec_products.size
+    if rp_columns > max_products
+      assign rp_columns = max_products
+    endif
+  elsif show_placeholders
+    assign rp_columns = placeholder_titles.size
+  else
+    assign rp_columns = max_products
+  endif
+  if rp_columns > 4
+    assign rp_columns = 4
+  endif
+  if rp_columns < 1
+    assign rp_columns = 4
+  endif
+
+  if rec_products != blank and rec_products.size > 0
+    assign has_recommendations = 'true'
+  elsif show_placeholders
+    assign has_recommendations = 'true'
+  elsif show_skeleton
+    assign has_recommendations = 'true'
+  else
+    assign has_recommendations = 'false'
+  endif
+-%}
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
 %}
 
-{% render 'quick-add-styles' %}
-{% render 'quick-add-modal-styles' %}
-{% render 'variant-picker-styles' %}
-{% render 'product-badges-styles' %}
 <product-recommendations
   id="product-recommendations-{{ section.id }}"
-  class="product-recommendations"
-  data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.max_products }}"
+  class="product-recommendations related-prints-root"
+  data-url="{{ routes.product_recommendations_url }}?limit={{ max_products }}"
   data-section-id="{{ section.id }}"
-  data-product-id="{{ section.settings.product.id | default: product.id }}"
+  data-product-id="{{ source_product.id }}"
   data-intent="{{ section.settings.recommendation_type }}"
   data-testid="product-recommendations-section"
   data-recommendations-performed="{{ recommendations.performed }}"
   data-hydration-key="product-recommendations-{{ section.id }}"
   {{ section.shopify_attributes }}
 >
-  {% liquid
-    if section.settings.background_color != blank
-      render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
-    endif
-  %}
-
   <div
-    class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+    class="section-background color-custom-{{ section.id }}"
+    style="background-color: {{ background_color }};"
   ></div>
+
   <div
     class="
       section
-      section--{{ section.settings.section_width }}
-      {% if section.settings.background_color != blank %}color-custom-{{ section.id }}{% endif %}
-      section-resource-list
+      section--full-width
+      related-prints
+      color-custom-{{ section.id }}
       spacing-style
-      gap-style
     "
     style="
-      {%  render 'spacing-style', settings: section.settings %}
-      {%  render 'gap-style', value: section.settings.gap %}
-      {{ styles }}
+      {% render 'spacing-style', settings: section.settings %}
+      --rp-bg: {{ background_color }};
+      --rp-text: {{ text_color }};
+      --rp-muted: {{ muted_color }};
+      --rp-brand: {{ brand_color }};
+      --rp-badge: {{ badge_color }};
+      --rp-star: {{ star_color }};
+      --rp-on-brand: #FEFEFD;
+      --rp-columns: {{ rp_columns }};
+      --rp-gap: 20px;
+      background-color: {{ background_color }};
     "
   >
-    <div class="section-resource-list__content">
-      {% content_for 'blocks' %}
-    </div>
-
-    {%- if recommendations.performed or section.settings.product == blank -%}
-      {% liquid
-        if section.settings.product == blank
-          assign products = null
-          # Onboarding mode: Show placeholder products
-          for i in (1..section.settings.max_products)
-            assign products = products | append: ', '
-            assign products = products | split: ','
-          endfor
-        elsif recommendations.performed and recommendations.products_count == 0
-          # No recommendations found, pull from catalog
-          if section.settings.recommendation_type == 'related'
-            assign products = collections.all.products | reject: 'id', section.settings.product.id
-          elsif section.settings.recommendation_type == 'complementary'
-            # Do not recommend the All collection as complementary products
-            assign products = null
-          endif
-
-        else
-          assign products = recommendations.products
-        endif
-      %}
-      {% capture list_items %}
-        {% for product in products limit: section.settings.max_products %}
-          <div class="resource-list__item">
-            {% content_for 'block',
-              type: '_product-card',
-              id: 'static-product-card',
-              closest.product: product,
-              product_view_context: 'recommendation'
-            %}
-          </div>
-          {% unless forloop.last %}
-            <!--@list/split-->
-          {% endunless %}
-        {% endfor %}
-      {% endcapture %}
-
-      {% liquid
-        # Create an array from the list items to be used in the carousel
-        assign slide_content = list_items | strip
-        assign slides = slide_content | split: '<!--@list/split-->'
-
-        if products != blank and products.size > 0
-          assign has_recommendations = 'true'
-        else
-          assign has_recommendations = 'false'
-        endif
-      %}
-
-      <div
-        class="
-          resource-list
-          {% if section.settings.layout_type == 'carousel' %}
-            force-full-width
-          {% endif %}
-          {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
-            hidden--mobile
-          {% endif %}
-          {{ classes }}
-        "
-        {% if section.settings.layout_type == 'grid' %}
-          data-testid="resource-list-grid"
-        {% endif %}
-        data-has-recommendations="{{ has_recommendations }}"
-      >
-        {% case section.settings.layout_type %}
-          {% when 'grid' %}
-            {{ list_items }}
-          {% when 'carousel' %}
-            {% render 'resource-list-carousel',
-              ref: 'resourceListCarousel',
-              slides: slides,
-              slide_count: recommendations.products.size,
-              settings: section.settings
-            %}
-        {% endcase %}
-      </div>
-
-      {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
-        {% liquid
-          assign mobile_carousel_gap = section.settings.columns_gap
-        %}
-        <div
-          class="
-            resource-list
-            hidden--desktop
-            force-full-width
-          "
-          style="
-            --resource-list-gap: {{ mobile_carousel_gap }}px;
-            --column-count: {{ section.settings.columns }};
-          "
-        >
-          {% render 'resource-list-carousel',
-            ref: 'resourceListCarouselMobile',
-            slides: slides,
-            slide_count: recommendations.products.size,
-            settings: section.settings
-          %}
+    <div
+      class="related-prints__layout"
+      data-has-recommendations="{{ has_recommendations }}"
+    >
+      <div class="related-prints__header">
+        <div class="related-prints__heading-group">
+          {%- if eyebrow != blank -%}
+            <p class="related-prints__eyebrow">{{ eyebrow }}</p>
+          {%- endif -%}
+          {%- if heading != blank -%}
+            <h2 class="related-prints__heading">{{ heading }}</h2>
+          {%- endif -%}
         </div>
-      {% endif %}
-    {%- else -%}
-      <div
-        class="resource-list resource-list--grid"
-      >
-        {% for i in (1..section.settings.columns) %}
-          <div
-            class="product-recommendations__skeleton-item"
-            aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
-          ></div>
-        {% endfor %}
+
+        {%- if button_label != blank -%}
+          <a
+            class="related-prints__cta"
+            {% if button_link != blank %}
+              href="{{ button_link }}"
+            {% else %}
+              role="link"
+              aria-disabled="true"
+            {% endif %}
+          >
+            <span>{{ button_label }}</span>
+            <span class="related-prints__cta-icon" aria-hidden="true">
+              {{ 'icon-long-arrow-right.svg' | inline_asset_content }}
+            </span>
+          </a>
+        {%- endif -%}
       </div>
-    {%- endif -%}
+
+      <div class="related-prints__grid">
+        {%- if show_skeleton -%}
+          {%- for i in (1..rp_columns) -%}
+            <div
+              class="related-prints__card related-prints__card--skeleton"
+              aria-label="{{ 'accessibility.loading_product_recommendations' | t }}"
+            >
+              <div class="related-prints__media"></div>
+              <div class="related-prints__meta">
+                <span class="related-prints__skeleton-line"></span>
+                <span class="related-prints__skeleton-line related-prints__skeleton-line--short"></span>
+                <span class="related-prints__skeleton-line related-prints__skeleton-line--price"></span>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- elsif show_placeholders -%}
+          {%- for title in placeholder_titles -%}
+            {%- liquid
+              assign display_price = placeholder_prices[forloop.index0] | times: 100 | money_without_trailing_zeros
+              assign show_badge = false
+              assign badge_position = section.settings.badge_position | plus: 0
+              if section.settings.show_badge and forloop.index == badge_position
+                assign show_badge = true
+              endif
+            -%}
+            {% render 'related-prints-card',
+              title: title,
+              price: display_price,
+              show_badge: show_badge,
+              badge_label: section.settings.badge_label,
+              placeholder: true
+            %}
+          {%- endfor -%}
+        {%- elsif rec_products != blank -%}
+          {%- for rec_product in rec_products limit: max_products -%}
+            {%- liquid
+              assign show_badge = false
+              assign badge_position = section.settings.badge_position | plus: 0
+              if section.settings.show_badge and forloop.index == badge_position
+                assign show_badge = true
+              endif
+            -%}
+            {% render 'related-prints-card',
+              product: rec_product,
+              show_badge: show_badge,
+              badge_label: section.settings.badge_label
+            %}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
   </div>
 </product-recommendations>
+
+{% stylesheet %}
+  .related-prints-root.product-recommendations > * {
+    border: none;
+  }
+
+  .related-prints {
+    color: var(--rp-text);
+  }
+
+  .related-prints__layout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.5rem;
+    width: 100%;
+  }
+
+  .related-prints__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .related-prints__heading-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3125rem;
+    color: var(--rp-text);
+  }
+
+  .related-prints__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+  }
+
+  .related-prints__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 2.25rem;
+    letter-spacing: 0;
+    color: inherit;
+  }
+
+  .related-prints__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 0.5px solid var(--rp-brand);
+    color: var(--rp-brand);
+    text-decoration: none;
+    font-family: var(--font-button--family, var(--font-body--family));
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0;
+    flex-shrink: 0;
+  }
+
+  .related-prints__cta[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .related-prints__cta:hover {
+    opacity: 0.75;
+  }
+
+  .related-prints__cta:focus-visible {
+    outline: 2px solid var(--rp-brand);
+    outline-offset: 2px;
+  }
+
+  .related-prints__cta-icon {
+    display: inline-flex;
+    width: 1.125rem;
+    height: 1.125rem;
+    overflow: clip;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .related-prints__cta-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .related-prints__grid {
+    display: flex;
+    gap: var(--rp-gap, 20px);
+    width: calc(
+      100% + var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) +
+        var(--padding-inline-end-mobile, var(--padding-inline-end, 0px))
+    );
+    margin-inline: calc(var(--padding-inline-start-mobile, var(--padding-inline-start, 0px)) * -1)
+      calc(var(--padding-inline-end-mobile, var(--padding-inline-end, 0px)) * -1);
+    padding-inline: var(--padding-inline-start-mobile, var(--padding-inline-start, 1.5625rem))
+      var(--padding-inline-end-mobile, var(--padding-inline-end, 1.5625rem));
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .related-prints__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .related-prints__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 0 0 75%;
+    width: 75%;
+    min-width: 0;
+    gap: 0.9375rem;
+    color: inherit;
+    text-decoration: none;
+    scroll-snap-align: start;
+  }
+
+  .related-prints__card[aria-disabled='true'] {
+    pointer-events: none;
+  }
+
+  .related-prints__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 282 / 288;
+    overflow: hidden;
+  }
+
+  .related-prints__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .related-prints__image--placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .related-prints__badge {
+    position: absolute;
+    top: 0.625rem;
+    left: 0.625rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-height: 1.1875rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--rp-badge);
+    color: var(--rp-on-brand);
+  }
+
+  .related-prints__badge-icon {
+    display: inline-flex;
+    width: 0.75rem;
+    height: 0.75rem;
+    overflow: clip;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .related-prints__badge-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .related-prints__badge-label {
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .related-prints__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3125rem;
+    width: 100%;
+  }
+
+  .related-prints__title {
+    margin: 0;
+    width: 100%;
+    font-family: var(--font-accent--family, var(--font-body--family));
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.06875rem;
+    text-transform: uppercase;
+    color: var(--rp-text);
+  }
+
+  .related-prints__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .related-prints__stars {
+    display: flex;
+    align-items: center;
+    gap: 0.1875rem;
+  }
+
+  .related-prints__star {
+    display: inline-flex;
+    width: 0.625rem;
+    height: 0.625rem;
+    overflow: clip;
+    flex-shrink: 0;
+    color: var(--rp-star);
+  }
+
+  .related-prints__star svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .related-prints__rating-count {
+    font-family: var(--font-body--family);
+    font-size: 0.4375rem;
+    font-weight: 400;
+    line-height: 0.9375rem;
+    text-transform: uppercase;
+    color: var(--rp-muted);
+  }
+
+  .related-prints__price {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.6875rem;
+    color: var(--rp-text);
+  }
+
+  .related-prints__card--skeleton {
+    pointer-events: none;
+  }
+
+  .related-prints__card--skeleton .related-prints__media,
+  .related-prints__skeleton-line {
+    background-color: #efece8;
+  }
+
+  .related-prints__skeleton-line {
+    display: block;
+    width: 70%;
+    height: 0.6875rem;
+    border-radius: 0.125rem;
+  }
+
+  .related-prints__skeleton-line--short {
+    width: 40%;
+    height: 0.625rem;
+  }
+
+  .related-prints__skeleton-line--price {
+    width: 30%;
+    height: 1.125rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .related-prints__header {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .related-prints__heading {
+      font-size: 2.5rem;
+      line-height: 1.08;
+      letter-spacing: -0.0125rem;
+    }
+
+    .related-prints__grid {
+      display: grid;
+      grid-template-columns: repeat(var(--rp-columns, 4), minmax(0, 1fr));
+      gap: var(--rp-gap, 20px);
+      width: 100%;
+      margin-inline: 0;
+      padding-inline: 0;
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+
+    .related-prints__card {
+      flex: none;
+      width: 100%;
+      max-width: none;
+      scroll-snap-align: none;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .related-prints__grid {
+      scroll-padding-left: 25px;
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:names.product_recommendations",
+  "tag": "section",
+  "class": "related-prints-section",
   "disabled_on": {
     "groups": ["header", "footer"]
   },
-  "blocks": [
-    {
-      "type": "@theme"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "video"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "spacer"
-    },
-    {
-      "type": "_divider"
-    }
-  ],
   "settings": [
     {
       "type": "product",
@@ -250,179 +569,110 @@
       "content": "t:content.complementary_products"
     },
     {
-      "type": "header",
-      "content": "t:content.cards_layout"
-    },
-    {
-      "type": "select",
-      "id": "layout_type",
-      "label": "t:settings.layout_style",
-      "options": [
-        {
-          "value": "grid",
-          "label": "t:options.grid"
-        },
-        {
-          "value": "carousel",
-          "label": "t:options.carousel"
-        }
-      ],
-      "default": "grid"
-    },
-    {
-      "type": "checkbox",
-      "id": "carousel_on_mobile",
-      "label": "t:settings.carousel_on_mobile",
-      "default": false,
-      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
-    },
-    {
       "type": "range",
       "id": "max_products",
       "label": "t:settings.product_count",
-      "min": 3,
-      "max": 10,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "columns",
-      "label": "t:settings.columns",
-      "min": 1,
+      "min": 2,
       "max": 8,
       "step": 1,
       "default": 4
     },
     {
-      "type": "select",
-      "id": "mobile_columns",
-      "label": "t:settings.mobile_columns",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:options.one_number"
-        },
-        {
-          "value": "2",
-          "label": "t:options.two_number"
-        }
-      ],
-      "default": "2",
-      "visible_if": "{{ section.settings.layout_type == 'grid' and section.settings.carousel_on_mobile == false }}"
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "MORE TO DISCOVER"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Prints that actually last"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Explore all styles"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:settings.collection",
+      "info": "Used for the button link when no URL is set."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_label",
+      "label": "Badge label",
+      "default": "Most loved",
+      "visible_if": "{{ section.settings.show_badge }}"
     },
     {
       "type": "range",
-      "id": "columns_gap",
-      "label": "t:settings.horizontal_gap",
-      "min": 0,
-      "max": 100,
+      "id": "badge_position",
+      "label": "Badge product",
+      "min": 1,
+      "max": 8,
       "step": 1,
-      "unit": "px",
-      "default": 16,
-      "visible_if": "{{ section.settings.layout_type == 'grid' or section.settings.layout_type == 'carousel' }}"
-    },
-    {
-      "type": "range",
-      "id": "rows_gap",
-      "label": "t:settings.vertical_gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 16,
-      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
+      "default": 3,
+      "info": "Which recommended product shows the badge (1 = first).",
+      "visible_if": "{{ section.settings.show_badge }}"
     },
     {
       "type": "header",
-      "content": "t:content.carousel_navigation",
-      "visible_if": "{{ section.settings.layout_type == 'carousel' or section.settings.carousel_on_mobile == true }}"
-    },
-    {
-      "type": "select",
-      "id": "icons_style",
-      "label": "t:settings.icon",
-      "options": [
-        {
-          "value": "arrow",
-          "label": "t:options.arrows"
-        },
-        {
-          "value": "chevron",
-          "label": "t:options.chevrons"
-        },
-        {
-          "value": "arrows_large",
-          "label": "t:options.arrows_large"
-        },
-        {
-          "value": "chevron_large",
-          "label": "t:options.chevron_large"
-        },
-        {
-          "value": "none",
-          "label": "t:options.none"
-        }
-      ],
-      "default": "arrow",
-      "visible_if": "{{ section.settings.layout_type == 'carousel' or section.settings.carousel_on_mobile == true }}"
-    },
-    {
-      "type": "select",
-      "id": "icons_shape",
-      "label": "t:settings.icon_background",
-      "options": [
-        {
-          "value": "none",
-          "label": "t:options.none"
-        },
-        {
-          "value": "circle",
-          "label": "t:options.circle"
-        },
-        {
-          "value": "square",
-          "label": "t:options.square"
-        }
-      ],
-      "default": "none",
-      "visible_if": "{{ section.settings.icons_style != 'none' and section.settings.layout_type == 'carousel' or section.settings.carousel_on_mobile == true }}"
-    },
-    {
-      "type": "header",
-      "content": "t:content.section_layout"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
-    },
-    {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 12
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "t:settings.background_color",
-      "placeholder": "t:settings.default"
+      "label": "Background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#605C64"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Brand",
+      "default": "#321C41"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge",
+      "default": "#8855AA"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Stars",
+      "default": "#F5CD72"
     },
     {
       "type": "header",
@@ -433,20 +683,40 @@
       "id": "padding-block-start",
       "label": "t:settings.top",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 0
+      "default": 100
     },
     {
       "type": "range",
       "id": "padding-block-end",
       "label": "t:settings.bottom",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 0
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 120
     },
     {
       "type": "header",
@@ -456,7 +726,7 @@
       "type": "checkbox",
       "id": "use_mobile_padding",
       "label": "Use mobile padding",
-      "default": false
+      "default": true
     },
     {
       "type": "range",
@@ -466,7 +736,7 @@
       "max": 100,
       "step": 1,
       "unit": "px",
-      "default": 0,
+      "default": 60,
       "visible_if": "{{ section.settings.use_mobile_padding }}"
     },
     {
@@ -477,7 +747,29 @@
       "max": 100,
       "step": 1,
       "unit": "px",
-      "default": 0,
+      "default": 60,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start-mobile",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
+      "visible_if": "{{ section.settings.use_mobile_padding }}"
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end-mobile",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 25,
       "visible_if": "{{ section.settings.use_mobile_padding }}"
     }
   ],
@@ -488,101 +780,29 @@
       "settings": {
         "product": "{{ closest.product }}",
         "recommendation_type": "related",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
         "max_products": 4,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "gap": 28,
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      },
-      "blocks": {
-        "header": {
-          "type": "text",
-          "name": "t:names.header",
-          "settings": {
-            "text": "t:html_defaults.related_product",
-            "type_preset": "h3"
-          }
-        },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 4
-          },
-          "blocks": {
-            "product-card-gallery": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "product_title": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "price": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            }
-          },
-          "block_order": ["product-card-gallery", "product_title", "price"]
-        }
-      },
-      "block_order": ["header"]
+        "eyebrow": "MORE TO DISCOVER",
+        "heading": "Prints that actually last",
+        "button_label": "Explore all styles",
+        "show_badge": true,
+        "badge_label": "Most loved",
+        "badge_position": 3,
+        "background_color": "#FFFDF8",
+        "text_color": "#242027",
+        "muted_color": "#605C64",
+        "brand_color": "#321C41",
+        "badge_color": "#8855AA",
+        "star_color": "#F5CD72",
+        "padding-block-start": 100,
+        "padding-block-end": 120,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 60,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
     }
   ]
 }

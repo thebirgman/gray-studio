@@ -36,7 +36,7 @@
 %}
 
 <span
-  class="buy-buttons-block buy-buttons-block--{{ block.id }}"
+  class="buy-buttons-block buy-buttons-block--{{ block.id }}{% if block_settings.show_buy_now %} pdp-buy-buttons{% endif %}"
   {% if block_settings.text_color != blank %}
     style="--color: {{ block_settings.text_color }}; --color-rgb: {{ block_settings.text_color.rgb  }}"
   {% endif %}
@@ -227,12 +227,34 @@
             add_to_cart_text: add_to_cart_text
           %}
 
-          {% content_for 'block',
-            type: 'accelerated-checkout',
-            id: 'accelerated-checkout',
-            can_add_to_cart: can_add_to_cart,
-            form_obj: form
-          %}
+          {%- if block_settings.show_buy_now -%}
+            <script
+              src="{{ 'pdp-buy-now.js' | asset_url }}"
+              type="module"
+            ></script>
+            <pdp-buy-now
+              class="pdp-buy-now"
+              data-add-url="{{ routes.cart_add_url }}.js"
+              data-checkout-url="/checkout"
+            >
+              <button
+                type="button"
+                class="button pdp-buy-now__button"
+                {% unless can_add_to_cart %}
+                  disabled
+                {% endunless %}
+              >
+                {{ 'products.product.buy_now' | t }}
+              </button>
+            </pdp-buy-now>
+          {%- else -%}
+            {% content_for 'block',
+              type: 'accelerated-checkout',
+              id: 'accelerated-checkout',
+              can_add_to_cart: can_add_to_cart,
+              form_obj: form
+            %}
+          {%- endif -%}
         </div>
         {%- if block_settings.gift_card_form and product.gift_card? -%}
           </span>
@@ -391,6 +413,12 @@
       "type": "checkbox",
       "id": "stacking",
       "label": "t:settings.always_stack_buttons",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "t:settings.show_buy_now",
       "default": false
     },
     {

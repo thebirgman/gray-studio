@@ -1,0 +1,159 @@
+<div class="pdp-faqs" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .pdp-faqs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .pdp-faqs__item {
+    width: 100%;
+    border-bottom: 1px solid #d9d6db;
+  }
+
+  .pdp-faqs__question {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+    padding: 1rem;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .pdp-faqs__question::-webkit-details-marker,
+  .pdp-faqs__question::marker {
+    display: none;
+    content: '';
+  }
+
+  .pdp-faqs__question:focus-visible {
+    outline: 2px solid #321c41;
+    outline-offset: 2px;
+  }
+
+  .pdp-faqs__question-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body--family);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #242027;
+    text-align: left;
+  }
+
+  @media screen and (min-width: 750px) {
+    .pdp-faqs__question-text {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+  }
+
+  .pdp-faqs__icon {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.5625rem;
+    height: 1.5625rem;
+  }
+
+  .pdp-faqs__icon-circle,
+  .pdp-faqs__icon-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pdp-faqs__icon-circle {
+    position: absolute;
+    inset: 0;
+  }
+
+  .pdp-faqs__icon-circle svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdp-faqs__icon-arrow {
+    position: relative;
+    width: 0.75rem;
+    height: 0.6rem;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: transform 0.2s ease;
+  }
+
+  .pdp-faqs__icon-arrow svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdp-faqs__item[open] .pdp-faqs__icon-arrow {
+    transform: rotate(-90deg);
+  }
+
+  .pdp-faqs__answer {
+    padding: 0 1rem 1rem 1.5rem;
+  }
+
+  .pdp-faqs__answer-text {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.009375rem;
+    color: #242027;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_faqs",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_pdp-faq"
+    }
+  ],
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:names.pdp_faqs",
+      "category": "t:categories.product",
+      "blocks": {
+        "faq_materials": {
+          "type": "_pdp-faq",
+          "settings": {
+            "question": "Materials & formats",
+            "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Watercolour Poster: archival matte paper. Giclée Canvas: gallery-wrapped canvas print, with an optional black, white, or oak frame."
+          }
+        },
+        "faq_sizing": {
+          "type": "_pdp-faq",
+          "settings": {
+            "question": "Sizing guide",
+            "answer": "Small 12×18\", Medium 24×36\", and Large 32×48\". Digital downloads are sized to print at those dimensions."
+          }
+        },
+        "faq_shipping": {
+          "type": "_pdp-faq",
+          "settings": {
+            "question": "Shipping",
+            "answer": "Prints ship worldwide with tracked delivery; orders over $100 ship free. Digital downloads deliver by email in minutes."
+          }
+        }
+      },
+      "block_order": ["faq_materials", "faq_sizing", "faq_shipping"]
+    }
+  ]
+}
+{% endschema %}

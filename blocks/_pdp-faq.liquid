@@ -1,0 +1,42 @@
+<details
+  class="pdp-faqs__item"
+  {{ block.shopify_attributes }}
+>
+  <summary class="pdp-faqs__question">
+    <span class="pdp-faqs__question-text">{{ block.settings.question | escape }}</span>
+    <span class="pdp-faqs__icon" aria-hidden="true">
+      <span class="pdp-faqs__icon-circle">
+        {{ 'faq-icon-circle.svg' | inline_asset_content }}
+      </span>
+      <span class="pdp-faqs__icon-arrow">
+        {{ 'faq-icon-arrow.svg' | inline_asset_content }}
+      </span>
+    </span>
+  </summary>
+
+  {%- if block.settings.answer != blank -%}
+    <div class="pdp-faqs__answer">
+      <p class="pdp-faqs__answer-text">{{ block.settings.answer | newline_to_br }}</p>
+    </div>
+  {%- endif -%}
+</details>
+
+{% schema %}
+{
+  "name": "t:names.pdp_faq",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question",
+      "default": "Materials & formats"
+    },
+    {
+      "type": "textarea",
+      "id": "answer",
+      "label": "Answer"
+    }
+  ]
+}
+{% endschema %}
