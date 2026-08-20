@@ -173,6 +173,7 @@
                 assign option_price = blank
                 assign option_compare = blank
                 assign option_save = 0
+                assign value_handle = product_option_value.name | handleize
                 if option_variant != blank
                   assign option_price = option_variant.price
                   assign option_compare = option_variant.compare_at_price
@@ -181,19 +182,40 @@
                   endif
                 endif
                 if described_layout != blank
+                  if described_layout == 'format' or described_layout == 'cards'
+                    if value_handle == 'digital-download' or value_handle contains 'digital-download'
+                      assign option_description = 'High-res file, delivered in minutes'
+                    elsif value_handle == 'watercolour-poster' or value_handle == 'watercolor-poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
+                      assign option_description = 'Fine art matte paper, ships in 3–7 days'
+                    elsif value_handle == 'giclee-canvas' or value_handle contains 'giclee'
+                      assign option_description = 'Gallery-wrapped, ships in 3–7 days'
+                      assign option_badge = 'Most loved'
+                    elsif value_handle == 'framed-canvas' or value_handle contains 'framed-canvas' or value_handle contains 'framed'
+                      assign option_description = 'Canvas + wood frame, ships in 3–7 days'
+                    endif
+                  elsif described_layout == 'size'
+                    if value_handle contains 'medium' and value_handle contains '24'
+                      assign option_badge = 'Most loved'
+                    elsif value_handle contains 'large' and value_handle contains '32'
+                      assign option_badge = 'Best value'
+                    endif
+                  endif
                   if metafield_descriptions != blank
-                    assign option_description = metafield_descriptions[product_option_value.name]
-                    if option_description == blank
-                      assign option_key = product_option_value.name | handleize
-                      assign option_description = metafield_descriptions[option_key]
+                    assign metafield_description = metafield_descriptions[product_option_value.name]
+                    if metafield_description == blank
+                      assign metafield_description = metafield_descriptions[value_handle]
+                    endif
+                    if metafield_description != blank
+                      assign option_description = metafield_description
                     endif
                   endif
                   if block != blank
                     for desc_block in block.blocks
                       if desc_block.type == '_option-description' or desc_block.type == 'option_description'
+                        assign desc_handle = desc_block.settings.option_value | strip | handleize
                         assign desc_match = desc_block.settings.option_value | strip | downcase
                         assign value_match = product_option_value.name | strip | downcase
-                        if desc_match == value_match
+                        if desc_handle == value_handle or desc_match == value_match
                           if desc_block.settings.description != blank
                             assign option_description = desc_block.settings.description
                           endif

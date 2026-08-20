@@ -11,12 +11,25 @@
   assign selected_product = closest.product
   assign selected_variant_media = selected_product.selected_or_first_available_variant.featured_media
   assign first_3d_model = selected_product.media | where: 'media_type', 'model' | first
+  assign gallery_presentation = block_settings.media_presentation
+  assign gallery_controls_style = block_settings.slideshow_controls_style
+  assign gallery_thumb_position = block_settings.thumbnail_position
+  assign gallery_thumb_width = block_settings.thumbnail_width
+  assign gallery_media_radius = block_settings.media_radius
+
+  if request.page_type == 'product'
+    assign gallery_presentation = 'carousel'
+    assign gallery_controls_style = 'thumbnails'
+    assign gallery_thumb_position = 'left'
+    assign gallery_thumb_width = 78
+    assign gallery_media_radius = 16
+  endif
 
   if block_settings.hide_variants
     assign variant_images = selected_product.images | where: 'attached_to_variant?', true | map: 'src'
   endif
 
-  if block_settings.slideshow_controls_style == 'thumbnails'
+  if gallery_controls_style == 'thumbnails'
     assign controls_on_media = false
   else
     assign controls_on_media = true
@@ -24,13 +37,13 @@
 
   assign render_slideshow_controls = false
 
-  if block_settings.media_presentation == 'carousel' or block_settings.slideshow_controls_style == block_settings.slideshow_mobile_controls_style
+  if gallery_presentation == 'carousel' or gallery_controls_style == block_settings.slideshow_mobile_controls_style
     assign render_slideshow_controls = true
   endif
 
   assign render_mobile_slideshow_controls = false
 
-  if block_settings.slideshow_controls_style != block_settings.slideshow_mobile_controls_style
+  if gallery_controls_style != block_settings.slideshow_mobile_controls_style
     assign slideshow_controls_class = 'mobile:hidden'
 
     if block_settings.slideshow_mobile_controls_style != 'hint'
@@ -38,7 +51,7 @@
     endif
   endif
 
-  assign slideshow_controls_style = block_settings.slideshow_controls_style
+  assign slideshow_controls_style = gallery_controls_style
   # Use a counter instead of dots when there are many images to avoid cropping/overflow.
   if slideshow_controls_style == 'dots' and selected_product.media.size > 15
     assign slideshow_controls_style = 'counter'
@@ -51,13 +64,13 @@
   else
     assign slideshow_class = ''
 
-    if block_settings.media_presentation == 'carousel'
+    if gallery_presentation == 'carousel'
       assign render_slideshow_arrows = true
     endif
   endif
 
   if slideshow_controls_style == 'thumbnails'
-    assign pagination_position = block_settings.thumbnail_position
+    assign pagination_position = gallery_thumb_position
   else
     assign pagination_position = 'center'
   endif
@@ -101,13 +114,13 @@
 
   # Determine if we're in single column mode (carousel or grid with one column)
   assign is_single_column = false
-  if block_settings.media_presentation == 'carousel' or sorted_media.size == 1 or block_settings.media_presentation == 'grid' and block_settings.media_columns == 'one'
+  if gallery_presentation == 'carousel' or sorted_media.size == 1 or gallery_presentation == 'grid' and block_settings.media_columns == 'one'
     assign is_single_column = true
   endif
 
   # Check if we need both sizes (for large first image in two-column grid)
   assign needs_both_sizes = false
-  if block_settings.media_presentation == 'grid' and block_settings.media_columns == 'two' and block_settings.large_first_image
+  if gallery_presentation == 'grid' and block_settings.media_columns == 'two' and block_settings.large_first_image
     assign needs_both_sizes = true
   endif
 
@@ -274,11 +287,11 @@
   class="
     spacing-style
     sticky-content
-    {% if block_settings.media_presentation == 'grid' %}
+    {% if gallery_presentation == 'grid' %}
       media-gallery--{{ block_settings.media_columns }}-column
       {% if block_settings.media_columns == "two" and block_settings.large_first_image%}media-gallery--large-first-image{% endif %}
     {% endif %}
-    media-gallery--{{ block_settings.media_presentation }}
+    media-gallery--{{ gallery_presentation }}
     {% if block_settings.slideshow_mobile_controls_style == 'hint' %}
       media-gallery--hint
     {% endif %}
@@ -286,8 +299,8 @@
       media-gallery--extend
     {% endif %}
   "
-  style="{% render 'spacing-style', settings: block_settings %} --thumbnail-width: {{ block_settings.thumbnail_width }}px; --media-radius: {{ block_settings.media_radius }}px;{% if block_settings.icons_style contains 'large' %} --slideshow-icon-padding: 0px;{% endif %}--image-gap: {{ block_settings.image_gap }}px;{% unless block_settings.aspect_ratio == 'adapt' %} --gallery-aspect-ratio: {{ block_settings.aspect_ratio }};{% endunless %}"
-  data-presentation="{{ block_settings.media_presentation }}"
+  style="{% render 'spacing-style', settings: block_settings %} --thumbnail-width: {{ gallery_thumb_width }}px; --media-radius: {{ gallery_media_radius }}px; --thumbnail-radius: 8px;{% if block_settings.icons_style contains 'large' %} --slideshow-icon-padding: 0px;{% endif %}--image-gap: {{ block_settings.image_gap }}px;{% unless block_settings.aspect_ratio == 'adapt' %} --gallery-aspect-ratio: {{ block_settings.aspect_ratio }};{% endunless %}"
+  data-presentation="{{ gallery_presentation }}"
   {{ block.shopify_attributes }}
 >
   {% capture slides %}
@@ -382,7 +395,7 @@
     mobile_slides_to_show: pdp_mobile_slides
   %}
 
-  {% if block_settings.media_presentation == 'grid' %}
+  {% if gallery_presentation == 'grid' %}
     <ul
       class="media-gallery__grid list-unstyled"
       data-testid="media-gallery-grid"

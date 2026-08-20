@@ -1,0 +1,185 @@
+{%- liquid
+  assign item_1_label = block.settings.item_1_label | default: 'Free shipping over $100'
+  assign item_2_label = block.settings.item_2_label | default: 'Worldwide Delivery'
+  assign item_3_label = block.settings.item_3_label | default: 'Lifetime warranty'
+  assign item_1_icon = block.settings.item_1_icon
+  assign item_2_icon = block.settings.item_2_icon
+  assign item_3_icon = block.settings.item_3_icon
+-%}
+
+<ul class="pdp-trust" role="list" {{ block.shopify_attributes }}>
+  <li class="pdp-trust__item">
+    <span class="pdp-trust__icon pdp-trust__icon--truck" aria-hidden="true">
+      {%- if item_1_icon != blank -%}
+        {{
+          item_1_icon
+          | image_url: width: 80
+          | image_tag:
+            class: 'pdp-trust__icon-img',
+            widths: '40, 80',
+            sizes: '21px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- else -%}
+        {{ 'pdp-trust-truck.svg' | inline_asset_content }}
+      {%- endif -%}
+    </span>
+    <span class="pdp-trust__label">{{ item_1_label | escape }}</span>
+  </li>
+  <li class="pdp-trust__item">
+    <span class="pdp-trust__icon pdp-trust__icon--globe" aria-hidden="true">
+      {%- if item_2_icon != blank -%}
+        {{
+          item_2_icon
+          | image_url: width: 80
+          | image_tag:
+            class: 'pdp-trust__icon-img',
+            widths: '40, 80',
+            sizes: '17px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- else -%}
+        {{ 'pdp-trust-globe.svg' | inline_asset_content }}
+      {%- endif -%}
+    </span>
+    <span class="pdp-trust__label">{{ item_2_label | escape }}</span>
+  </li>
+  <li class="pdp-trust__item">
+    <span class="pdp-trust__icon pdp-trust__icon--shield" aria-hidden="true">
+      {%- if item_3_icon != blank -%}
+        {{
+          item_3_icon
+          | image_url: width: 80
+          | image_tag:
+            class: 'pdp-trust__icon-img',
+            widths: '40, 80',
+            sizes: '13px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- else -%}
+        {{ 'pdp-trust-shield.svg' | inline_asset_content }}
+      {%- endif -%}
+    </span>
+    <span class="pdp-trust__label">{{ item_3_label | escape }}</span>
+  </li>
+</ul>
+
+{% stylesheet %}
+  .pdp-trust {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 0.5rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pdp-trust__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .pdp-trust__icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: #321c41;
+  }
+
+  .pdp-trust__icon svg,
+  .pdp-trust__icon-img {
+    display: block;
+    width: auto;
+    height: 0.8125rem;
+    object-fit: contain;
+  }
+
+  .pdp-trust__icon--globe svg,
+  .pdp-trust__icon--globe .pdp-trust__icon-img {
+    height: 1.0625rem;
+  }
+
+  .pdp-trust__icon--shield svg,
+  .pdp-trust__icon--shield .pdp-trust__icon-img {
+    height: 0.9375rem;
+  }
+
+  .pdp-trust__label {
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.1875rem;
+    color: #321c41;
+    text-align: center;
+    white-space: nowrap;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_trust",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "First item"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_1_label",
+      "label": "Label",
+      "default": "Free shipping over $100"
+    },
+    {
+      "type": "header",
+      "content": "Second item"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_2_label",
+      "label": "Label",
+      "default": "Worldwide Delivery"
+    },
+    {
+      "type": "header",
+      "content": "Third item"
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "item_3_label",
+      "label": "Label",
+      "default": "Lifetime warranty"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.pdp_trust",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}
