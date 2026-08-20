@@ -659,11 +659,73 @@ export default class VariantPicker extends Component {
       });
     });
 
-    if (described) this.#syncDescribedSizeVisibility();
+    if (described) {
+      this.#syncDescribedSizeVisibility();
+      this.#updateDescribedFormatPrices();
+    }
   }
 
   /**
-   * @returns {Array<{id: number, available: boolean, options: string[]}> | null}
+   * Keep a price on every Format card. Digital Download does not share sizes
+   * with print formats, so `option_value.variant` is often blank and the
+   * server omits the price. Use the current size when that combo exists,
+   * otherwise the cheapest variant for that format.
+   */
+  #updateDescribedFormatPrices() {
+    const variants = this.#readAllVariants();
+    if (!variants?.length) return;
+
+    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
+    const formatFieldset = fieldsets.find(
+      (fieldset) =>
+        fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
+    );
+    if (!formatFieldset) return;
+
+    const formatIndex = fieldsets.indexOf(formatFieldset);
+    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
+    let selectedSize = null;
+    if (sizeIndex >= 0) {
+      const checked = fieldsets[sizeIndex].querySelector('input:checked');
+      if (checked instanceof HTMLInputElement && !this.#isDigitalOption(checked)) {
+        selectedSize = checked.value;
+      }
+    }
+
+    formatFieldset.querySelectorAll('input').forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) return;
+
+      const matches = variants.filter((variant) => variant.options[formatIndex] === input.value);
+      if (matches.length === 0) return;
+
+      const withCurrentSize =
+        selectedSize && sizeIndex >= 0
+          ? matches.filter((variant) => variant.options[sizeIndex] === selectedSize)
+          : [];
+      const pool = withCurrentSize.length > 0 ? withCurrentSize : matches;
+      const available = pool.filter((variant) => variant.available);
+      const priced = (available.length > 0 ? available : pool)
+        .slice()
+        .sort((a, b) => (a.price ?? Number.POSITIVE_INFINITY) - (b.price ?? Number.POSITIVE_INFINITY));
+      const chosen = priced[0];
+      if (!chosen?.price_label) return;
+
+      const label = input.closest('label');
+      const row = label?.querySelector('.variant-option__card-row');
+      if (!row) return;
+
+      let priceEl = row.querySelector('.variant-option__card-price');
+      if (!priceEl) {
+        priceEl = document.createElement('span');
+        priceEl.className = 'variant-option__card-price';
+        row.appendChild(priceEl);
+      }
+      priceEl.textContent = chosen.price_label;
+    });
+  }
+
+  /**
+   * @returns {Array<{id: number, available: boolean, options: string[], price?: number, price_label?: string}> | null}
    */
   #readAllVariants() {
     const script = this.querySelector('script[type="application/json"][data-all-variants]');

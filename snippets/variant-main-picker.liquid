@@ -194,23 +194,34 @@
                   assign is_pairing_value = true
                 endif
                 assign option_selectable = product_option_value.available
+                assign format_fallback_variant = blank
                 if described_layout == 'format' or described_layout == 'cards'
                   assign option_selectable = false
                   for v in product_resource.variants
-                    if v.available == false
-                      continue
-                    endif
+                    assign format_match = false
                     if product_option.position == 1 and v.option1 == product_option_value.name
-                      assign option_selectable = true
+                      assign format_match = true
                     elsif product_option.position == 2 and v.option2 == product_option_value.name
-                      assign option_selectable = true
+                      assign format_match = true
                     elsif product_option.position == 3 and v.option3 == product_option_value.name
-                      assign option_selectable = true
+                      assign format_match = true
                     endif
-                    if option_selectable
-                      break
+                    if format_match
+                      if v.available
+                        assign option_selectable = true
+                      endif
+                      if format_fallback_variant == blank
+                        assign format_fallback_variant = v
+                      elsif v.available
+                        if format_fallback_variant.available == false or v.price < format_fallback_variant.price
+                          assign format_fallback_variant = v
+                        endif
+                      endif
                     endif
                   endfor
+                  if option_variant == blank and format_fallback_variant != blank
+                    assign option_variant = format_fallback_variant
+                  endif
                 endif
                 if option_variant != blank
                   assign option_price = option_variant.price
@@ -378,9 +389,11 @@
                         >
                           {{- product_option_value | escape -}}
                         </span>
-                        {%- if option_price != blank -%}
+                        {%- if described_layout == 'format' or described_layout == 'cards' or option_price != blank -%}
                           <span class="variant-option__card-price">
-                            {{- option_price | money_without_trailing_zeros -}}
+                            {%- if option_price != blank -%}
+                              {{- option_price | money_without_trailing_zeros -}}
+                            {%- endif -%}
                           </span>
                         {%- endif -%}
                       </span>
@@ -511,7 +524,7 @@
       <script type="application/json" data-all-variants>
         [
           {%- for v in product_resource.variants -%}
-            {"id":{{ v.id | json }},"available":{{ v.available | json }},"options":{{ v.options | json }}}
+            {"id":{{ v.id | json }},"available":{{ v.available | json }},"options":{{ v.options | json }},"price":{{ v.price | json }},"price_label":{{ v.price | money_without_trailing_zeros | json }}}
             {%- unless forloop.last -%},{%- endunless -%}
           {%- endfor -%}
         ]
