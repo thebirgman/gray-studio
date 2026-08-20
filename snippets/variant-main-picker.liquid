@@ -179,10 +179,15 @@
             assign hide_size_axis = false
             assign hide_finish_axis = false
             if described_layout == 'size'
-              assign selected_size_handle = product_option.selected_value | handleize
-              if selected_size_handle contains 'digital'
-                assign hide_size_axis = true
-              endif
+              for option in product_resource.options_with_values
+                assign format_handle = option.name | handleize
+                if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
+                  assign format_value_handle = option.selected_value | handleize
+                  if format_value_handle contains 'digital'
+                    assign hide_size_axis = true
+                  endif
+                endif
+              endfor
             endif
             if described_layout == 'finish'
               assign selected_format_is_framed = false
@@ -276,6 +281,7 @@
                 assign option_compare = blank
                 assign option_save = 0
                 assign value_handle = product_option_value.name | handleize
+                assign value_name = product_option_value.name | strip
                 assign is_pairing_value = false
                 if described_layout == 'size' and value_handle contains 'digital'
                   assign is_pairing_value = true
@@ -288,15 +294,23 @@
                 assign option_selectable = product_option_value.available
                 assign format_fallback_variant = blank
                 if described_layout == 'format' or described_layout == 'cards'
+                  assign option_variant = blank
                   assign option_selectable = false
                   for v in product_resource.variants
                     assign format_match = false
-                    if product_option.position == 1 and v.option1 == product_option_value.name
+                    assign v_option1 = v.option1 | strip
+                    assign v_option2 = v.option2 | strip
+                    assign v_option3 = v.option3 | strip
+                    if v_option1 == value_name or v_option2 == value_name or v_option3 == value_name
                       assign format_match = true
-                    elsif product_option.position == 2 and v.option2 == product_option_value.name
-                      assign format_match = true
-                    elsif product_option.position == 3 and v.option3 == product_option_value.name
-                      assign format_match = true
+                    endif
+                    if format_match == false
+                      assign v_handle1 = v.option1 | handleize
+                      assign v_handle2 = v.option2 | handleize
+                      assign v_handle3 = v.option3 | handleize
+                      if v_handle1 == value_handle or v_handle2 == value_handle or v_handle3 == value_handle
+                        assign format_match = true
+                      endif
                     endif
                     if format_match
                       if v.available

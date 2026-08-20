@@ -535,17 +535,24 @@ export default class VariantPicker extends Component {
       });
 
     const exact = variants.find((variant) => variant.available && matchesSelection(variant));
-    if (exact) {
+    const formatIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--format'));
+    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
+    const formatIsDigital = /digital/i.test(String(selectedByPosition[formatIndex] ?? ''));
+    const sizeIsDigital = /digital/i.test(String(selectedByPosition[sizeIndex] ?? ''));
+    const invalidDigitalPairing = formatIndex >= 0 && sizeIndex >= 0 && formatIsDigital !== sizeIsDigital;
+
+    if (exact && !invalidDigitalPairing) {
       this.#syncDescribedAxesVisibility();
       return;
     }
 
-    const candidates = variants.filter(
-      (variant) => variant.available && variant.options[changedIndex] === changedInput.value
-    );
+    const candidates = variants.filter((variant) => {
+      if (!variant.available) return false;
+      const option = String(variant.options[changedIndex] ?? '');
+      return option === changedInput.value || option.trim().toLowerCase() === String(changedInput.value || '').trim().toLowerCase();
+    });
     if (candidates.length === 0) return;
 
-    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
     const score = (/** @type {{options: string[]}} */ variant) => {
       let total = 0;
       variant.options.forEach((option, index) => {
@@ -554,7 +561,8 @@ export default class VariantPicker extends Component {
       });
       if (sizeIndex >= 0 && changedIndex !== sizeIndex) {
         const sizeValue = variant.options[sizeIndex] || '';
-        if (/medium/i.test(sizeValue)) total += 2;
+        if (/digital/i.test(sizeValue)) total -= 20;
+        else if (/medium/i.test(sizeValue)) total += 2;
         else if (/small/i.test(sizeValue)) total += 1;
       }
       return total;
@@ -659,21 +667,19 @@ export default class VariantPicker extends Component {
     if (!this.#isDescribedPicker()) return;
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
 
-    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
-    const sizeChecked = sizeFieldset?.querySelector('input:checked') ?? null;
-    if (sizeFieldset) {
-      sizeFieldset.toggleAttribute('hidden', this.#isDigitalOption(sizeChecked));
-    }
-
     const formatFieldset = fieldsets.find(
       (fieldset) =>
         fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
     );
     const formatChecked = formatFieldset?.querySelector('input:checked') ?? null;
-    const showFinish =
-      this.#isFramedFormat(formatChecked) &&
-      !this.#isDigitalOption(formatChecked) &&
-      !this.#isDigitalOption(sizeChecked);
+    const formatIsDigital = this.#isDigitalOption(formatChecked);
+
+    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
+    if (sizeFieldset) {
+      sizeFieldset.toggleAttribute('hidden', formatIsDigital);
+    }
+
+    const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
     this.#syncFrameFinishProperty(showFinish);
   }
 
@@ -746,22 +752,25 @@ export default class VariantPicker extends Component {
     if (!variants?.length) return;
 
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
-    const formatFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--format'));
+    const formatFieldset = fieldsets.find(
+      (fieldset) =>
+        fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
+    );
     if (!formatFieldset) return;
 
-    const formatInput = formatFieldset.querySelector('input');
-    const optionPosition = Number.parseInt(
-      (formatInput instanceof HTMLInputElement ? formatInput.dataset.inputId || '' : '').split('-')[0],
-      10
-    );
-    const formatIndex = Number.isInteger(optionPosition) && optionPosition > 0
-      ? optionPosition - 1
-      : fieldsets.indexOf(formatFieldset);
+    const normalize = (value) => String(value || '').trim().toLowerCase();
 
     formatFieldset.querySelectorAll('input').forEach((input) => {
       if (!(input instanceof HTMLInputElement)) return;
 
-      const matches = variants.filter((variant) => variant.options[formatIndex] === input.value);
+      const inputValue = input.value;
+      const inputHandle = input.dataset.optionHandle || '';
+      const matches = variants.filter((variant) =>
+        variant.options.some((option) => {
+          const value = String(option || '');
+          return value === inputValue || normalize(value) === normalize(inputValue) || value.toLowerCase().replace(/[^a-z0-9]+/g, '-') === inputHandle;
+        })
+      );
       if (matches.length === 0) return;
 
       const available = matches.filter((variant) => variant.available);
