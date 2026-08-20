@@ -29,7 +29,8 @@ export default class VariantPicker extends Component {
   /** @type {HTMLInputElement[][]} */
   #radios = [];
 
-  #resizeObserver = new ResizeNotifier(() => this.updateVariantPickerCss());
+  /** @type {string} */
+  #frameFinishValue = 'Black frame';
 
   connectedCallback() {
     super.connectedCallback();
@@ -48,7 +49,7 @@ export default class VariantPicker extends Component {
     this.addEventListener('change', this.variantChanged.bind(this));
     this.#resizeObserver.observe(this);
     this.recomputeAvailability();
-    this.#syncDescribedSizeVisibility();
+    this.#syncDescribedAxesVisibility();
   }
 
   disconnectedCallback() {
@@ -62,6 +63,11 @@ export default class VariantPicker extends Component {
    */
   variantChanged(event) {
     if (!(event.target instanceof HTMLElement)) return;
+
+    if (event.target instanceof HTMLInputElement && event.target.name.startsWith('properties')) {
+      this.#captureFrameFinish();
+      return;
+    }
 
     const selectedOption =
       event.target instanceof HTMLSelectElement ? event.target.options[event.target.selectedIndex] : event.target;
@@ -461,6 +467,8 @@ export default class VariantPicker extends Component {
       this.dataset.productUrl = newProductUrl;
     }
 
+    this.#captureFrameFinish();
+
     morph(this, newVariantPickerSource, {
       ...MORPH_OPTIONS,
       getNodeKey: (node) => {
@@ -475,8 +483,9 @@ export default class VariantPicker extends Component {
     // availability — Shopify's server-side computation is unreliable for some
     // selection paths (see snippets/variant-main-picker.liquid for context).
     this.#refreshRadioCaches();
+    this.#restoreFrameFinish();
     this.recomputeAvailability();
-    this.#syncDescribedSizeVisibility();
+    this.#syncDescribedAxesVisibility();
 
     return newProduct;
   }
@@ -527,7 +536,7 @@ export default class VariantPicker extends Component {
 
     const exact = variants.find((variant) => variant.available && matchesSelection(variant));
     if (exact) {
-      this.#syncDescribedSizeVisibility();
+      this.#syncDescribedAxesVisibility();
       return;
     }
 
@@ -566,7 +575,7 @@ export default class VariantPicker extends Component {
       }
     });
 
-    this.#syncDescribedSizeVisibility();
+    this.#syncDescribedAxesVisibility();
   }
 
   /**
@@ -601,13 +610,71 @@ export default class VariantPicker extends Component {
     return (input.dataset.optionHandle || '').includes('digital');
   }
 
-  #syncDescribedSizeVisibility() {
+  /** @param {Element | null} input */
+  #isFramedFormat(input) {
+    if (!(input instanceof HTMLInputElement)) return false;
+    const handle = input.dataset.optionHandle || '';
+    if (handle.includes('digital') || handle.includes('unframed')) return false;
+    return handle.includes('framed');
+  }
+
+  /** @returns {HTMLFieldSetElement | null} */
+  #getFrameFinishProperty() {
+    const root = this.querySelector('[data-frame-finish-property]');
+    return root instanceof HTMLFieldSetElement ? root : null;
+  }
+
+  #captureFrameFinish() {
+    const checked = this.#getFrameFinishProperty()?.querySelector('input:checked');
+    if (checked instanceof HTMLInputElement && !checked.disabled) {
+      this.#frameFinishValue = checked.value;
+    }
+  }
+
+  #restoreFrameFinish() {
+    const fieldset = this.#getFrameFinishProperty();
+    if (!fieldset) return;
+    const match = Array.from(fieldset.querySelectorAll('input')).find(
+      (input) => input instanceof HTMLInputElement && input.value === this.#frameFinishValue
+    );
+    if (match instanceof HTMLInputElement) {
+      match.checked = true;
+    }
+  }
+
+  #syncFrameFinishProperty(showFinish) {
+    const fieldset = this.#getFrameFinishProperty();
+    if (!fieldset) return;
+    fieldset.toggleAttribute('hidden', !showFinish);
+    fieldset.querySelectorAll('input').forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) return;
+      input.disabled = !showFinish;
+      if (showFinish && input.value === this.#frameFinishValue) {
+        input.checked = true;
+      }
+    });
+  }
+
+  #syncDescribedAxesVisibility() {
     if (!this.#isDescribedPicker()) return;
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
+
     const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
-    if (!sizeFieldset) return;
-    const checked = sizeFieldset.querySelector('input:checked');
-    sizeFieldset.toggleAttribute('hidden', this.#isDigitalOption(checked));
+    const sizeChecked = sizeFieldset?.querySelector('input:checked') ?? null;
+    if (sizeFieldset) {
+      sizeFieldset.toggleAttribute('hidden', this.#isDigitalOption(sizeChecked));
+    }
+
+    const formatFieldset = fieldsets.find(
+      (fieldset) =>
+        fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
+    );
+    const formatChecked = formatFieldset?.querySelector('input:checked') ?? null;
+    const showFinish =
+      this.#isFramedFormat(formatChecked) &&
+      !this.#isDigitalOption(formatChecked) &&
+      !this.#isDigitalOption(sizeChecked);
+    this.#syncFrameFinishProperty(showFinish);
   }
 
   /**
@@ -621,7 +688,8 @@ export default class VariantPicker extends Component {
    * available.
    *
    * Described Format/Size cards skip combination checks on Format (so Digital
-   * vs poster stays clickable) and never draw strikethroughs.
+   * vs poster stays clickable) and never draw strikethroughs. A leftover
+   * Shopify Frame Finish option stays hidden and is not a cart variant.
    */
   recomputeAvailability() {
     const variants = this.#readAllVariants();
@@ -640,7 +708,10 @@ export default class VariantPicker extends Component {
     });
 
     fieldsets.forEach((fieldset, fieldsetIndex) => {
-      const lockOtherAxes = !described || fieldset.classList.contains('variant-option--size');
+      const lockOtherAxes =
+        !described ||
+        fieldset.classList.contains('variant-option--size') ||
+        fieldset.classList.contains('variant-option--finish-native');
       const inputs = fieldset.querySelectorAll('input');
       inputs.forEach((input) => {
         const isAvailable = variants.some((variant) => {
@@ -660,37 +731,32 @@ export default class VariantPicker extends Component {
     });
 
     if (described) {
-      this.#syncDescribedSizeVisibility();
+      this.#syncDescribedAxesVisibility();
       this.#updateDescribedFormatPrices();
     }
   }
 
   /**
-   * Keep a price on every Format card. Digital Download does not share sizes
-   * with print formats, so `option_value.variant` is often blank and the
-   * server omits the price. Use the current size when that combo exists,
-   * otherwise the cheapest variant for that format.
+   * Format cards always show the lowest price for that format, not the
+   * currently selected size/variant. Shopify's option_value.variant is the
+   * current combo, so every card can land on the same price without this.
    */
   #updateDescribedFormatPrices() {
     const variants = this.#readAllVariants();
     if (!variants?.length) return;
 
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
-    const formatFieldset = fieldsets.find(
-      (fieldset) =>
-        fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
-    );
+    const formatFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--format'));
     if (!formatFieldset) return;
 
-    const formatIndex = fieldsets.indexOf(formatFieldset);
-    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
-    let selectedSize = null;
-    if (sizeIndex >= 0) {
-      const checked = fieldsets[sizeIndex].querySelector('input:checked');
-      if (checked instanceof HTMLInputElement && !this.#isDigitalOption(checked)) {
-        selectedSize = checked.value;
-      }
-    }
+    const formatInput = formatFieldset.querySelector('input');
+    const optionPosition = Number.parseInt(
+      (formatInput instanceof HTMLInputElement ? formatInput.dataset.inputId || '' : '').split('-')[0],
+      10
+    );
+    const formatIndex = Number.isInteger(optionPosition) && optionPosition > 0
+      ? optionPosition - 1
+      : fieldsets.indexOf(formatFieldset);
 
     formatFieldset.querySelectorAll('input').forEach((input) => {
       if (!(input instanceof HTMLInputElement)) return;
@@ -698,16 +764,11 @@ export default class VariantPicker extends Component {
       const matches = variants.filter((variant) => variant.options[formatIndex] === input.value);
       if (matches.length === 0) return;
 
-      const withCurrentSize =
-        selectedSize && sizeIndex >= 0
-          ? matches.filter((variant) => variant.options[sizeIndex] === selectedSize)
-          : [];
-      const pool = withCurrentSize.length > 0 ? withCurrentSize : matches;
-      const available = pool.filter((variant) => variant.available);
-      const priced = (available.length > 0 ? available : pool)
-        .slice()
-        .sort((a, b) => (a.price ?? Number.POSITIVE_INFINITY) - (b.price ?? Number.POSITIVE_INFINITY));
-      const chosen = priced[0];
+      const available = matches.filter((variant) => variant.available);
+      const pool = available.length > 0 ? available : matches;
+      const chosen = pool.reduce((lowest, variant) =>
+        (variant.price ?? Number.POSITIVE_INFINITY) < (lowest.price ?? Number.POSITIVE_INFINITY) ? variant : lowest
+      );
       if (!chosen?.price_label) return;
 
       const label = input.closest('label');

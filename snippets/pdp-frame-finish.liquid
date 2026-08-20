@@ -1,0 +1,75 @@
+{%- doc -%}
+  Frame finish picker for Framed Canvas. This is a cart line-item property,
+  not a Shopify variant option.
+
+  @param {object} product_resource - The product object
+  @param {object} section - The section object
+  @param {object} [block] - The variant picker block
+{%- enddoc -%}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign product_form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign guide_label = block_settings.frame_guide_label | default: 'Frame guide'
+  assign guide_link = block_settings.frame_guide_link | default: '#frame-guide'
+  assign show_frame_finish = false
+
+  for option in product_resource.options_with_values
+    assign format_handle = option.name | handleize
+    if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
+      assign format_value_handle = option.selected_value | handleize
+      if format_value_handle contains 'digital'
+        assign show_frame_finish = false
+      elsif format_value_handle contains 'framed'
+        unless format_value_handle contains 'unframed'
+          assign show_frame_finish = true
+        endunless
+      endif
+    endif
+  endfor
+
+  assign finish_values = 'Black frame,White frame' | split: ','
+-%}
+
+<fieldset
+  class="variant-option variant-option--buttons variant-option--described variant-option--finish pdp-frame-finish"
+  data-frame-finish-property
+  data-key="pdp-frame-finish"
+  {% unless show_frame_finish %}
+    hidden
+  {% endunless %}
+>
+  <legend>
+    <span class="variant-option__legend-heading">
+      <span class="variant-option__legend-text">Frame finish</span>
+    </span>
+    {%- if guide_label != blank -%}
+      <a class="variant-option__size-guide" href="{{ guide_link }}">
+        <span class="variant-option__size-guide-icon" aria-hidden="true">
+          {{ 'variant-size-guide.svg' | inline_asset_content }}
+        </span>
+        <span class="variant-option__size-guide-label">{{ guide_label | escape }}</span>
+      </a>
+    {%- endif -%}
+  </legend>
+  {%- for finish_value in finish_values -%}
+    <label class="variant-option__button-label variant-option__button-label--described">
+      <input
+        type="radio"
+        name="properties[Frame Finish]"
+        value="{{ finish_value | escape }}"
+        form="{{ product_form_id }}"
+        data-option-handle="{{ finish_value | handleize }}"
+        {% if forloop.first %}
+          checked
+        {% endif %}
+        {% unless show_frame_finish %}
+          disabled
+        {% endunless %}
+      >
+      <span class="variant-option__card-title" data-key="variant-option-text">
+        {{- finish_value | escape -}}
+      </span>
+    </label>
+  {%- endfor -%}
+</fieldset>

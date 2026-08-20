@@ -23,10 +23,28 @@
     opacity: 1;
   }
 
-  /* Right column: Figma 520px, 20px stack gap */
+  /* Right column: Figma 520px, centered in the 50% details track */
   @media screen and (min-width: 750px) {
+    .product-information .product-details {
+      justify-content: center;
+    }
+
     .product-information .product-details > .group-block {
+      width: 100%;
       max-width: 32.5rem;
+      margin-inline: auto;
+    }
+
+    .product-information
+      .product-information__grid:not(.product-information--media-none).product-information--media-left
+      .product-information__media {
+      padding-right: 2.1875rem;
+    }
+
+    .product-information
+      .product-information__grid:not(.product-information--media-none).product-information--media-left
+      .product-details {
+      padding-left: 2.1875rem;
     }
   }
 
@@ -95,31 +113,49 @@
 
   @media screen and (min-width: 750px) {
     .product-information .media-gallery--carousel slideshow-component:has(slideshow-controls[thumbnails]) {
-      column-gap: 0.9375rem;
+      column-gap: 1.5rem;
     }
   }
 
-  /* Mobile: two images side by side, 16px radius already from --media-radius */
+  /* Mobile: 85% slide with the next image peeking */
   @media screen and (max-width: 749px) {
-    .product-information slideshow-component {
-      --pdp-gallery-gap: 0.5rem;
-    }
-
-    .product-information slideshow-container {
-      gap: var(--pdp-gallery-gap);
+    .product-information slideshow-slides {
+      --slideshow-gap: 0.5rem;
     }
 
     .product-information slideshow-component:not(.slideshow--single-media) slideshow-slide {
-      width: calc((100% - var(--pdp-gallery-gap, 0.5rem)) / 2);
-      flex: 0 0 calc((100% - var(--pdp-gallery-gap, 0.5rem)) / 2);
+      --slide-width: 85%;
+      width: 85%;
+      flex: 0 0 85%;
+      scroll-snap-align: start;
+    }
+
+    .product-information
+      :is(
+        slideshow-slide:has(+ slideshow-slide[aria-hidden='false']:last-of-type),
+        slideshow-slide[aria-hidden='false'] + slideshow-slide
+      ) {
+      content-visibility: auto;
+    }
+
+    .product-information slideshow-component[actioned]
+      :is(
+        slideshow-slide:has(+ slideshow-slide[aria-hidden='false']:last-of-type),
+        slideshow-slide[aria-hidden='false'] + slideshow-slide
+      ) {
+      content-visibility: visible;
     }
   }
 
-  /* Quantity is not in the Figma PDP */
+  /* Quantity is not in the Figma PDP form; sticky cart has its own selector */
   .product-information .quantity-selector-wrapper,
   .product-information .quantity-label,
   .product-information .quantity-rules {
     display: none;
+  }
+
+  .product-information .sticky-add-to-cart .quantity-selector-wrapper {
+    display: flex;
   }
 
   /* Add to cart + Buy now — Figma 46×256, 4px radius */

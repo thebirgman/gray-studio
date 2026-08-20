@@ -95,17 +95,71 @@
 
           assign option_handle = product_option.name | handleize
           assign described_layout = ''
+          assign is_finish_option = false
+          if option_handle == 'finish' or option_handle contains 'finish'
+            assign is_finish_option = true
+          elsif option_handle contains 'frame'
+            unless option_handle contains 'format'
+              assign is_finish_option = true
+            endunless
+          endif
           if show_option_descriptions and block_settings.variant_style == 'buttons'
             assign described_layout = 'cards'
             if option_handle == 'size' or option_handle contains 'size'
               assign described_layout = 'size'
-            elsif option_handle == 'format' or option_handle contains 'format' or option_handle contains 'finish' or option_handle contains 'print'
+            elsif option_handle == 'format' or option_handle contains 'format' or option_handle contains 'print'
               assign described_layout = 'format'
             endif
           endif
         -%}
 
-        {%- if product_option.values.size == 1 and variant_style != 'swatch' and described_layout == blank -%}
+        {%- if is_finish_option -%}
+          {%- liquid
+            assign default_option_index = product_option.position | minus: 1
+            assign default_value_at_position = default_variant.options[default_option_index]
+          -%}
+          <fieldset
+            class="variant-option variant-option--finish-native"
+            data-fieldset-index="{{ fieldset_index }}"
+            ref="fieldsets[]"
+            hidden
+          >
+            {%- for product_option_value in product_option.values -%}
+              {%- liquid
+                if product_option_value.name == default_value_at_position
+                  assign is_selected_default = true
+                else
+                  assign is_selected_default = false
+                endif
+                assign value_handle = product_option_value.name | handleize
+              -%}
+              <input
+                type="radio"
+                name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                value="{{ product_option_value | escape }}"
+                data-previous-checked="false"
+                data-fieldset-index="{{ fieldset_index }}"
+                data-input-index="{{ forloop.index0 }}"
+                data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                data-option-name="{{ product_option.name | escape }}"
+                data-option-handle="{{ value_handle }}"
+                data-option-value-id="{{ product_option_value.id }}"
+                data-option-available="{{ product_option_value.available }}"
+                data-connected-product-url="{{ product_option_value.product_url }}"
+                {% if product_option_value.variant.id %}
+                  data-variant-id="{{ product_option_value.variant.id }}"
+                {% endif %}
+                {% if is_selected_default %}
+                  data-current-checked="true"
+                  checked
+                {% else %}
+                  data-current-checked="false"
+                {% endif %}
+              >
+            {%- endfor -%}
+          </fieldset>
+          {%- assign fieldset_index = fieldset_index | plus: 1 -%}
+        {%- elsif product_option.values.size == 1 and variant_style != 'swatch' and described_layout == blank -%}
           <div
             class="variant-option"
             data-testid="variant-option-single"
@@ -123,25 +177,79 @@
             assign default_option_index = product_option.position | minus: 1
             assign default_value_at_position = default_variant.options[default_option_index]
             assign hide_size_axis = false
+            assign hide_finish_axis = false
             if described_layout == 'size'
               assign selected_size_handle = product_option.selected_value | handleize
               if selected_size_handle contains 'digital'
                 assign hide_size_axis = true
               endif
             endif
+            if described_layout == 'finish'
+              assign selected_format_is_framed = false
+              assign selected_format_is_digital = false
+              for option in product_resource.options_with_values
+                assign format_handle = option.name | handleize
+                if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
+                  assign format_value_handle = option.selected_value | handleize
+                  if format_value_handle contains 'digital'
+                    assign selected_format_is_digital = true
+                  elsif format_value_handle contains 'framed'
+                    unless format_value_handle contains 'unframed'
+                      assign selected_format_is_framed = true
+                    endunless
+                  endif
+                endif
+              endfor
+              if selected_format_is_digital or selected_format_is_framed == false
+                assign hide_finish_axis = true
+              endif
+            endif
+            assign show_option_guide = false
+            assign guide_label = ''
+            assign guide_link = ''
+            if described_layout == 'size'
+              assign guide_label = block_settings.size_guide_label | default: 'Size guide'
+              assign guide_link = block_settings.size_guide_link | default: '#sizing-guide'
+              assign show_option_guide = true
+            elsif described_layout == 'finish'
+              assign guide_label = block_settings.frame_guide_label | default: 'Frame guide'
+              assign guide_link = block_settings.frame_guide_link | default: '#frame-guide'
+              assign show_option_guide = true
+            endif
           -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% elsif described_layout != blank %} variant-option--described variant-option--{{ described_layout }}{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
-            {% if hide_size_axis %}
+            {% if hide_size_axis or hide_finish_axis %}
               hidden
             {% endif %}
             {{ option_id_attribute }}
           >
             <legend>
               {%- if described_layout != blank -%}
-                <span class="variant-option__legend-text">Choose a {{ product_option.name | downcase | escape }}</span>
+                <span class="variant-option__legend-heading">
+                  <span class="variant-option__legend-text">
+                    {%- if described_layout == 'size' -%}
+                      Choose a size (prior to framing)
+                    {%- elsif described_layout == 'finish' -%}
+                      Frame finish
+                    {%- else -%}
+                      Choose a {{ product_option.name | downcase | escape }}
+                    {%- endif -%}
+                  </span>
+                </span>
+                {%- if show_option_guide and guide_label != blank -%}
+                    <a
+                      class="variant-option__size-guide"
+                      href="{{ guide_link }}"
+                    >
+                      <span class="variant-option__size-guide-icon" aria-hidden="true">
+                        {{ 'variant-size-guide.svg' | inline_asset_content }}
+                      </span>
+                      <span class="variant-option__size-guide-label">{{ guide_label | escape }}</span>
+                    </a>
+                {%- endif -%}
               {%- else -%}
                 {{ product_option.name | escape -}}
                 {%- if variant_style == 'swatch' -%}
@@ -149,27 +257,6 @@
                 {%- endif %}
               {%- endif -%}
             </legend>
-            {%- if described_layout == 'size' -%}
-              {%- liquid
-                assign size_guide_label = block_settings.size_guide_label | default: 'Size guide'
-                assign size_guide_link = block_settings.size_guide_link
-              -%}
-              {%- if size_guide_label != blank -%}
-                <a
-                  class="variant-option__size-guide"
-                  {% if size_guide_link != blank %}
-                    href="{{ size_guide_link }}"
-                  {% else %}
-                    href="#sizing-guide"
-                  {% endif %}
-                >
-                  <span class="variant-option__size-guide-icon" aria-hidden="true">
-                    {{ 'variant-size-guide.svg' | inline_asset_content }}
-                  </span>
-                  <span class="variant-option__size-guide-label">{{ size_guide_label | escape }}</span>
-                </a>
-              {%- endif -%}
-            {%- endif -%}
             {%- for product_option_value in product_option.values -%}
               {% if product_option_value.size > longest_value and option_id_attribute %}
                 {% assign longest_value = product_option_value.size %}
@@ -193,6 +280,11 @@
                 if described_layout == 'size' and value_handle contains 'digital'
                   assign is_pairing_value = true
                 endif
+                if described_layout == 'finish'
+                  if value_handle contains 'none' or value_handle contains 'unframed' or value_handle == 'n-a' or value_handle contains 'no-frame'
+                    assign is_pairing_value = true
+                  endif
+                endif
                 assign option_selectable = product_option_value.available
                 assign format_fallback_variant = blank
                 if described_layout == 'format' or described_layout == 'cards'
@@ -212,14 +304,14 @@
                       endif
                       if format_fallback_variant == blank
                         assign format_fallback_variant = v
-                      elsif v.available
-                        if format_fallback_variant.available == false or v.price < format_fallback_variant.price
-                          assign format_fallback_variant = v
-                        endif
+                      elsif v.available and format_fallback_variant.available == false
+                        assign format_fallback_variant = v
+                      elsif v.available == format_fallback_variant.available and v.price < format_fallback_variant.price
+                        assign format_fallback_variant = v
                       endif
                     endif
                   endfor
-                  if option_variant == blank and format_fallback_variant != blank
+                  if format_fallback_variant != blank
                     assign option_variant = format_fallback_variant
                   endif
                 endif
@@ -310,6 +402,14 @@
                       endif
                     endfor
                   endif
+                  if described_layout == 'finish'
+                    assign option_badge = blank
+                    assign option_description = blank
+                    assign option_thumb = blank
+                    assign option_price = blank
+                    assign option_compare = blank
+                    assign option_save = 0
+                  endif
                 endif
               -%}
               <label
@@ -361,6 +461,13 @@
                     variant_image: featured_media,
                     mode: 'unscaled'
                   %}
+                {% elsif described_layout == 'finish' %}
+                  <span
+                    class="variant-option__card-title"
+                    data-key="variant-option-text"
+                  >
+                    {{- product_option_value | escape -}}
+                  </span>
                 {% elsif described_layout != blank %}
                   {%- if option_badge != blank -%}
                     <span class="variant-option__card-badge">{{ option_badge | escape }}</span>
@@ -389,7 +496,7 @@
                         >
                           {{- product_option_value | escape -}}
                         </span>
-                        {%- if described_layout == 'format' or described_layout == 'cards' or option_price != blank -%}
+                        {%- if described_layout != 'finish' and option_price != blank or described_layout == 'format' or described_layout == 'cards' -%}
                           <span class="variant-option__card-price">
                             {%- if option_price != blank -%}
                               {{- option_price | money_without_trailing_zeros -}}
@@ -510,6 +617,14 @@
           </div>
         {%- endif -%}
       {%- endfor -%}
+
+      {%- if block_settings.variant_style == 'buttons' -%}
+        {% render 'pdp-frame-finish',
+          product_resource: product_resource,
+          section: section,
+          block: block
+        %}
+      {%- endif -%}
 
       <script type="application/json">
         {{ default_variant | json }}

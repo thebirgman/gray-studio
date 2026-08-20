@@ -40,7 +40,7 @@ import { StandardEvents, ProductSelectEvent, CartLinesUpdateEvent, CartErrorEven
  * @extends {Component<StickyAddToCartRefs>}
  */
 class StickyAddToCartComponent extends Component {
-  requiredRefs = ['stickyBar', 'addToCartButton', 'quantityDisplay', 'quantityNumber'];
+  requiredRefs = ['stickyBar', 'addToCartButton'];
 
   /** @type {IntersectionObserver | null} */
   #buyButtonsIntersectionObserver = null;
@@ -257,8 +257,8 @@ class StickyAddToCartComponent extends Component {
         if (variant == null) {
           this.#handleVariantUnavailable();
         }
-        // Restore the current quantity display if needed
-        this.#updateButtonText();
+        this.#restoreStickyQuantity();
+        this.#syncFormQuantity(this.#currentQuantity);
       })
       .catch((error) => {
         if (error?.name !== 'AbortError') console.warn('[sticky-add-to-cart] Event promise rejected:', error);
@@ -276,6 +276,7 @@ class StickyAddToCartComponent extends Component {
     if (!variantTitleElement || !variantPicker) return;
 
     const selectedOptions = Array.from(variantPicker.querySelectorAll('input:checked'))
+      .filter((option) => !String(/** @type {HTMLInputElement} */ (option).name).startsWith('properties'))
       .map((option) => /** @type {HTMLInputElement} */ (option).value)
       .filter((value) => value !== '')
       .join(' / ');
@@ -313,7 +314,7 @@ class StickyAddToCartComponent extends Component {
     if (event.detail.cartLine) return;
 
     this.#currentQuantity = event.detail.quantity;
-    this.#updateButtonText();
+    this.#syncFormQuantity(this.#currentQuantity);
   };
 
   /**
@@ -375,26 +376,27 @@ class StickyAddToCartComponent extends Component {
    */
   #getInitialQuantity() {
     this.#currentQuantity = parseInt(this.dataset.initialQuantity || '1') || 1;
-    this.#updateButtonText();
+    this.#restoreStickyQuantity();
+    this.#syncFormQuantity(this.#currentQuantity);
   }
 
   /**
-   * Updates the button text to include quantity
+   * Copies sticky quantity onto the (hidden) product-form quantity selector
+   * so Add to cart uses the same amount.
+   * @param {number} quantity
    */
-  #updateButtonText() {
-    const { addToCartButton, quantityDisplay, quantityNumber } = this.refs;
+  #syncFormQuantity(quantity) {
+    const productForm = this.#getProductForm();
+    const selector = productForm?.querySelector('quantity-selector-component');
+    if (!selector || typeof selector.setValue !== 'function') return;
+    if (String(selector.getValue?.()) === String(quantity)) return;
+    selector.setValue(String(quantity));
+  }
 
-    const available = !addToCartButton.disabled;
-
-    // Update the quantity number
-    quantityNumber.textContent = this.#currentQuantity.toString();
-
-    // Show/hide the quantity display based on availability and quantity
-    if (available && this.#currentQuantity > 1) {
-      quantityDisplay.style.display = 'inline';
-    } else {
-      quantityDisplay.style.display = 'none';
-    }
+  #restoreStickyQuantity() {
+    const selector = this.querySelector('.sticky-add-to-cart__qty-wrap quantity-selector-component');
+    if (!selector || typeof selector.setValue !== 'function') return;
+    selector.setValue(String(this.#currentQuantity));
   }
 }
 
