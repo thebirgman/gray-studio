@@ -503,64 +503,94 @@ export default class VariantPicker extends Component {
   }
 
   /**
-   * Format/Size cards are not a strict Shopify combination grid. Digital
-   * Download only exists with a hidden "Digital file" size, so combination
-   * availability would strike every other card. When the clicked option has
-   * no variant with the current other selections, pick the best available
-   * variant that includes the new option (prefer keeping the other axis,
-   * then Medium).
-   * @param {HTMLInputElement} changedInput
+   * Shopify option position (0-based) for a picker fieldset, from data-input-id.
+   * Fieldset index can differ when a leftover Frame Finish option sits in between.
+   * @param {HTMLFieldSetElement} fieldset
+   * @returns {number | null}
    */
+  #shopifyOptionIndex(fieldset) {
+    const input = fieldset.querySelector('input[data-input-id]');
+    if (!(input instanceof HTMLInputElement)) return null;
+    const position = Number.parseInt((input.dataset.inputId || '').split('-')[0] || '', 10);
+    return Number.isNaN(position) ? null : position - 1;
+  }
+
+  /** @returns {HTMLFieldSetElement[]} */
+  #optionFieldsets() {
+    return Array.from(this.querySelectorAll('fieldset.variant-option[data-fieldset-index]'));
+  }
+
+  /**
+   * @param {string | null | undefined} left
+   * @param {string | null | undefined} right
+   */
+  #sameOptionValue(left, right) {
+    return String(left || '').trim().toLowerCase() === String(right || '').trim().toLowerCase();
+  }
+
   #reconcileDescribedSelection(changedInput) {
     if (!this.#isDescribedPicker()) return;
 
     const variants = this.#readAllVariants();
     if (!variants?.length) return;
 
-    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
-    const changedIndex = Number.parseInt(changedInput.dataset.fieldsetIndex || '', 10);
-    if (Number.isNaN(changedIndex)) return;
+    const fieldsets = this.#optionFieldsets();
+    const changedFieldset = changedInput.closest('fieldset');
+    const changedShopifyIndex =
+      changedFieldset instanceof HTMLFieldSetElement ? this.#shopifyOptionIndex(changedFieldset) : null;
 
     /** @type {(string | null)[]} */
-    const selectedByPosition = fieldsets.map((fieldset, index) => {
-      if (index === changedIndex) return changedInput.value;
+    const selectedByShopifyIndex = [];
+    fieldsets.forEach((fieldset) => {
+      const shopifyIndex = this.#shopifyOptionIndex(fieldset);
+      if (shopifyIndex == null) return;
+      if (fieldset.contains(changedInput)) {
+        selectedByShopifyIndex[shopifyIndex] = changedInput.value;
+        return;
+      }
       const checked = fieldset.querySelector('input:checked');
-      return checked instanceof HTMLInputElement ? checked.value : null;
+      selectedByShopifyIndex[shopifyIndex] = checked instanceof HTMLInputElement ? checked.value : null;
     });
 
     const matchesSelection = (/** @type {{options: string[]}} */ variant) =>
       variant.options.every((option, index) => {
-        const selected = selectedByPosition[index];
-        return selected == null || option === selected;
+        const selected = selectedByShopifyIndex[index];
+        return selected == null || this.#sameOptionValue(option, selected);
       });
 
-    const exact = variants.find((variant) => variant.available && matchesSelection(variant));
-    const formatIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--format'));
-    const sizeIndex = fieldsets.findIndex((fieldset) => fieldset.classList.contains('variant-option--size'));
-    const formatIsDigital = /digital/i.test(String(selectedByPosition[formatIndex] ?? ''));
-    const sizeIsDigital = /digital/i.test(String(selectedByPosition[sizeIndex] ?? ''));
-    const invalidDigitalPairing = formatIndex >= 0 && sizeIndex >= 0 && formatIsDigital !== sizeIsDigital;
+    const formatFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--format'));
+    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
+    const formatShopifyIndex = formatFieldset ? this.#shopifyOptionIndex(formatFieldset) : null;
+    const sizeShopifyIndex = sizeFieldset ? this.#shopifyOptionIndex(sizeFieldset) : null;
+    const formatIsDigital = /digital/i.test(String(selectedByShopifyIndex[formatShopifyIndex ?? -1] ?? ''));
+    const sizeIsDigital = /digital/i.test(String(selectedByShopifyIndex[sizeShopifyIndex ?? -1] ?? ''));
+    const invalidDigitalPairing =
+      formatShopifyIndex != null && sizeShopifyIndex != null && formatIsDigital !== sizeIsDigital;
 
+    const exact = variants.find((variant) => variant.available && matchesSelection(variant));
     if (exact && !invalidDigitalPairing) {
       this.#syncDescribedAxesVisibility();
       return;
     }
 
+    const changedValue = String(changedInput.value || '').trim().toLowerCase();
     const candidates = variants.filter((variant) => {
       if (!variant.available) return false;
-      const option = String(variant.options[changedIndex] ?? '');
-      return option === changedInput.value || option.trim().toLowerCase() === String(changedInput.value || '').trim().toLowerCase();
+      if (changedShopifyIndex != null) {
+        return this.#sameOptionValue(variant.options[changedShopifyIndex], changedInput.value);
+      }
+      return variant.options.some((option) => String(option || '').trim().toLowerCase() === changedValue);
     });
     if (candidates.length === 0) return;
 
     const score = (/** @type {{options: string[]}} */ variant) => {
       let total = 0;
       variant.options.forEach((option, index) => {
-        if (index === changedIndex) return;
-        if (option === selectedByPosition[index]) total += 10;
+        if (index === changedShopifyIndex) return;
+        if (this.#sameOptionValue(option, selectedByShopifyIndex[index])) total += 10;
       });
-      if (sizeIndex >= 0 && changedIndex !== sizeIndex) {
-        const sizeValue = variant.options[sizeIndex] || '';
+      if (sizeShopifyIndex != null && changedShopifyIndex !== sizeShopifyIndex) {
+        const sizeValue = variant.options[sizeShopifyIndex] || '';
         if (/digital/i.test(sizeValue)) total -= 20;
         else if (/medium/i.test(sizeValue)) total += 2;
         else if (/small/i.test(sizeValue)) total += 1;
@@ -572,11 +602,15 @@ export default class VariantPicker extends Component {
     const best = candidates[0];
     if (!best) return;
 
-    fieldsets.forEach((fieldset, index) => {
-      if (index === changedIndex) return;
-      const desired = best.options[index];
+    fieldsets.forEach((fieldset) => {
+      if (fieldset.contains(changedInput)) return;
+      const shopifyIndex = this.#shopifyOptionIndex(fieldset);
+      if (shopifyIndex == null) return;
+      const desired = best.options[shopifyIndex];
       const input = Array.from(fieldset.querySelectorAll('input')).find(
-        (candidate) => candidate instanceof HTMLInputElement && candidate.value === desired
+        (candidate) =>
+          candidate instanceof HTMLInputElement &&
+          (candidate.value === desired || this.#sameOptionValue(candidate.value, desired))
       );
       if (input instanceof HTMLInputElement && !input.checked) {
         this.updateSelectedOption(input);
@@ -593,14 +627,19 @@ export default class VariantPicker extends Component {
     const variants = this.#readAllVariants();
     if (!variants?.length) return null;
 
-    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
-    const selected = fieldsets.map((fieldset) => {
+    /** @type {(string | null)[]} */
+    const selected = [];
+    this.#optionFieldsets().forEach((fieldset) => {
+      const shopifyIndex = this.#shopifyOptionIndex(fieldset);
       const checked = fieldset.querySelector('input:checked');
-      return checked instanceof HTMLInputElement ? checked.value : null;
+      if (shopifyIndex == null || !(checked instanceof HTMLInputElement)) return;
+      selected[shopifyIndex] = checked.value;
     });
 
     return (
-      variants.find((variant) => variant.options.every((option, index) => option === selected[index])) ?? null
+      variants.find((variant) =>
+        variant.options.every((option, index) => selected[index] == null || this.#sameOptionValue(option, selected[index]))
+      ) ?? null
     );
   }
 
@@ -665,19 +704,16 @@ export default class VariantPicker extends Component {
 
   #syncDescribedAxesVisibility() {
     if (!this.#isDescribedPicker()) return;
-    const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
 
-    const formatFieldset = fieldsets.find(
-      (fieldset) =>
-        fieldset.classList.contains('variant-option--format') || fieldset.classList.contains('variant-option--cards')
+    const formatFieldset = this.querySelector(
+      'fieldset.variant-option--format, fieldset.variant-option--cards:not(.variant-option--size)'
     );
     const formatChecked = formatFieldset?.querySelector('input:checked') ?? null;
     const formatIsDigital = this.#isDigitalOption(formatChecked);
 
-    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
-    if (sizeFieldset) {
-      sizeFieldset.toggleAttribute('hidden', formatIsDigital);
-    }
+    this.querySelectorAll('fieldset.variant-option--size').forEach((fieldset) => {
+      fieldset.removeAttribute('hidden');
+    });
 
     const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
     this.#syncFrameFinishProperty(showFinish);

@@ -176,19 +176,7 @@
           {%- liquid
             assign default_option_index = product_option.position | minus: 1
             assign default_value_at_position = default_variant.options[default_option_index]
-            assign hide_size_axis = false
             assign hide_finish_axis = false
-            if described_layout == 'size'
-              for option in product_resource.options_with_values
-                assign format_handle = option.name | handleize
-                if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
-                  assign format_value_handle = option.selected_value | handleize
-                  if format_value_handle contains 'digital'
-                    assign hide_size_axis = true
-                  endif
-                endif
-              endfor
-            endif
             if described_layout == 'finish'
               assign selected_format_is_framed = false
               assign selected_format_is_digital = false
@@ -226,7 +214,7 @@
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% elsif described_layout != blank %} variant-option--described variant-option--{{ described_layout }}{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
-            {% if hide_size_axis or hide_finish_axis %}
+            {% if hide_finish_axis %}
               hidden
             {% endif %}
             {{ option_id_attribute }}
