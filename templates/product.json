@@ -12,8 +12,10 @@
     "breadcrumbs": {
       "type": "breadcrumbs",
       "settings": {
+        "home_label": "",
         "product_category_source": "collection",
         "separator": "|",
+        "background_color": "",
         "section_width": "page-width",
         "padding-block-start": 24,
         "padding-block-end": 20,
@@ -29,6 +31,24 @@
     "main": {
       "type": "product-information",
       "blocks": {
+        "disclosures": {
+          "type": "disclosures",
+          "settings": {
+            "heading": "Disclosures",
+            "heading_preset": "h4",
+            "open_by_default": false,
+            "icon": "caret",
+            "disclosure_heading_preset": "h5",
+            "text_color": "",
+            "dividers": true,
+            "divider_color": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -68,13 +88,17 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 20,
+            "use_mobile_gap": false,
+            "mobile_gap": 12,
             "sticky_details_desktop": true,
             "background_media": "none",
+            "background_color": "",
             "video_position": "cover",
             "background_image_position": "cover",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 24,
@@ -93,7 +117,14 @@
                 "align_baseline": false,
                 "horizontal_alignment_flex_direction_column": "flex-start",
                 "vertical_alignment_flex_direction_column": "center",
+                "use_mobile_alignment": false,
+                "mobile_horizontal_alignment": "flex-start",
+                "mobile_vertical_alignment": "center",
+                "mobile_horizontal_alignment_flex_direction_column": "flex-start",
+                "mobile_vertical_alignment_flex_direction_column": "center",
                 "gap": 8,
+                "use_mobile_gap": false,
+                "mobile_gap": 12,
                 "width": "fill",
                 "custom_width": 100,
                 "width_mobile": "fill",
@@ -101,6 +132,7 @@
                 "height": "fit",
                 "custom_height": 100,
                 "background_media": "none",
+                "background_color": "",
                 "video_position": "cover",
                 "background_image_position": "cover",
                 "toggle_overlay": false,
@@ -110,6 +142,7 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
+                "border_color": "",
                 "border_radius": 0,
                 "link": "",
                 "open_in_new_tab": false,
@@ -117,7 +150,12 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
               },
               "blocks": {
                 "text_xrnftG": {
@@ -125,23 +163,39 @@
                   "name": "Product title",
                   "settings": {
                     "text": "<h1>{{ closest.product.title }}</h1>",
+                    "mobile_text": "",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
+                    "height_mode": "auto",
+                    "desktop_height": "",
+                    "mobile_height": "",
                     "type_preset": "h3",
                     "font": "var(--font-heading--family)",
+                    "enable_custom_font_weight": false,
+                    "weight": "400",
                     "font_size": "",
                     "line_height": "normal",
+                    "custom_line_height": 1.5,
                     "letter_spacing": "normal",
                     "case": "none",
                     "wrap": "pretty",
+                    "type_preset_mobile": "rte",
+                    "mobile_font_size": "1rem",
+                    "mobile_custom_line_height": 1.5,
+                    "text_color": "",
                     "background": false,
                     "background_color": "#00000026",
                     "corner_radius": 0,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                    "padding-inline-end": 0,
+                    "use_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
                   },
                   "blocks": {}
                 },
@@ -149,7 +203,8 @@
                   "type": "pdp-reviews",
                   "settings": {
                     "fallback_count": 148
-                  }
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -159,30 +214,63 @@
             },
             "from_price_pdp": {
               "type": "pdp-from-price",
-              "settings": {}
+              "settings": {},
+              "blocks": {}
             },
             "collection_browser_pdp": {
               "type": "collection-browser",
               "settings": {
+                "collection": "",
                 "heading": "Browse the collection"
-              }
+              },
+              "blocks": {}
             },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "show_option_descriptions": true,
+                "size_guide_label": "Size guide",
+                "size_guide_link": "",
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 8,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
               "blocks": {
                 "desc_digital": {
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Digital Download",
-                    "description": "High-res file, delivered in minutes"
-                  }
+                    "description": "High-res file, delivered in minutes",
+                    "badge": ""
+                  },
+                  "blocks": {}
                 },
                 "desc_poster": {
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Watercolour Poster",
-                    "description": "Fine art matte paper, ships in 3–7 days"
-                  }
+                    "description": "Fine art matte paper, ships in 3–7 days",
+                    "badge": ""
+                  },
+                  "blocks": {}
                 },
                 "desc_canvas": {
                   "type": "_option-description",
@@ -190,34 +278,44 @@
                     "option_value": "Giclée Canvas",
                     "description": "Gallery-wrapped, ships in 3–7 days",
                     "badge": "Most loved"
-                  }
+                  },
+                  "blocks": {}
                 },
                 "desc_framed": {
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Framed Canvas",
-                    "description": "Canvas + wood frame, ships in 3–7 days"
-                  }
+                    "description": "Canvas + wood frame, ships in 3–7 days",
+                    "badge": ""
+                  },
+                  "blocks": {}
                 },
                 "desc_small": {
                   "type": "_option-description",
                   "settings": {
-                    "option_value": "Small - 12x18\""
-                  }
+                    "option_value": "Small - 12x18\"",
+                    "description": "",
+                    "badge": ""
+                  },
+                  "blocks": {}
                 },
                 "desc_medium": {
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Medium - 24x36\"",
+                    "description": "",
                     "badge": "Most loved"
-                  }
+                  },
+                  "blocks": {}
                 },
                 "desc_large": {
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Large - 32x48\"",
+                    "description": "",
                     "badge": "Best value"
-                  }
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -228,26 +326,30 @@
                 "desc_small",
                 "desc_medium",
                 "desc_large"
-              ],
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "show_option_descriptions": true,
-                "size_guide_label": "Size guide",
-                "size_guide_link": "",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
+              ]
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
                 "stacking": false,
                 "show_buy_now": true,
+                "text_color": "",
                 "show_pickup_availability": false,
+                "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "border_width": 1,
+                "border_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -257,14 +359,24 @@
                 "quantity": {
                   "type": "quantity",
                   "static": true,
-                  "settings": {},
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.foreground }}",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
                   "blocks": {}
                 },
                 "add-to-cart": {
                   "type": "add-to-cart",
                   "static": true,
                   "settings": {
-                    "style_class": "button-secondary"
+                    "style_class": "button-secondary",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}"
                   },
                   "blocks": {}
                 },
@@ -280,42 +392,49 @@
             "trust_pdp": {
               "type": "pdp-trust",
               "settings": {
+                "item_1_icon": "shopify://shop_images/Union.svg",
                 "item_1_label": "Free shipping over $100",
+                "item_2_icon": "shopify://shop_images/Frame_2.svg",
                 "item_2_label": "Worldwide Delivery",
+                "item_3_icon": "shopify://shop_images/Group_1597884212.svg",
                 "item_3_label": "Lifetime warranty"
-              }
+              },
+              "blocks": {}
             },
             "faqs_pdp": {
               "type": "pdp-faqs",
+              "settings": {},
               "blocks": {
                 "faq_materials": {
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Materials & formats",
                     "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Watercolour Poster: archival matte paper. Giclée Canvas: gallery-wrapped canvas print, with an optional black, white, or oak frame."
-                  }
+                  },
+                  "blocks": {}
                 },
                 "faq_sizing": {
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Sizing guide",
                     "answer": "Small 12×18\", Medium 24×36\", and Large 32×48\". Digital downloads are sized to print at those dimensions."
-                  }
+                  },
+                  "blocks": {}
                 },
                 "faq_shipping": {
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Shipping",
                     "answer": "Prints ship worldwide with tracked delivery; orders over $100 ship free. Digital downloads deliver by email in minutes."
-                  }
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "faq_materials",
                 "faq_sizing",
                 "faq_shipping"
-              ],
-              "settings": {}
+              ]
             }
           },
           "block_order": [
@@ -327,14 +446,6 @@
             "trust_pdp",
             "faqs_pdp"
           ]
-        },
-        "disclosures": {
-          "type": "disclosures",
-          "settings": {
-            "padding-block-start": 0,
-            "padding-block-end": 0
-          },
-          "blocks": {}
         }
       },
       "block_order": [
@@ -348,6 +459,8 @@
         "gap": 20,
         "use_mobile_gap": true,
         "mobile_gap": 16,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "",
         "padding-block-start": 0,
         "padding-block-end": 24
       }
@@ -412,15 +525,16 @@
         "heading": "Prints that actually last",
         "button_label": "Explore all styles",
         "button_link": "",
+        "collection": "",
         "show_badge": true,
         "badge_label": "Most loved",
         "badge_position": 3,
-        "background_color": "#FFFDF8",
+        "background_color": "#fffdf8",
         "text_color": "#242027",
-        "muted_color": "#605C64",
-        "brand_color": "#321C41",
-        "badge_color": "#8855AA",
-        "star_color": "#F5CD72",
+        "muted_color": "#605c64",
+        "brand_color": "#321c41",
+        "badge_color": "#8855aa",
+        "star_color": "#f5cd72",
         "padding-block-start": 100,
         "padding-block-end": 120,
         "padding-inline-start": 120,
