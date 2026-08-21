@@ -18,7 +18,7 @@
     assign format_handle = option.name | handleize
     if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
       assign format_value_handle = option.selected_value | handleize
-      if format_value_handle contains 'framed'
+      if format_value_handle contains 'framed' or format_value_handle contains 'frame-canvas' or format_value_handle contains 'canvas-frame'
         unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
           assign show_frame_finish = true
         endunless
@@ -33,9 +33,6 @@
   class="variant-option variant-option--buttons variant-option--described variant-option--finish pdp-frame-finish"
   data-frame-finish-property
   data-key="pdp-frame-finish"
-  {% unless show_frame_finish %}
-    hidden
-  {% endunless %}
 >
   <legend>
     <span class="variant-option__legend-heading">

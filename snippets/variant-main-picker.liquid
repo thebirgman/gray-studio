@@ -35,7 +35,7 @@
       if format_value_handle contains 'digital'
         assign picker_is_digital = true
       endif
-      if format_value_handle contains 'framed'
+      if format_value_handle contains 'framed' or format_value_handle contains 'frame-canvas' or format_value_handle contains 'canvas-frame'
         unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
           assign picker_is_framed = true
         endunless
@@ -173,6 +173,7 @@
                 data-option-handle="{{ value_handle }}"
                 data-option-value-id="{{ product_option_value.id }}"
                 data-option-available="{{ product_option_value.available }}"
+                data-key="option-{{ product_option_value.id }}"
                 data-connected-product-url="{{ product_option_value.product_url }}"
                 {% if product_option_value.variant.id %}
                   data-variant-id="{{ product_option_value.variant.id }}"
@@ -306,7 +307,7 @@
                 if described_layout == 'format' or described_layout == 'cards'
                   if value_handle contains 'digital'
                     assign format_kind = 'digital'
-                  elsif value_handle contains 'framed'
+                  elsif value_handle contains 'framed' or value_handle contains 'frame-canvas' or value_handle contains 'canvas-frame'
                     unless value_handle contains 'unframed'
                       assign format_kind = 'framed'
                     endunless
@@ -492,6 +493,7 @@
                   {% endif %}
                   data-option-value-id="{{ product_option_value.id }}"
                   data-option-available="{{ option_selectable }}"
+                  data-key="option-{{ product_option_value.id }}"
                   data-connected-product-url="{{ product_option_value.product_url }}"
                   {% if product_option_value.variant.id %}
                     data-variant-id="{{ product_option_value.variant.id }}"

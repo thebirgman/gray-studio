@@ -29,30 +29,10 @@
     assign card_image = card_product.featured_image
   endif
 
-  assign rating_value = 5
-  assign rating_count = 49
-  if card_product != blank
-    if card_product.metafields.reviews.rating.value.rating != blank
-      assign rating_value = card_product.metafields.reviews.rating.value.rating
-    endif
-    if card_product.metafields.reviews.rating_count.value != blank
-      assign rating_count = card_product.metafields.reviews.rating_count.value
-    endif
-  endif
-
   assign display_price = price
   if card_product != blank
     assign display_price = card_product.price | money_without_trailing_zeros
   endif
-
-  assign variant = card_product.selected_or_first_available_variant
-  assign can_add_to_cart = false
-  if variant and variant.available
-    assign can_add_to_cart = true
-  endif
-
-  assign product_form_id = 'CartDrawer-ProductForm-' | append: card_product.id
-  assign add_to_cart_label = 'actions.add_to_cart' | t
 -%}
 
 <div class="cart-drawer-card">
@@ -101,24 +81,10 @@
       {%- endif -%}
     </h3>
 
-    <div
-      class="cart-drawer-card__rating"
-      aria-label="{{ rating_value }} out of 5 stars, {{ rating_count }} reviews"
-    >
-      <div class="cart-drawer-card__stars" aria-hidden="true">
-        {%- for i in (1..5) -%}
-          <span class="cart-drawer-card__star">
-            {{ 'featured-prints-star.svg' | inline_asset_content }}
-          </span>
-        {%- endfor -%}
-      </div>
-      <span class="cart-drawer-card__rating-count">({{ rating_count }})</span>
-    </div>
-
     <p class="cart-drawer-card__price">{{ display_price }}</p>
   </div>
 
-  {%- if is_placeholder or card_product == blank -%}
+  {%- if is_placeholder or card_product == blank or card_url == blank -%}
     <button
       class="button cart-drawer-card__atc"
       type="button"
@@ -127,35 +93,11 @@
       <span class="button-text">{{ 'actions.add_to_cart' | t }}</span>
     </button>
   {%- else -%}
-    <product-form-component
-      class="cart-drawer-card__form"
-      data-product-id="{{ card_product.id }}"
-      data-product-url="{{ card_product.url }}"
-      on:submit="/handleSubmit"
+    <a
+      class="button cart-drawer-card__atc"
+      href="{{ card_url }}"
     >
-      {%- form 'product', card_product, id: product_form_id, data-type: 'add-to-cart-form' -%}
-        <input
-          type="hidden"
-          name="id"
-          ref="variantId"
-          value="{{ variant.id }}"
-          {% unless can_add_to_cart %}
-            disabled
-          {% endunless %}
-        >
-        <input
-          type="hidden"
-          name="quantity"
-          value="{{ variant.quantity_rule.min | default: 1 }}"
-        >
-        {% render 'add-to-cart-button',
-          add_to_cart_text: add_to_cart_label,
-          class: 'cart-drawer-card__atc add-to-cart-button',
-          can_add_to_cart: can_add_to_cart,
-          show_icon: false,
-          product: card_product
-        %}
-      {%- endform -%}
-    </product-form-component>
+      <span class="button-text">{{ 'actions.add_to_cart' | t }}</span>
+    </a>
   {%- endif -%}
 </div>

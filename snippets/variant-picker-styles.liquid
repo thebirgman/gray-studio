@@ -135,9 +135,25 @@
     display: none;
   }
 
+  /* Never use the HTML hidden attribute on Frame Finish: [hidden] is
+     display:none !important in the UA stylesheet, so morph can pin it closed.
+     Visibility is driven by the selected format radio. */
+  .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
+    display: none;
+  }
+
   .variant-picker--described.is-framed-format
+    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
+  .variant-picker--described:has([data-format-kind='framed']:checked)
+    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
+  .variant-picker--described:has(.variant-option--format [data-option-handle*='framed']:checked)
+    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
+  .variant-picker--described:has(.variant-option--format [data-option-handle*='frame-canvas']:checked)
+    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
+  .variant-picker--described:has(input:checked[data-option-handle*='framed']:not([name^='properties']))
     .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .variant-option.variant-option--buttons.variant-option--described[hidden] > legend {

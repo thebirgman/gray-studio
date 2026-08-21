@@ -737,7 +737,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    padding: 2.25rem 1.875rem 0.25rem;
+    padding: 4rem 1.875rem 0.25rem;
     text-align: center;
   }
 
@@ -766,7 +766,7 @@
     flex-direction: column;
     gap: 0.9375rem;
     width: 100%;
-    padding: 1.25rem 0.8125rem 1.5rem;
+    padding: 1.25rem 0 1.5rem;
     --cd-card-text: #242027;
     --cd-card-muted: #605c64;
     --cd-card-brand: #321c41;
@@ -780,6 +780,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    padding-inline: var(--cart-drawer-pad, 2rem);
   }
 
   .cart-drawer-bestsellers__heading {
@@ -838,7 +839,10 @@
     scrollbar-width: none;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.25rem;
+    padding-block-end: 0.25rem;
+    padding-inline-start: var(--cart-drawer-pad, 2rem);
+    padding-inline-end: 0;
+    scroll-padding-inline-start: var(--cart-drawer-pad, 2rem);
   }
 
   .cart-drawer-bestsellers__scroller::-webkit-scrollbar {
@@ -849,10 +853,11 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    flex: 0 0 15rem;
-    width: 15rem;
+    flex: 0 0 min(15rem, calc(100% - 4.75rem));
+    width: min(15rem, calc(100% - 4.75rem));
     gap: 0.9375rem;
     scroll-snap-align: start;
+    text-align: left;
   }
 
   .cart-drawer-card__media-link {
@@ -932,46 +937,13 @@
     line-height: 1.2;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    text-align: left;
     color: var(--cd-card-text);
   }
 
   .cart-drawer-card__title a {
     color: inherit;
     text-decoration: none;
-  }
-
-  .cart-drawer-card__rating {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .cart-drawer-card__stars {
-    display: flex;
-    align-items: center;
-    gap: 0.1875rem;
-  }
-
-  .cart-drawer-card__star {
-    display: inline-flex;
-    width: 0.625rem;
-    height: 0.625rem;
-    overflow: clip;
-    color: var(--cd-card-star);
-  }
-
-  .cart-drawer-card__star svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .cart-drawer-card__rating-count {
-    font-family: var(--font-body--family);
-    font-size: 0.4375rem;
-    line-height: 0.9375rem;
-    text-transform: uppercase;
-    color: var(--cd-card-muted);
   }
 
   .cart-drawer-card__price {
@@ -1002,6 +974,7 @@
     font-size: 1rem;
     font-weight: 500;
     line-height: 1;
+    text-decoration: none;
   }
 
   .cart-drawer-card__atc:hover {
