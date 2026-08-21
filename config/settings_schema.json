@@ -2357,9 +2357,55 @@
         "type": "text",
         "id": "cart_free_shipping_threshold",
         "label": "Free shipping threshold",
-        "info": "Amount in your store currency (e.g. 50 for $50). The bar fills as the cart subtotal approaches this amount.",
-        "default": "50",
+        "info": "Amount in your store currency (e.g. 100 for $100). The first rewards milestone.",
+        "default": "100",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "text",
+        "id": "cart_reward_gift_label",
+        "label": "Gift card reward label",
+        "default": "A $50 Gift Card",
+        "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "text",
+        "id": "cart_reward_gift_threshold",
+        "label": "Gift card threshold",
+        "info": "Amount in your store currency for the second rewards milestone.",
+        "default": "250",
+        "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "text",
+        "id": "cart_reward_secret_label",
+        "label": "Secret gift reward label",
+        "default": "A Secret Gift",
+        "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "text",
+        "id": "cart_reward_secret_threshold",
+        "label": "Secret gift threshold",
+        "info": "Amount in your store currency for the final rewards milestone. The bar fills toward this total.",
+        "default": "500",
+        "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "header",
+        "content": "Empty cart bestsellers"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_bestsellers_enabled",
+        "label": "Show bestseller carousel in empty cart",
+        "default": true
+      },
+      {
+        "type": "collection",
+        "id": "cart_bestsellers_collection",
+        "label": "Bestsellers collection",
+        "info": "Products shown in the empty cart drawer. Falls back to all products if blank. Used when the empty cart bestseller carousel is enabled."
       },
       {
         "type": "header",
