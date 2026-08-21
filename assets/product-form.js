@@ -316,7 +316,12 @@ class ProductFormComponent extends Component {
 
   /** @returns {string | undefined} */
   #getIntendedVariantId() {
-    return new URL(window.location.href).searchParams.get('variant') || this.refs.variantId?.value || undefined;
+    const picker = /** @type {HTMLElement & { getSelectedVariant?: () => { id: number } | null } | null} */ (
+      document.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`)
+    );
+    const resolved = picker?.getSelectedVariant?.();
+    if (resolved?.id != null) return String(resolved.id);
+    return this.refs.variantId?.value || new URL(window.location.href).searchParams.get('variant') || undefined;
   }
 
   /** @returns {number} */
@@ -389,22 +394,57 @@ class ProductFormComponent extends Component {
       }
     }
 
-    const formData = new FormData(form);
-
-    if (overrideVariantId) {
-      formData.set('id', overrideVariantId);
+    const picker = /** @type {HTMLElement & { getSelectedVariant?: () => { id: number, available: boolean, options: string[] } | null } | null} */ (
+      document.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`)
+    );
+    const resolved = picker?.getSelectedVariant?.() ?? null;
+    const resolvedId = overrideVariantId || (resolved?.id != null ? String(resolved.id) : '') || this.refs.variantId?.value;
+    if (!resolvedId) {
+      console.error('[PDP ATC] No variant id to add');
+      return;
     }
-    if (overrideQuantity !== undefined) {
-      formData.set('quantity', overrideQuantity.toString());
+
+    if (this.refs.variantId) this.refs.variantId.value = String(resolvedId);
+
+    const quantity =
+      overrideQuantity !== undefined
+        ? overrideQuantity
+        : Number(this.refs.quantitySelector?.getValue?.()) || Number(this.dataset.quantityDefault) || 1;
+
+    // Build a clean payload. Associated Frame Finish radios and other form extras
+    // have been causing sold-out errors for in-stock Format×Size variants.
+    const formData = new FormData();
+    formData.set('id', String(resolvedId));
+    formData.set('quantity', String(quantity));
+
+    const framed = picker?.classList?.contains('is-framed-format');
+    if (framed) {
+      const finish = document.querySelector(
+        `variant-picker[data-product-id="${this.dataset.productId}"] [data-frame-finish-property] input:checked`
+      );
+      if (finish instanceof HTMLInputElement && finish.value) {
+        formData.set('properties[Frame Finish]', finish.value);
+      }
     }
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');
-    let cartItemComponentsSectionIds = [];
+    /** @type {string[]} */
+    const cartItemComponentsSectionIds = [];
     cartItemsComponents.forEach((item) => {
       if (item instanceof HTMLElement && item.dataset.sectionId) {
         cartItemComponentsSectionIds.push(item.dataset.sectionId);
       }
-      formData.append('sections', cartItemComponentsSectionIds.join(','));
+    });
+    if (cartItemComponentsSectionIds.length) {
+      formData.set('sections', cartItemComponentsSectionIds.join(','));
+    }
+
+    console.warn('[PDP ATC] submitting', {
+      id: formData.get('id'),
+      quantity: formData.get('quantity'),
+      frameFinish: formData.get('properties[Frame Finish]'),
+      resolved,
+      formIdBeforeClean: this.refs.variantId?.value,
     });
 
     const itemCount = Number(formData.get('quantity')) || Number(this.dataset.quantityDefault);

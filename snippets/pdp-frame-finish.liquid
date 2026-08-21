@@ -51,12 +51,14 @@
     <label class="variant-option__button-label variant-option__button-label--described">
       <input
         type="radio"
-        name="properties[Frame Finish]"
         value="{{ finish_value | escape }}"
         form="{{ product_form_id }}"
         data-option-handle="{{ finish_value | handleize }}"
         {% if forloop.first %}
           checked
+        {% endif %}
+        {% if show_frame_finish %}
+          name="properties[Frame Finish]"
         {% endif %}
         {% unless show_frame_finish %}
           disabled

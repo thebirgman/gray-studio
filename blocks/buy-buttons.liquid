@@ -234,8 +234,9 @@
             ></script>
             <pdp-buy-now
               class="pdp-buy-now"
-              data-add-url="{{ routes.cart_add_url }}.js"
+              data-add-url="{{ routes.cart_add_url }}"
               data-checkout-url="/checkout"
+              data-product-id="{{ product.id }}"
             >
               <button
                 type="button"

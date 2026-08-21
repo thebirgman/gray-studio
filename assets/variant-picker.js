@@ -174,6 +174,7 @@ export default class VariantPicker extends Component {
     this.addEventListener('click', this.#onVariantClick, true);
     this.#resizeObserver.observe(this);
     try {
+      this.#disableNativeFinishOption();
       this.recomputeAvailability();
       this.#syncDescribedAxesVisibility();
       this.#pairSizeToFormat();
@@ -846,10 +847,19 @@ export default class VariantPicker extends Component {
   }
 
   /**
+   * Public: Format×Size variant currently selected in the picker.
+   * @returns {{id: number, available: boolean, options: string[]} | null}
+   */
+  getSelectedVariant() {
+    return this.#findSelectedVariant();
+  }
+
+  /**
    * Keep the buy button form on the Format×Size variant from our table.
    * Hidden leftover options (finish-native) and stale morph HTML must not drive ATC.
    */
   #syncProductFormVariant() {
+    this.#disableNativeFinishOption();
     const resolved = this.#findSelectedVariant();
     this.#debug('sync form variant', {
       resolved,
@@ -860,7 +870,7 @@ export default class VariantPicker extends Component {
     const id = String(resolved.id);
     document
       .querySelectorAll(
-        `product-form-component[data-product-id="${this.dataset.productId}"] input[name="id"], sticky-add-to-cart input[name="id"]`
+        `product-form-component[data-product-id="${this.dataset.productId}"] input[name="id"]`
       )
       .forEach((input) => {
         if (!(input instanceof HTMLInputElement)) return;
@@ -875,6 +885,17 @@ export default class VariantPicker extends Component {
       if (resolved.available) addContainer.enable();
       else addContainer.disable();
     }
+  }
+
+  /** Leftover Shopify Frame Finish / Digital-file axes must never affect cart or option_values. */
+  #disableNativeFinishOption() {
+    this.querySelectorAll('fieldset.variant-option--finish-native input').forEach((input) => {
+      if (!(input instanceof HTMLInputElement)) return;
+      input.disabled = true;
+      input.checked = false;
+      input.removeAttribute('checked');
+      input.dataset.currentChecked = 'false';
+    });
   }
 
   /** @returns {boolean} */
@@ -1185,6 +1206,12 @@ export default class VariantPicker extends Component {
 
     inputs.forEach((input) => {
       input.disabled = !showFinish;
+      // Drop name when hidden so these never ride along on add-to-cart.
+      if (showFinish) {
+        input.setAttribute('name', 'properties[Frame Finish]');
+      } else {
+        input.removeAttribute('name');
+      }
     });
 
     if (!showFinish) {
@@ -1202,6 +1229,7 @@ export default class VariantPicker extends Component {
     if (selected) {
       selected.checked = true;
       selected.disabled = false;
+      selected.setAttribute('name', 'properties[Frame Finish]');
       this.#frameFinishValue = selected.value;
     }
     this.#debug('frame finish show', {
