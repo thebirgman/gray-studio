@@ -41,15 +41,41 @@ export default class VariantPicker extends Component {
   /** @type {number} */
   #pairSizeTimer = 0;
 
+  #resizeObserver = new ResizeNotifier(() => this.updateVariantPickerCss());
+
+  /** @type {(event: Event) => void} */
+  #onVariantChange = (event) => this.variantChanged(event);
+
+  /** @type {(event: Event) => void} */
+  #onVariantClick = (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const input = target instanceof HTMLInputElement ? target : target.closest('label')?.querySelector('input');
+    if (!(input instanceof HTMLInputElement)) return;
+    if (input.name?.startsWith('properties')) return;
+    this.#debug('click before change?', {
+      value: input.value,
+      handle: input.dataset.optionHandle,
+      checkedBefore: input.checked,
+      name: input.name,
+    });
+  };
+
   /**
-   * PDP debug logs. Filter DevTools by `PDP picker`.
-   * Turn off with: window.__PDP_PICKER_DEBUG = false
+   * PDP debug — uses console.warn so it still shows when DevTools hides Info/Verbose.
+   * Filter by `PDP picker`. Turn off: window.__PDP_PICKER_DEBUG = false
    * @param {string} label
    * @param {Record<string, unknown>} [data]
    */
   #debug(label, data = {}) {
     if (window.__PDP_PICKER_DEBUG === false) return;
-    console.log(`[PDP picker] ${label}`, data, this.#debugSnapshot());
+    let snapshot = null;
+    try {
+      snapshot = this.#debugSnapshot();
+    } catch (error) {
+      snapshot = { snapshotError: String(error) };
+    }
+    console.warn(`[PDP picker] ${label}`, data, snapshot);
   }
 
   /** @returns {Record<string, unknown>} */
@@ -120,7 +146,13 @@ export default class VariantPicker extends Component {
   }
 
   connectedCallback() {
+    console.warn('[PDP picker] connectedCallback start', {
+      described: this.classList.contains('variant-picker--described'),
+      productId: this.dataset.productId,
+    });
     super.connectedCallback();
+    this.#radios = [];
+    this.#checkedIndices = [];
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
 
     fieldsets.forEach((fieldset) => {
@@ -133,21 +165,32 @@ export default class VariantPicker extends Component {
       }
     });
 
-    this.addEventListener('change', this.variantChanged.bind(this));
+    this.removeEventListener('change', this.#onVariantChange);
+    this.removeEventListener('click', this.#onVariantClick, true);
+    this.addEventListener('change', this.#onVariantChange);
+    this.addEventListener('click', this.#onVariantClick, true);
     this.#resizeObserver.observe(this);
-    this.recomputeAvailability();
-    this.#syncDescribedAxesVisibility();
-    this.#pairSizeToFormat();
+    try {
+      this.recomputeAvailability();
+      this.#syncDescribedAxesVisibility();
+      this.#pairSizeToFormat();
+    } catch (error) {
+      console.error('[PDP picker] connected setup threw — listener is still attached', error);
+    }
     this.#debug('connected');
+    window.__PDP_PICKER = this;
   }
 
   updatedCallback() {
     super.updatedCallback();
     this.#refreshRadioCaches();
     this.#schedulePairSizeToFormat();
+    this.#debug('updatedCallback');
   }
 
   disconnectedCallback() {
+    this.removeEventListener('change', this.#onVariantChange);
+    this.removeEventListener('click', this.#onVariantClick, true);
     super.disconnectedCallback();
     this.#resizeObserver.disconnect();
     window.clearTimeout(this.#pairSizeTimer);
@@ -1432,6 +1475,28 @@ export default class VariantPicker extends Component {
   }
 }
 
+console.warn('[PDP picker] module evaluated', {
+  alreadyDefined: Boolean(customElements.get('variant-picker')),
+  href: typeof location !== 'undefined' ? location.pathname : '',
+});
+
 if (!customElements.get('variant-picker')) {
   customElements.define('variant-picker', VariantPicker);
+  console.warn('[PDP picker] custom element defined');
+} else {
+  console.warn(
+    '[PDP picker] custom element was ALREADY defined — this file’s new class may not be active until a hard refresh'
+  );
 }
+
+/** Manual probe from DevTools: __PDP_PICKER_DUMP() */
+window.__PDP_PICKER_DUMP = () => {
+  const picker = document.querySelector('variant-picker');
+  console.warn('[PDP picker] dump', {
+    found: Boolean(picker),
+    isInstance: picker instanceof VariantPicker,
+    className: picker?.className,
+    listenersGuess: 'check click then change logs after selecting a format',
+  });
+  return picker;
+};
