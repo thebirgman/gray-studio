@@ -2377,6 +2377,12 @@
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
       {
+        "type": "product",
+        "id": "cart_reward_gift_product",
+        "label": "Gift card product",
+        "info": "Automatically added to the cart when the gift card threshold is reached. Use a $0 product for a free bonus."
+      },
+      {
         "type": "text",
         "id": "cart_reward_secret_label",
         "label": "Secret gift reward label",
@@ -2390,6 +2396,12 @@
         "info": "Amount in your store currency for the final rewards milestone. The bar fills toward this total.",
         "default": "500",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
+      },
+      {
+        "type": "product",
+        "id": "cart_reward_secret_product",
+        "label": "Secret gift product",
+        "info": "Automatically added to the cart when the secret gift threshold is reached. Use a $0 product for a free bonus."
       },
       {
         "type": "header",
