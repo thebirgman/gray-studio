@@ -131,14 +131,8 @@
     display: none;
   }
 
-  .variant-option.variant-option--buttons.variant-option--described[hidden] {
-    display: none;
-  }
-
-  .variant-picker--described:has(.variant-option--format [data-option-handle*='digital']:checked)
-    .variant-option--finish,
-  .variant-picker--described:has(.variant-option--cards [data-option-handle*='digital']:checked)
-    .variant-option--finish {
+  .variant-option.variant-option--buttons.variant-option--described[hidden],
+  .variant-picker--described:not(.is-framed-format) .variant-option--finish {
     display: none;
   }
 
@@ -420,7 +414,11 @@
   }
 
   .variant-option--described.variant-option--size .variant-option__button-label[hidden],
-  .variant-option.variant-option--buttons.variant-option--described.variant-option--size
+  .variant-picker--described.is-digital-format
+    .variant-option--size
+    .variant-option__button-label:not(:has([data-option-handle*='digital'])),
+  .variant-picker--described:not(.is-digital-format)
+    .variant-option--size
     .variant-option__button-label:has([data-option-handle*='digital']) {
     display: none;
   }

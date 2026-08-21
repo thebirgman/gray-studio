@@ -654,15 +654,52 @@ export default class VariantPicker extends Component {
    */
   #isDigitalOption(input) {
     if (!(input instanceof HTMLInputElement)) return false;
-    return (input.dataset.optionHandle || '').includes('digital');
+    const handle = (input.dataset.optionHandle || '').toLowerCase();
+    const value = (input.value || '').toLowerCase();
+    return handle.includes('digital') || value.includes('digital');
   }
 
   /** @param {Element | null} input */
   #isFramedFormat(input) {
     if (!(input instanceof HTMLInputElement)) return false;
-    const handle = input.dataset.optionHandle || '';
-    if (handle.includes('digital') || handle.includes('unframed')) return false;
-    return handle.includes('framed');
+    const handle = (input.dataset.optionHandle || '').toLowerCase();
+    const value = (input.value || '').toLowerCase();
+    const haystack = `${handle} ${value}`;
+    if (haystack.includes('digital') || haystack.includes('unframed')) return false;
+    return haystack.includes('framed');
+  }
+
+  /** @returns {HTMLFieldSetElement | null} */
+  #getFormatFieldset() {
+    const byClass = this.querySelector('fieldset.variant-option--format');
+    if (byClass instanceof HTMLFieldSetElement) return byClass;
+
+    return (
+      this.#optionFieldsets().find((fieldset) => {
+        if (fieldset.classList.contains('variant-option--size')) return false;
+        if (fieldset.classList.contains('variant-option--finish-native')) return false;
+        return Array.from(fieldset.querySelectorAll('input')).some((input) => {
+          if (!(input instanceof HTMLInputElement)) return false;
+          const handle = input.dataset.optionHandle || '';
+          return (
+            handle.includes('digital-download') ||
+            handle.includes('poster') ||
+            handle.includes('giclee') ||
+            handle.includes('canvas')
+          );
+        });
+      }) ?? null
+    );
+  }
+
+  /** @returns {HTMLInputElement | null} */
+  #getSelectedFormatInput() {
+    const fieldset = this.#getFormatFieldset();
+    if (!fieldset) return null;
+    const current = fieldset.querySelector('input[data-current-checked="true"]');
+    if (current instanceof HTMLInputElement) return current;
+    const checked = fieldset.querySelector('input:checked');
+    return checked instanceof HTMLInputElement ? checked : null;
   }
 
   /** @returns {HTMLFieldSetElement | null} */
@@ -702,20 +739,47 @@ export default class VariantPicker extends Component {
     });
   }
 
+  #ensureSelectedSize(formatIsDigital) {
+    const sizeFieldset = this.querySelector('fieldset.variant-option--size');
+    if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
+
+    const inputs = Array.from(sizeFieldset.querySelectorAll('input')).filter(
+      (input) => input instanceof HTMLInputElement
+    );
+    const digitalInputs = inputs.filter((input) => this.#isDigitalOption(input));
+    const physicalInputs = inputs.filter((input) => !this.#isDigitalOption(input));
+    const checked = sizeFieldset.querySelector('input:checked');
+    const checkedIsDigital = this.#isDigitalOption(checked);
+
+    let next = null;
+    if (formatIsDigital) {
+      if (!checkedIsDigital) next = digitalInputs[0] ?? null;
+    } else if (checkedIsDigital || !(checked instanceof HTMLInputElement)) {
+      next =
+        physicalInputs.find((input) => /medium/i.test(input.value)) ??
+        physicalInputs[0] ??
+        null;
+    }
+
+    if (next instanceof HTMLInputElement && !next.checked) {
+      this.updateSelectedOption(next);
+    }
+  }
+
   #syncDescribedAxesVisibility() {
     if (!this.#isDescribedPicker()) return;
 
-    const formatFieldset = this.querySelector(
-      'fieldset.variant-option--format, fieldset.variant-option--cards:not(.variant-option--size)'
-    );
-    const formatChecked = formatFieldset?.querySelector('input:checked') ?? null;
+    const formatChecked = this.#getSelectedFormatInput();
     const formatIsDigital = this.#isDigitalOption(formatChecked);
+    const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
+
+    this.classList.toggle('is-digital-format', formatIsDigital);
+    this.classList.toggle('is-framed-format', showFinish);
 
     this.querySelectorAll('fieldset.variant-option--size').forEach((fieldset) => {
       fieldset.removeAttribute('hidden');
     });
-
-    const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
+    this.#ensureSelectedSize(formatIsDigital);
     this.#syncFrameFinishProperty(showFinish);
   }
 
@@ -924,7 +988,9 @@ export default class VariantPicker extends Component {
    * @returns {HTMLInputElement | HTMLOptionElement | undefined} The selected option.
    */
   get selectedOption() {
-    const selectedOption = this.querySelector('select option[selected], fieldset input:checked');
+    const selectedOption = this.querySelector(
+      'select option[selected], fieldset input:checked[data-option-value-id]'
+    );
 
     if (!(selectedOption instanceof HTMLInputElement || selectedOption instanceof HTMLOptionElement)) {
       return undefined;
@@ -984,15 +1050,15 @@ export default class VariantPicker extends Component {
    */
   get selectedOptionsValues() {
     /** @type HTMLElement[] */
-    const selectedOptions = Array.from(this.querySelectorAll('select option[selected], fieldset input:checked'));
-
-    return selectedOptions.map((option) => {
-      const { optionValueId } = option.dataset;
-
-      if (!optionValueId) throw new Error('No option value ID found');
-
-      return optionValueId;
+    const selectedOptions = Array.from(
+      this.querySelectorAll('select option[selected], fieldset input:checked')
+    ).filter((option) => {
+      if (!option.dataset.optionValueId) return false;
+      if (option instanceof HTMLInputElement && option.name.startsWith('properties')) return false;
+      return true;
     });
+
+    return selectedOptions.map((option) => option.dataset.optionValueId);
   }
 }
 

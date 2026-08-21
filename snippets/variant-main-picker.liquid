@@ -26,6 +26,22 @@
     assign has_custom_variant_buttons = true
   endif
   assign fieldset_index = 0
+  assign picker_is_digital = false
+  assign picker_is_framed = false
+  for option in product_resource.options_with_values
+    assign format_handle = option.name | handleize
+    if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
+      assign format_value_handle = option.selected_value | handleize
+      if format_value_handle contains 'digital'
+        assign picker_is_digital = true
+      endif
+      if format_value_handle contains 'framed'
+        unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
+          assign picker_is_framed = true
+        endunless
+      endif
+    endif
+  endfor
 %}
 
 {% unless product_resource.has_only_default_variant %}
@@ -42,7 +58,7 @@
     {% render 'variant-button-custom-styles', block_settings: block_settings, block_id: block.id %}
   {% endif %}
   <variant-picker
-    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if show_option_descriptions %} variant-picker--described{% endif %}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if show_option_descriptions %} variant-picker--described{% endif %}{% if picker_is_digital %} is-digital-format{% endif %}{% if picker_is_framed %} is-framed-format{% endif %}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
     style="
       {% render 'spacing-style', settings: block_settings %}
        {% if block_settings.option_label_text_color != blank %}
@@ -96,6 +112,13 @@
           assign option_handle = product_option.name | handleize
           assign described_layout = ''
           assign is_finish_option = false
+          assign size_like_count = 0
+          for option_value in product_option.values
+            assign option_value_handle = option_value.name | handleize
+            if option_value_handle contains 'small' or option_value_handle contains 'medium' or option_value_handle contains 'large' or option_value_handle == 'digital-file' or option_value_handle == 'digital-files'
+              assign size_like_count = size_like_count | plus: 1
+            endif
+          endfor
           if option_handle == 'finish' or option_handle contains 'finish'
             assign is_finish_option = true
           elsif option_handle contains 'frame'
@@ -105,10 +128,15 @@
           endif
           if show_option_descriptions and block_settings.variant_style == 'buttons'
             assign described_layout = 'cards'
-            if option_handle == 'size' or option_handle contains 'size'
+            if option_handle == 'size' or option_handle contains 'size' or size_like_count > 1
               assign described_layout = 'size'
             elsif option_handle == 'format' or option_handle contains 'format' or option_handle contains 'print'
               assign described_layout = 'format'
+            endif
+          endif
+          if is_finish_option == false and described_layout != 'size' and described_layout != 'format'
+            if option_handle == 'digital-file' or option_handle == 'digital-files'
+              assign is_finish_option = true
             endif
           endif
         -%}
@@ -224,7 +252,7 @@
                 <span class="variant-option__legend-heading">
                   <span class="variant-option__legend-text">
                     {%- if described_layout == 'size' -%}
-                      Choose a size (prior to framing)
+                      Choose a Size
                     {%- elsif described_layout == 'finish' -%}
                       Frame finish
                     {%- else -%}
@@ -271,9 +299,6 @@
                 assign value_handle = product_option_value.name | handleize
                 assign value_name = product_option_value.name | strip
                 assign is_pairing_value = false
-                if described_layout == 'size' and value_handle contains 'digital'
-                  assign is_pairing_value = true
-                endif
                 if described_layout == 'finish'
                   if value_handle contains 'none' or value_handle contains 'unframed' or value_handle == 'n-a' or value_handle contains 'no-frame'
                     assign is_pairing_value = true
@@ -369,7 +394,9 @@
                         assign option_description = 'Canvas + wood frame, ships in 3–7 days'
                       endif
                     elsif described_layout == 'size'
-                      if value_handle contains 'medium' and value_handle contains '24'
+                      if value_handle contains 'digital'
+                        assign option_description = 'High-res file, delivered in minutes'
+                      elsif value_handle contains 'medium' and value_handle contains '24'
                         assign option_badge = 'Most loved'
                       elsif value_handle contains 'large' and value_handle contains '32'
                         assign option_badge = 'Best value'
