@@ -41,6 +41,9 @@ export default class VariantPicker extends Component {
   /** @type {number} */
   #pairSizeTimer = 0;
 
+  /** When true, next size pairings pick Small (first print size), not a leftover Medium. */
+  #preferDefaultSize = false;
+
   #resizeObserver = new ResizeNotifier(() => this.updateVariantPickerCss());
 
   /** @type {(event: Event) => void} */
@@ -761,8 +764,8 @@ export default class VariantPicker extends Component {
       if (sizeShopifyIndex != null && changedShopifyIndex !== sizeShopifyIndex) {
         const sizeValue = variant.options[sizeShopifyIndex] || '';
         if (/digital/i.test(sizeValue)) total -= 20;
-        else if (/medium/i.test(sizeValue)) total += 2;
-        else if (/small/i.test(sizeValue)) total += 1;
+        else if (/small/i.test(sizeValue)) total += 3;
+        else if (/medium/i.test(sizeValue)) total += 1;
       }
       return total;
     };
@@ -988,9 +991,13 @@ export default class VariantPicker extends Component {
   #schedulePairSizeToFormat(preferredFormatInput = null) {
     if (preferredFormatInput instanceof HTMLInputElement && this.#getFormatFieldset()?.contains(preferredFormatInput)) {
       this.#describedFormatValue = preferredFormatInput.value;
+      this.#preferDefaultSize = true;
     }
 
-    this.#debug('schedule pair', { preferred: preferredFormatInput?.value ?? null });
+    this.#debug('schedule pair', {
+      preferred: preferredFormatInput?.value ?? null,
+      preferDefaultSize: this.#preferDefaultSize,
+    });
     this.#pairSizeToFormat(preferredFormatInput);
     window.clearTimeout(this.#pairSizeTimer);
     const rerun = (reason) => {
@@ -1001,7 +1008,10 @@ export default class VariantPicker extends Component {
       this.#syncFrameFinishProperty(this.#isFramedFormat(format) && !this.#isDigitalOption(format));
     };
     requestAnimationFrame(() => rerun('rAF'));
-    this.#pairSizeTimer = window.setTimeout(() => rerun('400ms'), 400);
+    this.#pairSizeTimer = window.setTimeout(() => {
+      rerun('400ms');
+      this.#preferDefaultSize = false;
+    }, 400);
   }
 
   #ensureSelectedSize(formatIsDigital, formatValue) {
@@ -1050,7 +1060,13 @@ export default class VariantPicker extends Component {
       ? usableRadios.filter((radio) => this.#sizeAvailableForFormat(radio, formatName))
       : usableRadios;
     const pool = available.length > 0 ? available : usableRadios;
-    const selected = pool.find((radio) => radio.checked) ?? pool[0];
+    const defaultSize =
+      pool.find((radio) => /small/i.test(`${radio.dataset.optionHandle || ''} ${radio.value}`)) ?? pool[0];
+    const checkedUsable = pool.find((radio) => radio.checked);
+    const formatJustChanged =
+      preferredFormatInput instanceof HTMLInputElement && Boolean(formatFieldset?.contains(preferredFormatInput));
+    const selected =
+      this.#preferDefaultSize || formatJustChanged || !checkedUsable ? defaultSize : checkedUsable;
     if (!(selected instanceof HTMLInputElement)) {
       this.#debug('pairSize BAIL: no usable size radio', {
         digitalFormat,
@@ -1068,6 +1084,8 @@ export default class VariantPicker extends Component {
     this.#debug('pairSize applied', {
       digitalFormat,
       formatName,
+      preferDefaultSize: this.#preferDefaultSize,
+      formatJustChanged,
       wanted: selected.value,
       actuallyChecked: actuallyChecked instanceof HTMLInputElement ? actuallyChecked.value : null,
       checkStuck: actuallyChecked !== selected,
