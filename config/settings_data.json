@@ -73,6 +73,7 @@
     "auto_open_cart_drawer": true,
     "show_cart_note": false,
     "show_add_discount_code": true,
+    "cart_bestsellers_collection": "frontpage",
     "icon_stroke": "default",
     "palette_input_border": "{{ settings.color_palette.color3 }}",
     "input_border_width": 1,
