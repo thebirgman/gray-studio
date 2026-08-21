@@ -267,6 +267,7 @@ export default class VariantPicker extends Component {
 
     const resolvedVariant = this.#findSelectedVariant();
     const variantId = resolvedVariant?.id != null ? String(resolvedVariant.id) : selectedOption.dataset.variantId || null;
+    this.#syncProductFormVariant();
 
     if (isOnProductPage) {
       if (variantId) {
@@ -556,15 +557,37 @@ export default class VariantPicker extends Component {
 
         this.#schedulePairSizeToFormat();
 
+        // Prefer the Format×Size match from the embedded variants table. The
+        // section JSON can lag or include leftover option axes and mark a
+        // sellable combo sold out.
+        const resolved = this.#findSelectedVariant();
+        this.#syncProductFormVariant();
+
         // Resolve the ProductSelectEvent promise with all data needed by listeners
         if (this.selectedOptionId) {
           const variantData = JSON.parse(textContent);
+          const resource =
+            resolved != null
+              ? {
+                  ...(variantData && typeof variantData === 'object' ? variantData : {}),
+                  id: resolved.id,
+                  available: resolved.available,
+                  options: resolved.options,
+                }
+              : variantData;
 
-          if (variantData && typeof variantData === 'object') {
+          if (resource && typeof resource === 'object') {
             const productViewAttr = variantPickerJsonScript
               ?.closest('[view-event-payload]')
               ?.getAttribute('view-event-payload')
               ?.trim();
+
+            this.#debug('fetch resolved variant', {
+              serverId: variantData?.id,
+              serverAvailable: variantData?.available,
+              clientId: resolved?.id,
+              clientAvailable: resolved?.available,
+            });
 
             deferredEventPromise.resolve({
               variant: (productViewAttr && JSON.parse(productViewAttr))?.product?.selectedVariant ?? null,
@@ -573,7 +596,7 @@ export default class VariantPicker extends Component {
                 productId: this.dataset.productId ?? '',
                 newProduct,
                 sourceId: this.selectedOptionId,
-                resource: variantData,
+                resource,
               },
             });
 
@@ -803,17 +826,55 @@ export default class VariantPicker extends Component {
     /** @type {(string | null)[]} */
     const selected = [];
     this.#optionFieldsets().forEach((fieldset) => {
+      if (fieldset.classList.contains('variant-option--finish-native')) return;
       const shopifyIndex = this.#shopifyOptionIndex(fieldset);
       const checked = fieldset.querySelector('input:checked');
       if (shopifyIndex == null || !(checked instanceof HTMLInputElement)) return;
       selected[shopifyIndex] = checked.value;
     });
 
+    const requiredIndexes = selected
+      .map((value, index) => (value == null ? -1 : index))
+      .filter((index) => index >= 0);
+    if (requiredIndexes.length === 0) return null;
+
     return (
       variants.find((variant) =>
-        variant.options.every((option, index) => selected[index] == null || this.#sameOptionValue(option, selected[index]))
+        requiredIndexes.every((index) => this.#sameOptionValue(variant.options[index], selected[index]))
       ) ?? null
     );
+  }
+
+  /**
+   * Keep the buy button form on the Format×Size variant from our table.
+   * Hidden leftover options (finish-native) and stale morph HTML must not drive ATC.
+   */
+  #syncProductFormVariant() {
+    const resolved = this.#findSelectedVariant();
+    this.#debug('sync form variant', {
+      resolved,
+      optionValues: this.selectedOptionsValues,
+    });
+    if (!resolved?.id) return;
+
+    const id = String(resolved.id);
+    document
+      .querySelectorAll(
+        `product-form-component[data-product-id="${this.dataset.productId}"] input[name="id"], sticky-add-to-cart input[name="id"]`
+      )
+      .forEach((input) => {
+        if (!(input instanceof HTMLInputElement)) return;
+        input.value = id;
+      });
+
+    const form = document.querySelector(
+      `product-form-component[data-product-id="${this.dataset.productId}"]`
+    );
+    const addContainer = form?.querySelector('[ref="addToCartButtonContainer"]');
+    if (addContainer && typeof addContainer.enable === 'function' && typeof addContainer.disable === 'function') {
+      if (resolved.available) addContainer.enable();
+      else addContainer.disable();
+    }
   }
 
   /** @returns {boolean} */
@@ -1094,6 +1155,7 @@ export default class VariantPicker extends Component {
 
     this.#selectRadio(selected);
     this.#describedSizeValue = selected.value;
+    this.#syncProductFormVariant();
     const actuallyChecked = sizeFieldset.querySelector('input:checked');
     this.#debug('pairSize applied', {
       digitalFormat,
@@ -1432,9 +1494,14 @@ export default class VariantPicker extends Component {
    * @returns {HTMLInputElement | HTMLOptionElement | undefined} The selected option.
    */
   get selectedOption() {
-    const selectedOption = this.querySelector(
-      'select option[selected], fieldset input:checked[data-option-value-id]'
-    );
+    const selectedOption = Array.from(
+      this.querySelectorAll('select option[selected], fieldset input:checked[data-option-value-id]')
+    ).find((option) => {
+      if (!(option instanceof HTMLInputElement || option instanceof HTMLOptionElement)) return false;
+      if (option instanceof HTMLInputElement && option.name.startsWith('properties')) return false;
+      if (option.closest('fieldset.variant-option--finish-native')) return false;
+      return true;
+    });
 
     if (!(selectedOption instanceof HTMLInputElement || selectedOption instanceof HTMLOptionElement)) {
       return undefined;
@@ -1464,9 +1531,10 @@ export default class VariantPicker extends Component {
     /** @type {NodeListOf<HTMLInputElement>} */
     const checkedInputs = this.querySelectorAll('fieldset input:checked');
     for (const input of checkedInputs) {
-      if (input.dataset?.optionName) {
-        options.push({ name: input.dataset.optionName, value: input.value });
-      }
+      if (!input.dataset?.optionName) continue;
+      if (input.name.startsWith('properties')) continue;
+      if (input.closest('fieldset.variant-option--finish-native')) continue;
+      options.push({ name: input.dataset.optionName, value: input.value });
     }
 
     return options;
@@ -1493,12 +1561,13 @@ export default class VariantPicker extends Component {
    * @returns {string[]} The selected options values.
    */
   get selectedOptionsValues() {
-    /** @type HTMLElement[] */
+    /** @type {HTMLElement[]} */
     const selectedOptions = Array.from(
       this.querySelectorAll('select option[selected], fieldset input:checked')
     ).filter((option) => {
       if (!option.dataset.optionValueId) return false;
       if (option instanceof HTMLInputElement && option.name.startsWith('properties')) return false;
+      if (option.closest('fieldset.variant-option--finish-native')) return false;
       return true;
     });
 
