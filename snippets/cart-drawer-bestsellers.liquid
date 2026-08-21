@@ -1,0 +1,89 @@
+{%- doc -%}
+  Empty-cart bestsellers carousel for the cart drawer.
+
+  @example
+  {% render 'cart-drawer-bestsellers' %}
+{%- enddoc -%}
+
+{%- unless settings.cart_bestsellers_enabled == false -%}
+  {%- liquid
+    assign bestsellers_collection = settings.cart_bestsellers_collection
+    assign max_products = 8
+    assign products = bestsellers_collection.products
+    if bestsellers_collection == blank or products.size == 0
+      assign products = collections.all.products
+    endif
+
+    assign show_placeholders = false
+    if products.size == 0
+      assign show_placeholders = true
+    endif
+
+    assign placeholder_titles = 'Digital Download,Watercolour Poster,Giclée Canvas,Framed Canvas' | split: ','
+    assign placeholder_prices = '29,79,149,194' | split: ','
+  -%}
+
+  <cart-drawer-bestsellers class="cart-drawer-bestsellers">
+    <div class="cart-drawer-bestsellers__header">
+      <h3 class="cart-drawer-bestsellers__heading">{{ 'content.cart_bestsellers_heading' | t }}</h3>
+      <div class="cart-drawer-bestsellers__nav">
+        <button
+          class="cart-drawer-bestsellers__arrow"
+          type="button"
+          data-bestsellers-prev
+          aria-label="{{ 'content.pagination.previous' | t }}"
+        >
+          <span class="cart-drawer-bestsellers__arrow-icon cart-drawer-bestsellers__arrow-icon--prev">
+            {{- 'icon-cart-drawer-arrow.svg' | inline_asset_content -}}
+          </span>
+        </button>
+        <button
+          class="cart-drawer-bestsellers__arrow"
+          type="button"
+          data-bestsellers-next
+          aria-label="{{ 'content.pagination.next' | t }}"
+        >
+          <span class="cart-drawer-bestsellers__arrow-icon">
+            {{- 'icon-cart-drawer-arrow.svg' | inline_asset_content -}}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="cart-drawer-bestsellers__scroller"
+      data-bestsellers-scroller
+    >
+      {%- if show_placeholders -%}
+        {%- for title in placeholder_titles -%}
+          {%- liquid
+            assign display_price = placeholder_prices[forloop.index0] | times: 100 | money_without_trailing_zeros
+            assign show_badge = false
+            if forloop.index == 3
+              assign show_badge = true
+            endif
+          -%}
+          {% render 'cart-drawer-product-card',
+            title: title,
+            price: display_price,
+            show_badge: show_badge,
+            placeholder: true
+          %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for product in products limit: max_products -%}
+          {%- liquid
+            assign show_badge = false
+            if product.tags contains 'most-loved' or forloop.index == 3
+              assign show_badge = true
+            endif
+          -%}
+          {% render 'cart-drawer-product-card',
+            product: product,
+            show_badge: show_badge
+          %}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </cart-drawer-bestsellers>
+{%- endunless -%}

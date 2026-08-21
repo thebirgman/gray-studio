@@ -18,10 +18,8 @@
     assign format_handle = option.name | handleize
     if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
       assign format_value_handle = option.selected_value | handleize
-      if format_value_handle contains 'digital'
-        assign show_frame_finish = false
-      elsif format_value_handle contains 'framed'
-        unless format_value_handle contains 'unframed'
+      if format_value_handle contains 'framed'
+        unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
           assign show_frame_finish = true
         endunless
       endif

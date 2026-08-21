@@ -3,6 +3,7 @@
 
   @param {string} [accelerated_checkout_buttons_layout] - { 'vertical' } Forced layout of the additional checkout buttons, instead of relying on platform's layout.
   @param {string} [section_id] - The section ID for cart discount component.
+  @param {string} [context] - Render context — pass `'drawer'` for cart drawer layout.
 {%- enddoc -%}
 
 <div class="cart-totals">
@@ -222,36 +223,66 @@
     else
       assign total_price = cart.total_price | money
     endif
+    assign subtotal_price = cart.items_subtotal_price | money
+    assign shipping_threshold_money = settings.cart_free_shipping_threshold | default: 100 | times: 100 | money
   -%}
 
-  <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
-    <span
-      class="cart-totals__item cart-totals__total"
-      role="status"
-    >
-      <span class="cart-totals__total-label cart-primary-typography">{{ 'content.cart_estimated_total' | t }}</span>
-      <text-component
-        ref="cartTotal"
-        value="{{ total_price | strip_html }}"
-        class="cart-totals__total-value cart-secondary-typography"
-        {% comment %} Used by payment_terms web component {% endcomment %}
-        data-testid="cart-total-value"
-        data-cart-subtotal
+  {%- if context == 'drawer' -%}
+    <div class="cart-drawer-totals">
+      <div class="cart-drawer-totals__row">
+        <span>{{ 'content.cart_subtotal' | t }}</span>
+        <span data-testid="cart-subtotal-value">{{ subtotal_price }}</span>
+      </div>
+      <div class="cart-drawer-totals__row">
+        <span>{{ 'content.shipping' | t }}</span>
+        <span>{{ 'content.calculated_at_checkout' | t }}</span>
+      </div>
+      <div
+        class="cart-drawer-totals__row cart-drawer-totals__row--total"
+        role="status"
       >
-        {{ total_price }}
-      </text-component>
-    </span>
-    {% if settings.show_installments %}
-      <span class="cart-totals__item cart-totals__installments">
-        {% form 'cart', cart %}
-          {{ form | payment_terms }}
-        {% endform %}
-      </span>
-    {% endif %}
-    <div class="cart-totals__item cart-totals__tax-note cart-primary-typography">
-      {% render 'tax-info', has_discounts_enabled: settings.show_add_discount_code %}
+        <span class="cart-drawer-totals__label--total">{{ 'content.cart_total_label' | t }}</span>
+        <text-component
+          ref="cartTotal"
+          value="{{ total_price | strip_html }}"
+          class="cart-drawer-totals__value--total"
+          data-testid="cart-total-value"
+          data-cart-subtotal
+        >
+          {{ total_price }}
+        </text-component>
+      </div>
     </div>
-  </div>
+  {%- else -%}
+    <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
+      <span
+        class="cart-totals__item cart-totals__total"
+        role="status"
+      >
+        <span class="cart-totals__total-label cart-primary-typography">{{ 'content.cart_estimated_total' | t }}</span>
+        <text-component
+          ref="cartTotal"
+          value="{{ total_price | strip_html }}"
+          class="cart-totals__total-value cart-secondary-typography"
+          {% comment %} Used by payment_terms web component {% endcomment %}
+          data-testid="cart-total-value"
+          data-cart-subtotal
+        >
+          {{ total_price }}
+        </text-component>
+      </span>
+      {% if settings.show_installments %}
+        <span class="cart-totals__item cart-totals__installments">
+          {% form 'cart', cart %}
+            {{ form | payment_terms }}
+          {% endform %}
+        </span>
+      {% endif %}
+      <div class="cart-totals__item cart-totals__tax-note cart-primary-typography">
+        {% render 'tax-info', has_discounts_enabled: settings.show_add_discount_code %}
+      </div>
+    </div>
+  {%- endif -%}
 </div>
 
 <div class="cart__ctas">
@@ -266,11 +297,21 @@
     form="cart-form"
   >
     <span class="button-text">
-      {{ 'content.checkout' | t }}
+      {%- if context == 'drawer' -%}
+        {{ 'content.proceed_to_checkout' | t }}
+      {%- else -%}
+        {{ 'content.checkout' | t }}
+      {%- endif -%}
     </span>
   </button>
 
-  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons %}
+  {%- if context == 'drawer' -%}
+    <p class="cart-drawer__trust">
+      {{ 'content.cart_trust_note' | t: amount: shipping_threshold_money }}
+    </p>
+  {%- endif -%}
+
+  {% if additional_checkout_buttons and settings.show_accelerated_checkout_buttons and context != 'drawer' %}
     <div
       class="
         additional-checkout-buttons
@@ -481,8 +522,19 @@
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {
-    border-block-start: var(--style-border-width) solid rgb(var(--color-foreground-rgb) / var(--opacity-10-25));
-    padding-block-start: var(--padding-2xl);
+    border-block-start: none;
+    padding-block-start: 0;
+  }
+
+  .cart-drawer__summary .cart__ctas .cart__checkout-button {
+    height: 2.875rem;
+    padding-inline: 1.5rem;
+    border-radius: 0.25rem;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 1rem;
+    background-color: #321c41;
+    color: #fefefd;
   }
 
   .cart-drawer__summary .cart-note {

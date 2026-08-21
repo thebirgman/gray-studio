@@ -53,20 +53,22 @@
   "
 >
   {% if cart.empty? or force_empty %}
-    {%- if shop.customer_accounts_enabled and customer == null -%}
-      <p>
-        {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
-      </p>
-    {%- endif -%}
+    {%- unless context == 'drawer' -%}
+      {%- if shop.customer_accounts_enabled and customer == null -%}
+        <p>
+          {{ 'actions.log_in_html' | t: link: routes.account_login_url }}
+        </p>
+      {%- endif -%}
 
-    <a
-      class="button cart-items__empty-button"
-      href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
-    >
-      <span class="button-text">
-        {{ 'actions.continue_shopping' | t }}
-      </span>
-    </a>
+      <a
+        class="button cart-items__empty-button"
+        href="{{ settings.empty_cart_button_link | default: routes.all_products_collection_url }}"
+      >
+        <span class="button-text">
+          {{ 'actions.continue_shopping' | t }}
+        </span>
+      </a>
+    {%- endunless -%}
   {%- else -%}
     <span
       class="visually-hidden"
@@ -138,10 +140,16 @@
 
           <tbody role="rowgroup">
             {% for item in cart.items %}
+              {%- liquid
+                assign is_complimentary = false
+                if item.final_line_price == 0
+                  assign is_complimentary = true
+                endif
+              -%}
               <tr
                 id="CartItem-{{ item.key }}"
                 role="row"
-                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% if context == 'drawer' %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}{% endif %}"
+                class="cart-items__table-row{% if item.parent_relationship.parent != null %} cart-items__nested-line{% endif %}{% if context == 'drawer' %}{% unless item.unit_price_measurement %} cart-items__table-row--full-width-variants{% endunless %}{% endif %}{% if is_complimentary %} cart-items__table-row--complimentary{% endif %}"
                 ref="cartItemRows[]"
                 data-parent-key="{{ item.parent_relationship.parent.key }}"
                 data-key="{{ item.key }}"
@@ -205,6 +213,14 @@
                         mode: 'trigger'
                       %}
                     </div>
+                    {%- if context == 'drawer' -%}
+                      {%- if item.product.type != blank -%}
+                        <p class="cart-items__product-type">{{ item.product.type }}</p>
+                      {%- endif -%}
+                      {%- if is_complimentary -%}
+                        <span class="cart-items__offer-badge">{{ 'content.special_offer' | t }}</span>
+                      {%- endif -%}
+                    {%- endif -%}
                     {% if item.product.vendor and block_settings.vendor %}
                       <p>
                         {{ item.product.vendor }}
@@ -356,7 +372,11 @@
                         hidden
                       {% endif %}
                     >
-                      {{- 'icon-delete.svg' | inline_asset_content -}}
+                      {%- if context == 'drawer' -%}
+                        {{- 'icon-close.svg' | inline_asset_content -}}
+                      {%- else -%}
+                        {{- 'icon-delete.svg' | inline_asset_content -}}
+                      {%- endif -%}
                       <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
                     </button>
                   </div>

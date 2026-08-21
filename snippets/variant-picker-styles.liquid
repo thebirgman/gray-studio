@@ -131,10 +131,13 @@
     display: none;
   }
 
-  .variant-option.variant-option--buttons.variant-option--described[hidden],
-  .variant-picker--described:not(:has(.variant-option--format input:checked[data-option-handle*='framed']))
-    .variant-option--finish {
+  .variant-option.variant-option--buttons.variant-option--described[hidden] {
     display: none;
+  }
+
+  .variant-picker--described.is-framed-format
+    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
+    display: grid;
   }
 
   .variant-option.variant-option--buttons.variant-option--described[hidden] > legend {

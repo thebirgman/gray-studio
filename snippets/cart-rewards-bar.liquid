@@ -1,0 +1,158 @@
+{%- doc -%}
+  Three-tier cart rewards progress bar for the cart drawer.
+
+  @example
+  {% render 'cart-rewards-bar' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign current = cart.items_subtotal_price
+
+  assign t1_value = settings.cart_free_shipping_threshold | default: 100
+  assign t2_value = settings.cart_reward_gift_threshold | default: 250
+  assign t3_value = settings.cart_reward_secret_threshold | default: 500
+
+  assign t1 = t1_value | times: 100
+  assign t2 = t2_value | times: 100
+  assign t3 = t3_value | times: 100
+
+  if t1 <= 0
+    assign t1 = 10000
+  endif
+  if t2 <= t1
+    assign t2 = t1 | times: 2.5 | round
+  endif
+  if t3 <= t2
+    assign t3 = t2 | times: 2
+  endif
+
+  assign percent = current | times: 100.0 | divided_by: t3
+  if percent > 100
+    assign percent = 100
+  endif
+  if percent < 0
+    assign percent = 0
+  endif
+
+  assign t1_pos = t1 | times: 100.0 | divided_by: t3
+  assign t2_pos = t2 | times: 100.0 | divided_by: t3
+
+  assign unlocked_1 = false
+  assign unlocked_2 = false
+  assign unlocked_3 = false
+  if current >= t1
+    assign unlocked_1 = true
+  endif
+  if current >= t2
+    assign unlocked_2 = true
+  endif
+  if current >= t3
+    assign unlocked_3 = true
+  endif
+
+  assign gift_label = settings.cart_reward_gift_label | default: 'A $50 Gift Card'
+  assign secret_label = settings.cart_reward_secret_label | default: 'A Secret Gift'
+  assign shipping_label = 'content.cart_reward_free_shipping' | t
+
+  assign remaining = 0
+  assign next_reward = shipping_label
+  assign all_unlocked = false
+
+  if unlocked_3
+    assign all_unlocked = true
+  elsif current < t1
+    assign remaining = t1 | minus: current
+    assign next_reward = shipping_label
+  elsif current < t2
+    assign remaining = t2 | minus: current
+    assign next_reward = gift_label
+  else
+    assign remaining = t3 | minus: current
+    assign next_reward = secret_label
+  endif
+
+  assign remaining_money = remaining | money
+  assign current_money = current | money
+  assign total_money = t3 | money
+-%}
+
+<div
+  class="cart-rewards"
+  role="group"
+  aria-label="{{ 'content.cart_rewards_label' | t }}"
+>
+  <div class="cart-rewards__copy">
+    {%- if all_unlocked -%}
+      <p class="cart-rewards__status">{{ 'content.cart_reward_unlocked' | t }}</p>
+    {%- else -%}
+      <p class="cart-rewards__status">
+        {{ 'content.cart_reward_add_more_html' | t: amount: remaining_money, reward: next_reward }}
+      </p>
+    {%- endif -%}
+    <p class="cart-rewards__progress-text">
+      {{ 'content.cart_reward_progress' | t: current: current_money, total: total_money }}
+    </p>
+  </div>
+
+  <div
+    class="cart-rewards__track"
+    style="--cart-rewards-percent: {{ percent }}%;"
+  >
+    <span class="cart-rewards__fill" aria-hidden="true"></span>
+
+    <span
+      class="cart-rewards__marker{% if unlocked_1 %} cart-rewards__marker--unlocked{% endif %}"
+      style="left: {{ t1_pos }}%;"
+      aria-hidden="true"
+    >
+      {%- if unlocked_1 -%}
+        <span class="cart-rewards__check">
+          {{- 'icon-cart-reward-check.svg' | inline_asset_content -}}
+        </span>
+      {%- endif -%}
+    </span>
+    <span
+      class="cart-rewards__marker{% if unlocked_2 %} cart-rewards__marker--unlocked{% endif %}"
+      style="left: {{ t2_pos }}%;"
+      aria-hidden="true"
+    >
+      {%- if unlocked_2 -%}
+        <span class="cart-rewards__check">
+          {{- 'icon-cart-reward-check.svg' | inline_asset_content -}}
+        </span>
+      {%- endif -%}
+    </span>
+    <span
+      class="cart-rewards__marker{% if unlocked_3 %} cart-rewards__marker--unlocked{% endif %}"
+      style="left: 100%;"
+      aria-hidden="true"
+    >
+      {%- if unlocked_3 -%}
+        <span class="cart-rewards__check">
+          {{- 'icon-cart-reward-check.svg' | inline_asset_content -}}
+        </span>
+      {%- endif -%}
+    </span>
+  </div>
+
+  <div class="cart-rewards__labels">
+    <span
+      class="cart-rewards__label{% unless unlocked_1 %} cart-rewards__label--locked{% endunless %}"
+      style="left: {{ t1_pos }}%;"
+    >
+      {{ shipping_label }}
+    </span>
+    <span
+      class="cart-rewards__label{% unless unlocked_2 %} cart-rewards__label--locked{% endunless %}"
+      style="left: {{ t2_pos }}%;"
+    >
+      {{ gift_label | remove_first: 'A ' }}
+    </span>
+    <span
+      class="cart-rewards__label{% unless unlocked_3 %} cart-rewards__label--locked{% endunless %}"
+      style="left: 100%;"
+    >
+      {{ secret_label | remove_first: 'A ' }}
+    </span>
+  </div>
+</div>

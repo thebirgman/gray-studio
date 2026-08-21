@@ -298,6 +298,26 @@
                 assign option_save = 0
                 assign value_handle = product_option_value.name | handleize
                 assign value_name = product_option_value.name | strip
+                assign format_kind = ''
+                assign size_kind = ''
+                if described_layout == 'format' or described_layout == 'cards'
+                  if value_handle contains 'digital'
+                    assign format_kind = 'digital'
+                  elsif value_handle contains 'framed'
+                    unless value_handle contains 'unframed'
+                      assign format_kind = 'framed'
+                    endunless
+                  else
+                    assign format_kind = 'physical'
+                  endif
+                endif
+                if described_layout == 'size'
+                  if value_handle contains 'digital'
+                    assign size_kind = 'digital'
+                  else
+                    assign size_kind = 'physical'
+                  endif
+                endif
                 assign is_pairing_value = false
                 if described_layout == 'finish'
                   if value_handle contains 'none' or value_handle contains 'unframed' or value_handle == 'n-a' or value_handle contains 'no-frame'
@@ -461,6 +481,12 @@
                   data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
                   data-option-name="{{ product_option.name | escape }}"
                   data-option-handle="{{ value_handle }}"
+                  {% if format_kind != blank %}
+                    data-format-kind="{{ format_kind }}"
+                  {% endif %}
+                  {% if size_kind != blank %}
+                    data-size-kind="{{ size_kind }}"
+                  {% endif %}
                   data-option-value-id="{{ product_option_value.id }}"
                   data-option-available="{{ option_selectable }}"
                   data-connected-product-url="{{ product_option_value.product_url }}"
