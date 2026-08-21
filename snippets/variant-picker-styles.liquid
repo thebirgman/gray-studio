@@ -132,7 +132,8 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described[hidden],
-  .variant-picker--described:not(.is-framed-format) .variant-option--finish {
+  .variant-picker--described:not(:has(.variant-option--format input:checked[data-option-handle*='framed']))
+    .variant-option--finish {
     display: none;
   }
 
@@ -414,12 +415,12 @@
   }
 
   .variant-option--described.variant-option--size .variant-option__button-label[hidden],
-  .variant-picker--described.is-digital-format
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='digital'])
     .variant-option--size
-    .variant-option__button-label:not(:has([data-option-handle*='digital'])),
-  .variant-picker--described:not(.is-digital-format)
+    .variant-option__button-label:not(:has(input[data-option-handle*='digital'])),
+  .variant-picker--described:has(.variant-option--format input:checked:not([data-option-handle*='digital']))
     .variant-option--size
-    .variant-option__button-label:has([data-option-handle*='digital']) {
+    .variant-option__button-label:has(input[data-option-handle*='digital']) {
     display: none;
   }
 

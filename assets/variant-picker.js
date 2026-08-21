@@ -78,6 +78,7 @@ export default class VariantPicker extends Component {
     if (event.target instanceof HTMLInputElement) {
       this.#reconcileDescribedSelection(event.target);
     }
+    this.#syncDescribedAxesVisibility();
     this.recomputeAvailability();
 
     const isOnProductPage =
@@ -246,6 +247,13 @@ export default class VariantPicker extends Component {
         }
       }
       target.checked = true;
+      const liveFieldset = target.closest('fieldset');
+      if (liveFieldset) {
+        liveFieldset.querySelectorAll('input[type="radio"]').forEach((input) => {
+          if (!(input instanceof HTMLInputElement)) return;
+          input.dataset.currentChecked = input === target ? 'true' : 'false';
+        });
+      }
     }
 
     if (target instanceof HTMLSelectElement) {
@@ -696,8 +704,6 @@ export default class VariantPicker extends Component {
   #getSelectedFormatInput() {
     const fieldset = this.#getFormatFieldset();
     if (!fieldset) return null;
-    const current = fieldset.querySelector('input[data-current-checked="true"]');
-    if (current instanceof HTMLInputElement) return current;
     const checked = fieldset.querySelector('input:checked');
     return checked instanceof HTMLInputElement ? checked : null;
   }
@@ -739,25 +745,64 @@ export default class VariantPicker extends Component {
     });
   }
 
-  #ensureSelectedSize(formatIsDigital) {
+  #sizeAvailableForFormat(sizeInput, formatValue) {
+    const variants = this.#readAllVariants();
+    if (!variants?.length) return !this.#isDigitalOption(sizeInput);
+
+    return variants.some((variant) => {
+      if (!variant.available) return false;
+      const hasFormat = variant.options.some((option) => this.#sameOptionValue(option, formatValue));
+      const hasSize = variant.options.some((option) => this.#sameOptionValue(option, sizeInput.value));
+      return hasFormat && hasSize;
+    });
+  }
+
+  #syncSizeChoices(formatIsDigital, formatValue) {
     const sizeFieldset = this.querySelector('fieldset.variant-option--size');
     if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
 
-    const inputs = Array.from(sizeFieldset.querySelectorAll('input')).filter(
+    const labels = Array.from(sizeFieldset.querySelectorAll('.variant-option__button-label'));
+    let shownPhysical = 0;
+
+    labels.forEach((label) => {
+      const input = label.querySelector('input');
+      if (!(input instanceof HTMLInputElement)) return;
+      const isDigital = this.#isDigitalOption(input);
+      let show = formatIsDigital ? isDigital : !isDigital && this.#sizeAvailableForFormat(input, formatValue);
+      if (show && !isDigital) shownPhysical += 1;
+      label.toggleAttribute('hidden', !show);
+    });
+
+    if (!formatIsDigital && shownPhysical === 0) {
+      labels.forEach((label) => {
+        const input = label.querySelector('input');
+        if (!(input instanceof HTMLInputElement)) return;
+        label.toggleAttribute('hidden', this.#isDigitalOption(input));
+      });
+    }
+  }
+
+  #ensureSelectedSize(formatIsDigital, formatValue) {
+    const sizeFieldset = this.querySelector('fieldset.variant-option--size');
+    if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
+
+    const visibleInputs = Array.from(sizeFieldset.querySelectorAll('.variant-option__button-label:not([hidden]) input')).filter(
       (input) => input instanceof HTMLInputElement
     );
-    const digitalInputs = inputs.filter((input) => this.#isDigitalOption(input));
-    const physicalInputs = inputs.filter((input) => !this.#isDigitalOption(input));
     const checked = sizeFieldset.querySelector('input:checked');
-    const checkedIsDigital = this.#isDigitalOption(checked);
+    const checkedVisible = checked instanceof HTMLInputElement && visibleInputs.includes(checked);
+
+    if (checkedVisible) return;
 
     let next = null;
     if (formatIsDigital) {
-      if (!checkedIsDigital) next = digitalInputs[0] ?? null;
-    } else if (checkedIsDigital || !(checked instanceof HTMLInputElement)) {
+      next = visibleInputs[0] ?? Array.from(sizeFieldset.querySelectorAll('input')).find((input) => this.#isDigitalOption(input));
+    } else {
+      const physical = visibleInputs.filter((input) => !this.#isDigitalOption(input));
       next =
-        physicalInputs.find((input) => /medium/i.test(input.value)) ??
-        physicalInputs[0] ??
+        physical.find((input) => /medium/i.test(input.value)) ??
+        physical.find((input) => this.#sizeAvailableForFormat(input, formatValue)) ??
+        physical[0] ??
         null;
     }
 
@@ -770,6 +815,7 @@ export default class VariantPicker extends Component {
     if (!this.#isDescribedPicker()) return;
 
     const formatChecked = this.#getSelectedFormatInput();
+    const formatValue = formatChecked?.value ?? '';
     const formatIsDigital = this.#isDigitalOption(formatChecked);
     const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
 
@@ -779,7 +825,8 @@ export default class VariantPicker extends Component {
     this.querySelectorAll('fieldset.variant-option--size').forEach((fieldset) => {
       fieldset.removeAttribute('hidden');
     });
-    this.#ensureSelectedSize(formatIsDigital);
+    this.#syncSizeChoices(formatIsDigital, formatValue);
+    this.#ensureSelectedSize(formatIsDigital, formatValue);
     this.#syncFrameFinishProperty(showFinish);
   }
 

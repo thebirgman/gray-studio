@@ -90,7 +90,7 @@
             "gap": 20,
             "use_mobile_gap": false,
             "mobile_gap": 12,
-            "sticky_details_desktop": true,
+            "sticky_details_desktop": false,
             "background_media": "none",
             "background_color": "",
             "video_position": "cover",

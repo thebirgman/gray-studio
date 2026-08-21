@@ -46,6 +46,23 @@
       .product-details {
       padding-left: 2.1875rem;
     }
+
+    .product-information .product-information__media {
+      position: sticky;
+      top: var(--sticky-header-offset, 0px);
+      align-self: start;
+      z-index: var(--layer-flat, 1);
+    }
+
+    body:has(#header-group #header-component[data-sticky-state='active'])
+      .product-information
+      .product-information__media {
+      --sticky-header-offset: var(--header-height);
+    }
+
+    .product-information .product-details.sticky-content--desktop {
+      position: static;
+    }
   }
 
   /* Title — Playfair 34 / 28 */
