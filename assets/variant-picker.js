@@ -177,6 +177,7 @@ export default class VariantPicker extends Component {
       this.recomputeAvailability();
       this.#syncDescribedAxesVisibility();
       this.#pairSizeToFormat();
+      this.#captureDescribedSelection();
     } catch (error) {
       console.error('[PDP picker] connected setup threw — listener is still attached', error);
     }
@@ -832,6 +833,11 @@ export default class VariantPicker extends Component {
     return handle.includes('digital') || value.includes('digital');
   }
 
+  /** @param {string | null | undefined} value */
+  #isDigitalOptionValue(value) {
+    return /digital/i.test(String(value || ''));
+  }
+
   /** @param {Element | null} input */
   #isFramedFormat(input) {
     if (!(input instanceof HTMLInputElement)) return false;
@@ -990,8 +996,13 @@ export default class VariantPicker extends Component {
 
   #schedulePairSizeToFormat(preferredFormatInput = null) {
     if (preferredFormatInput instanceof HTMLInputElement && this.#getFormatFieldset()?.contains(preferredFormatInput)) {
+      const sizeChecked = this.#getSizeFieldset()?.querySelector('input:checked');
+      const previousWasDigital =
+        this.#isDigitalOptionValue(this.#describedFormatValue) || this.#isDigitalOption(sizeChecked);
+      const nextIsDigital = this.#isDigitalOption(preferredFormatInput);
+      // Only force Small when leaving Digital Download for a print format.
+      this.#preferDefaultSize = previousWasDigital && !nextIsDigital;
       this.#describedFormatValue = preferredFormatInput.value;
-      this.#preferDefaultSize = true;
     }
 
     this.#debug('schedule pair', {
@@ -1019,8 +1030,9 @@ export default class VariantPicker extends Component {
   }
 
   /**
-   * Always leave exactly one usable size checked. Digital Download pairs with
-   * Digital file; every other format pairs with the first print size.
+   * Always leave exactly one usable size checked.
+   * Digital Download ↔ Digital file. Print formats keep the current size when
+   * still available; Small is only forced when leaving Digital Download.
    * @param {Element | null} [preferredFormatInput]
    * @param {boolean} [formatIsDigital]
    * @param {string} [formatValue]
@@ -1063,10 +1075,12 @@ export default class VariantPicker extends Component {
     const defaultSize =
       pool.find((radio) => /small/i.test(`${radio.dataset.optionHandle || ''} ${radio.value}`)) ?? pool[0];
     const checkedUsable = pool.find((radio) => radio.checked);
-    const formatJustChanged =
-      preferredFormatInput instanceof HTMLInputElement && Boolean(formatFieldset?.contains(preferredFormatInput));
-    const selected =
-      this.#preferDefaultSize || formatJustChanged || !checkedUsable ? defaultSize : checkedUsable;
+    const rememberedUsable = this.#describedSizeValue
+      ? pool.find((radio) => this.#sameOptionValue(radio.value, this.#describedSizeValue))
+      : null;
+    const selected = this.#preferDefaultSize
+      ? defaultSize
+      : checkedUsable ?? rememberedUsable ?? defaultSize;
     if (!(selected instanceof HTMLInputElement)) {
       this.#debug('pairSize BAIL: no usable size radio', {
         digitalFormat,
@@ -1085,7 +1099,6 @@ export default class VariantPicker extends Component {
       digitalFormat,
       formatName,
       preferDefaultSize: this.#preferDefaultSize,
-      formatJustChanged,
       wanted: selected.value,
       actuallyChecked: actuallyChecked instanceof HTMLInputElement ? actuallyChecked.value : null,
       checkStuck: actuallyChecked !== selected,
