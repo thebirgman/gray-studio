@@ -722,7 +722,16 @@ export default class VariantPicker extends Component {
    * @param {string | null | undefined} right
    */
   #sameOptionValue(left, right) {
-    return String(left || '').trim().toLowerCase() === String(right || '').trim().toLowerCase();
+    return this.#normalizeOptionValue(left) === this.#normalizeOptionValue(right);
+  }
+
+  /** @param {string | null | undefined} value */
+  #normalizeOptionValue(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[\u201c\u201d\u201e\u201f\u2033\u2036]/g, '"')
+      .replace(/[\u2018\u2019\u2032]/g, "'");
   }
 
   #reconcileDescribedSelection(changedInput) {
@@ -848,10 +857,104 @@ export default class VariantPicker extends Component {
 
   /**
    * Public: Format×Size variant currently selected in the picker.
-   * @returns {{id: number, available: boolean, options: string[]} | null}
+   * @returns {{id: number, available: boolean, options: string[], source?: string, sizeRadioVariantId?: number | null, mismatch?: boolean} | null}
    */
   getSelectedVariant() {
-    return this.#findSelectedVariant();
+    const fromTable = this.#findSelectedVariant();
+    const sizeChecked = this.#getSizeFieldset()?.querySelector('input:checked');
+    const formatChecked = this.#getSelectedFormatInput();
+    const sizeVariantId =
+      sizeChecked instanceof HTMLInputElement && sizeChecked.dataset.variantId
+        ? Number(sizeChecked.dataset.variantId)
+        : null;
+    const formatVariantId =
+      formatChecked instanceof HTMLInputElement && formatChecked.dataset.variantId
+        ? Number(formatChecked.dataset.variantId)
+        : null;
+
+    if (fromTable) {
+      return {
+        ...fromTable,
+        source: 'variants-table',
+        sizeRadioVariantId: sizeVariantId,
+        mismatch: Boolean(sizeVariantId && Number(fromTable.id) !== sizeVariantId),
+      };
+    }
+
+    // Only fall back to radio data-variant-id when the table can't resolve.
+    if (sizeVariantId && !Number.isNaN(sizeVariantId)) {
+      return {
+        id: sizeVariantId,
+        available: true,
+        options: [],
+        source: 'size-radio-data-variant-id-fallback',
+        sizeRadioVariantId: sizeVariantId,
+      };
+    }
+
+    if (formatVariantId && !Number.isNaN(formatVariantId)) {
+      return {
+        id: formatVariantId,
+        available: true,
+        options: [],
+        source: 'format-radio-fallback',
+      };
+    }
+
+    return null;
+  }
+
+  /** DevTools: __PDP_DUMP() */
+  dumpDebugState() {
+    const resolved = this.getSelectedVariant();
+    const sizeChecked = this.#getSizeFieldset()?.querySelector('input:checked');
+    const formatChecked = this.#getSelectedFormatInput();
+    const report = {
+      productId: this.dataset.productId,
+      productHandle: this.dataset.productHandle,
+      selectedFormat: formatChecked
+        ? {
+            value: formatChecked.value,
+            handle: formatChecked.dataset.optionHandle,
+            variantId: formatChecked.dataset.variantId,
+            optionValueId: formatChecked.dataset.optionValueId,
+          }
+        : null,
+      selectedSize: sizeChecked instanceof HTMLInputElement
+        ? {
+            value: sizeChecked.value,
+            handle: sizeChecked.dataset.optionHandle,
+            variantId: sizeChecked.dataset.variantId,
+            optionValueId: sizeChecked.dataset.optionValueId,
+            checked: sizeChecked.checked,
+          }
+        : null,
+      resolved,
+      optionValues: this.selectedOptionsValues,
+      formId: document.querySelector(
+        `product-form-component[data-product-id="${this.dataset.productId}"] input[name="id"]`
+      )?.value,
+      allVariants: this.#readAllVariants(),
+      finishNativeChecked: Array.from(
+        this.querySelectorAll('fieldset.variant-option--finish-native input:checked')
+      ).map((input) => ({
+        name: input.name,
+        value: input.value,
+        disabled: input.disabled,
+        optionValueId: input.dataset.optionValueId,
+      })),
+      frameFinish: {
+        framedClass: this.classList.contains('is-framed-format'),
+        named: Array.from(this.querySelectorAll('[data-frame-finish-property] input[name]')).map((input) => ({
+          name: input.getAttribute('name'),
+          value: input.value,
+          checked: input.checked,
+          disabled: input.disabled,
+        })),
+      },
+    };
+    console.warn('[PDP dump]', report);
+    return report;
   }
 
   /**
@@ -1617,14 +1720,15 @@ if (!customElements.get('variant-picker')) {
   );
 }
 
-/** Manual probe from DevTools: __PDP_PICKER_DUMP() */
+/** Manual probe from DevTools: __PDP_PICKER_DUMP() / __PDP_DUMP() */
 window.__PDP_PICKER_DUMP = () => {
   const picker = document.querySelector('variant-picker');
   console.warn('[PDP picker] dump', {
     found: Boolean(picker),
     isInstance: picker instanceof VariantPicker,
     className: picker?.className,
-    listenersGuess: 'check click then change logs after selecting a format',
+    hasGetSelectedVariant: typeof picker?.getSelectedVariant === 'function',
   });
-  return picker;
+  return picker?.dumpDebugState?.() ?? picker;
 };
+window.__PDP_DUMP = window.__PDP_PICKER_DUMP;

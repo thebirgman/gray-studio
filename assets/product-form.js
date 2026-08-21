@@ -394,13 +394,18 @@ class ProductFormComponent extends Component {
       }
     }
 
-    const picker = /** @type {HTMLElement & { getSelectedVariant?: () => { id: number, available: boolean, options: string[] } | null } | null} */ (
+    const picker = /** @type {HTMLElement & {
+      getSelectedVariant?: () => { id: number, available: boolean, options: string[], source?: string } | null,
+      dumpDebugState?: () => unknown,
+      dataset: DOMStringMap
+    } | null} */ (
       document.querySelector(`variant-picker[data-product-id="${this.dataset.productId}"]`)
     );
     const resolved = picker?.getSelectedVariant?.() ?? null;
     const resolvedId = overrideVariantId || (resolved?.id != null ? String(resolved.id) : '') || this.refs.variantId?.value;
     if (!resolvedId) {
       console.error('[PDP ATC] No variant id to add');
+      picker?.dumpDebugState?.();
       return;
     }
 
@@ -411,11 +416,24 @@ class ProductFormComponent extends Component {
         ? overrideQuantity
         : Number(this.refs.quantitySelector?.getValue?.()) || Number(this.dataset.quantityDefault) || 1;
 
-    // Build a clean payload. Associated Frame Finish radios and other form extras
-    // have been causing sold-out errors for in-stock Format×Size variants.
+    // Build a clean payload — do not reuse FormData(form), which was pulling in
+    // associated Frame Finish radios and other extras.
     const formData = new FormData();
     formData.set('id', String(resolvedId));
     formData.set('quantity', String(quantity));
+
+    const token = form.querySelector('input[name="authenticity_token"]');
+    if (token instanceof HTMLInputElement && token.value) {
+      formData.set('authenticity_token', token.value);
+    }
+    const formType = form.querySelector('input[name="form_type"]');
+    if (formType instanceof HTMLInputElement && formType.value) {
+      formData.set('form_type', formType.value);
+    }
+    const utf8 = form.querySelector('input[name="utf8"]');
+    if (utf8 instanceof HTMLInputElement && utf8.value) {
+      formData.set('utf8', utf8.value);
+    }
 
     const framed = picker?.classList?.contains('is-framed-format');
     if (framed) {
@@ -439,12 +457,16 @@ class ProductFormComponent extends Component {
       formData.set('sections', cartItemComponentsSectionIds.join(','));
     }
 
+    const dump = picker?.dumpDebugState?.();
     console.warn('[PDP ATC] submitting', {
-      id: formData.get('id'),
-      quantity: formData.get('quantity'),
+      url: Theme.routes.cart_add_url,
+      id: String(formData.get('id')),
+      quantity: String(formData.get('quantity')),
       frameFinish: formData.get('properties[Frame Finish]'),
+      hasToken: Boolean(formData.get('authenticity_token')),
+      sections: formData.get('sections'),
       resolved,
-      formIdBeforeClean: this.refs.variantId?.value,
+      liveAvailableInThemeJson: resolved?.available,
     });
 
     const itemCount = Number(formData.get('quantity')) || Number(this.dataset.quantityDefault);
@@ -470,12 +492,49 @@ class ProductFormComponent extends Component {
       ...fetchCfg,
       headers: {
         ...fetchCfg.headers,
-        Accept: 'text/html',
+        Accept: 'application/json',
       },
     })
       .then((response) => response.json())
       .then(async (response) => {
         if (response.status) {
+          console.error('[PDP ATC] Shopify rejected add', {
+            status: response.status,
+            message: response.message,
+            description: response.description,
+            submittedId: String(resolvedId),
+            resolved,
+            dump,
+          });
+
+          // Compare against live storefront product JSON for that id.
+          const handle = picker?.dataset?.productHandle;
+          if (handle) {
+            fetch(`/products/${handle}.js`)
+              .then((res) => res.json())
+              .then((productJson) => {
+                const live = productJson?.variants?.find((variant) => String(variant.id) === String(resolvedId));
+                console.error('[PDP ATC] live product.js for submitted id', {
+                  handle,
+                  submittedId: String(resolvedId),
+                  liveVariant: live
+                    ? {
+                        id: live.id,
+                        title: live.title,
+                        available: live.available,
+                        options: live.options,
+                      }
+                    : 'ID NOT FOUND IN product.js',
+                  allLive: productJson?.variants?.map((variant) => ({
+                    id: variant.id,
+                    title: variant.title,
+                    available: variant.available,
+                  })),
+                });
+              })
+              .catch((error) => console.error('[PDP ATC] product.js fetch failed', error));
+          }
+
           this.dispatchEvent(
             new CartErrorEvent({
               error: response.message || 'Add to cart failed',
