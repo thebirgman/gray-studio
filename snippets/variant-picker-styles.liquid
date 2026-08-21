@@ -268,7 +268,11 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described .variant-option__button-label:has(:checked),
-  .variant-option.variant-option--buttons.variant-option--described .variant-option__button-label:has(:checked):hover {
+  .variant-option.variant-option--buttons.variant-option--described .variant-option__button-label:has(:checked):hover,
+  .variant-option.variant-option--buttons.variant-option--described.variant-option--size
+    .variant-option__button-label:has([data-current-checked='true']),
+  .variant-option.variant-option--buttons.variant-option--described.variant-option--size
+    .variant-option__button-label:has([data-current-checked='true']):hover {
     border-width: 2px;
     border-color: var(--vp-accent, #8855aa);
     background-color: var(--vp-card-bg, #fffefd);
@@ -405,6 +409,9 @@
 
   .variant-option--described.variant-option--size
     .variant-option__button-label:has(:checked)
+    .variant-option__card-radio::after,
+  .variant-option--described.variant-option--size
+    .variant-option__button-label:has([data-current-checked='true'])
     .variant-option__card-radio::after {
     content: '';
     position: absolute;

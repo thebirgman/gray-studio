@@ -2322,7 +2322,7 @@
         "type": "checkbox",
         "id": "show_add_discount_code",
         "label": "t:settings.add_discount_code",
-        "default": true
+        "default": false
       },
       {
         "type": "checkbox",

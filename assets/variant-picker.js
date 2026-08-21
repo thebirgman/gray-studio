@@ -38,6 +38,9 @@ export default class VariantPicker extends Component {
   /** @type {string} */
   #describedSizeValue = '';
 
+  /** @type {number} */
+  #pairSizeTimer = 0;
+
   connectedCallback() {
     super.connectedCallback();
     const fieldsets = /** @type {HTMLFieldSetElement[]} */ (this.refs.fieldsets || []);
@@ -56,11 +59,19 @@ export default class VariantPicker extends Component {
     this.#resizeObserver.observe(this);
     this.recomputeAvailability();
     this.#syncDescribedAxesVisibility();
+    this.#pairSizeToFormat();
+  }
+
+  updatedCallback() {
+    super.updatedCallback();
+    this.#refreshRadioCaches();
+    this.#schedulePairSizeToFormat();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.#resizeObserver.disconnect();
+    window.clearTimeout(this.#pairSizeTimer);
   }
 
   /**
@@ -81,11 +92,18 @@ export default class VariantPicker extends Component {
     if (!selectedOption) return;
 
     this.updateSelectedOption(event.target);
-    if (event.target instanceof HTMLInputElement) {
-      this.#reconcileDescribedSelection(event.target);
-      this.#syncDescribedAxesVisibility(event.target);
-    } else {
-      this.#syncDescribedAxesVisibility();
+    try {
+      if (event.target instanceof HTMLInputElement) {
+        this.#reconcileDescribedSelection(event.target);
+        this.#syncDescribedAxesVisibility(event.target);
+        this.#schedulePairSizeToFormat(event.target);
+      } else {
+        this.#syncDescribedAxesVisibility();
+        this.#schedulePairSizeToFormat();
+      }
+    } catch (error) {
+      console.error(error);
+      this.#schedulePairSizeToFormat(event.target instanceof HTMLInputElement ? event.target : null);
     }
     this.#captureDescribedSelection();
     this.recomputeAvailability();
@@ -503,6 +521,7 @@ export default class VariantPicker extends Component {
     this.#restoreDescribedSelection();
     this.recomputeAvailability();
     this.#syncDescribedAxesVisibility();
+    this.#schedulePairSizeToFormat();
 
     return newProduct;
   }
@@ -806,42 +825,70 @@ export default class VariantPicker extends Component {
     this.#restoreFrameFinish();
   }
 
+  #schedulePairSizeToFormat(preferredFormatInput = null) {
+    if (preferredFormatInput instanceof HTMLInputElement && this.#getFormatFieldset()?.contains(preferredFormatInput)) {
+      this.#describedFormatValue = preferredFormatInput.value;
+    }
+
+    this.#pairSizeToFormat(preferredFormatInput);
+    window.clearTimeout(this.#pairSizeTimer);
+    this.#pairSizeTimer = window.setTimeout(() => {
+      this.#restoreDescribedSelection();
+      this.#pairSizeToFormat();
+      this.#syncFrameFinishProperty(
+        this.#isFramedFormat(this.#getSelectedFormatInput()) && !this.#isDigitalOption(this.#getSelectedFormatInput())
+      );
+    }, 150);
+  }
+
   #ensureSelectedSize(formatIsDigital, formatValue) {
+    this.#pairSizeToFormat(null, formatIsDigital, formatValue);
+  }
+
+  /**
+   * Always leave exactly one usable size checked. Digital Download pairs with
+   * Digital file; every other format pairs with the first print size.
+   * @param {Element | null} [preferredFormatInput]
+   * @param {boolean} [formatIsDigital]
+   * @param {string} [formatValue]
+   */
+  #pairSizeToFormat(preferredFormatInput = null, formatIsDigital, formatValue) {
     const sizeFieldset = this.#getSizeFieldset();
     if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
 
-    const inputs = Array.from(sizeFieldset.querySelectorAll('input')).filter(
+    const formatFieldset = this.#getFormatFieldset();
+    const formatInput =
+      preferredFormatInput instanceof HTMLInputElement && formatFieldset?.contains(preferredFormatInput)
+        ? preferredFormatInput
+        : this.#getSelectedFormatInput();
+
+    const digitalFormat = formatIsDigital ?? this.#isDigitalOption(formatInput);
+    const formatName = formatValue ?? formatInput?.value ?? '';
+    const radios = Array.from(sizeFieldset.querySelectorAll('input[type="radio"]')).filter(
       (input) => input instanceof HTMLInputElement
     );
-    const digitalInput = inputs.find((input) => this.#isDigitalOption(input));
-    const physicalInputs = inputs.filter((input) => !this.#isDigitalOption(input));
-    const availablePhysical = physicalInputs.filter((input) => this.#sizeAvailableForFormat(input, formatValue));
-    const physical = availablePhysical.length > 0 ? availablePhysical : physicalInputs;
 
-    if (formatIsDigital) {
-      if (digitalInput instanceof HTMLInputElement) {
-        this.#selectRadio(digitalInput);
-        this.#describedSizeValue = digitalInput.value;
+    radios.forEach((radio) => {
+      const usable = digitalFormat ? this.#isDigitalOption(radio) : !this.#isDigitalOption(radio);
+      radio.disabled = !usable;
+      if (!usable) {
+        radio.checked = false;
+        radio.removeAttribute('checked');
+        radio.dataset.currentChecked = 'false';
       }
-      return;
-    }
+    });
 
-    const checked = sizeFieldset.querySelector('input:checked');
-    const checkedIsUsable =
-      checked instanceof HTMLInputElement &&
-      !this.#isDigitalOption(checked) &&
-      physical.includes(checked);
+    const usableRadios = radios.filter((radio) => !radio.disabled);
+    const available = formatName
+      ? usableRadios.filter((radio) => this.#sizeAvailableForFormat(radio, formatName))
+      : usableRadios;
+    const pool = available.length > 0 ? available : usableRadios;
+    const selected = pool.find((radio) => radio.checked) ?? pool[0];
+    if (!(selected instanceof HTMLInputElement)) return;
 
-    if (checkedIsUsable) {
-      this.#describedSizeValue = checked.value;
-      return;
-    }
-
-    const next = physical[0];
-    if (next instanceof HTMLInputElement) {
-      this.#selectRadio(next);
-      this.#describedSizeValue = next.value;
-    }
+    selected.disabled = false;
+    this.#selectRadio(selected);
+    this.#describedSizeValue = selected.value;
   }
 
   #syncFrameFinishProperty(showFinish) {
