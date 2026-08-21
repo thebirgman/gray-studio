@@ -6,7 +6,12 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign current = cart.items_subtotal_price
+  assign current = 0
+  for item in cart.items
+    if item.properties._cart_reward == blank
+      assign current = current | plus: item.final_line_price
+    endif
+  endfor
 
   assign t1_value = settings.cart_free_shipping_threshold | default: 100
   assign t2_value = settings.cart_reward_gift_threshold | default: 250

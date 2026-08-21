@@ -142,7 +142,7 @@
             {% for item in cart.items %}
               {%- liquid
                 assign is_complimentary = false
-                if item.final_line_price == 0
+                if item.final_line_price == 0 or item.properties._cart_reward != blank
                   assign is_complimentary = true
                 endif
               -%}

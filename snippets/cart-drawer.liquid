@@ -32,6 +32,11 @@
     fetchpriority="low"
   ></script>
   <script
+    src="{{ 'cart-rewards.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+  <script
     src="{{ 'cart-drawer-bestsellers.js' | asset_url }}"
     type="module"
     fetchpriority="low"
@@ -60,6 +65,8 @@
   <theme-drawer
     id="cart-drawer"
     data-skip-node-update
+    overlay
+    no-persist
   >
     <dialog
       ref="panel"
@@ -72,6 +79,37 @@
           auto-open
         {% endif %}
       >
+        {%- if settings.cart_free_shipping_enabled -%}
+          {%- liquid
+            assign gift_product = settings.cart_reward_gift_product
+            assign secret_product = settings.cart_reward_secret_product
+            assign gift_variant = gift_product.selected_or_first_available_variant
+            assign secret_variant = secret_product.selected_or_first_available_variant
+            assign gift_threshold_cents = settings.cart_reward_gift_threshold | default: 250 | times: 100
+            assign secret_threshold_cents = settings.cart_reward_secret_threshold | default: 500 | times: 100
+          -%}
+          <cart-rewards-controller>
+            <script type="application/json">
+              [
+                {%- if gift_variant != blank and gift_variant.available -%}
+                  {
+                    "key": "gift",
+                    "variantId": {{ gift_variant.id | json }},
+                    "threshold": {{ gift_threshold_cents | json }}
+                  }{%- if secret_variant != blank and secret_variant.available -%},{%- endif -%}
+                {%- endif -%}
+                {%- if secret_variant != blank and secret_variant.available -%}
+                  {
+                    "key": "secret",
+                    "variantId": {{ secret_variant.id | json }},
+                    "threshold": {{ secret_threshold_cents | json }}
+                  }
+                {%- endif -%}
+              ]
+            </script>
+          </cart-rewards-controller>
+        {%- endif -%}
+
         <template id="empty-cart-template">
           {{ empty_cart_drawer_content }}
         </template>
@@ -160,15 +198,26 @@
     --cart-drawer-badge: #8855aa;
     --cart-drawer-pad: 2rem;
     --cart-drawer-item-media: 5rem;
+    --backdrop-opacity: 0.5;
+    --backdrop-color-rgb: 0 0 0;
 
     background-color: var(--cart-drawer-bg);
     color: var(--cart-drawer-text);
+  }
+
+  #cart-drawer .theme-drawer__dialog::backdrop {
+    background: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
   }
 
   cart-drawer-component {
     --cart-drawer-padding: var(--cart-drawer-pad);
     --font-paragraph--line-height: 1;
     display: contents;
+  }
+
+  cart-rewards-controller {
+    display: none;
   }
 
   .cart-drawer__inner {

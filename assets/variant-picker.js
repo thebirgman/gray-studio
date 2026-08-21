@@ -83,8 +83,10 @@ export default class VariantPicker extends Component {
     this.updateSelectedOption(event.target);
     if (event.target instanceof HTMLInputElement) {
       this.#reconcileDescribedSelection(event.target);
+      this.#syncDescribedAxesVisibility(event.target);
+    } else {
+      this.#syncDescribedAxesVisibility();
     }
-    this.#syncDescribedAxesVisibility();
     this.#captureDescribedSelection();
     this.recomputeAvailability();
 
@@ -573,8 +575,8 @@ export default class VariantPicker extends Component {
         return selected == null || this.#sameOptionValue(option, selected);
       });
 
-    const formatFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--format'));
-    const sizeFieldset = fieldsets.find((fieldset) => fieldset.classList.contains('variant-option--size'));
+    const formatFieldset = this.#getFormatFieldset();
+    const sizeFieldset = this.#getSizeFieldset();
     const formatShopifyIndex = formatFieldset ? this.#shopifyOptionIndex(formatFieldset) : null;
     const sizeShopifyIndex = sizeFieldset ? this.#shopifyOptionIndex(sizeFieldset) : null;
     const formatIsDigital = /digital/i.test(String(selectedByShopifyIndex[formatShopifyIndex ?? -1] ?? ''));
@@ -627,8 +629,8 @@ export default class VariantPicker extends Component {
           candidate instanceof HTMLInputElement &&
           (candidate.value === desired || this.#sameOptionValue(candidate.value, desired))
       );
-      if (input instanceof HTMLInputElement && !input.checked) {
-        this.updateSelectedOption(input);
+      if (input instanceof HTMLInputElement) {
+        this.#selectRadio(input);
       }
     });
 
@@ -744,9 +746,51 @@ export default class VariantPicker extends Component {
   #captureDescribedSelection() {
     const format = this.#getSelectedFormatInput();
     if (format) this.#describedFormatValue = format.value;
-    const size = this.querySelector('.variant-option--size input:checked');
+    const size = this.#getSizeFieldset()?.querySelector('input:checked');
     if (size instanceof HTMLInputElement) this.#describedSizeValue = size.value;
     this.#captureFrameFinish();
+  }
+
+  /** @returns {HTMLFieldSetElement | null} */
+  #getSizeFieldset() {
+    const byClass = this.querySelector('fieldset.variant-option--size, fieldset[data-axis="size"]');
+    if (byClass instanceof HTMLFieldSetElement) return byClass;
+
+    return (
+      this.#optionFieldsets().find((fieldset) => {
+        if (fieldset.classList.contains('variant-option--format')) return false;
+        if (fieldset.classList.contains('variant-option--finish-native')) return false;
+        return Array.from(fieldset.querySelectorAll('input')).some((input) => {
+          if (!(input instanceof HTMLInputElement)) return false;
+          if (input.dataset.sizeKind) return true;
+          const haystack = `${input.dataset.optionHandle || ''} ${input.value || ''}`;
+          return /digital-file|small|medium|large/i.test(haystack);
+        });
+      }) ?? null
+    );
+  }
+
+  /**
+   * Force a radio on, including the HTML checked attribute, so morph + CSS :has(:checked)
+   * stay in sync with the intended selection.
+   * @param {HTMLInputElement} input
+   */
+  #selectRadio(input) {
+    const fieldset = input.closest('fieldset');
+    if (fieldset) {
+      fieldset.querySelectorAll('input[type="radio"]').forEach((candidate) => {
+        if (!(candidate instanceof HTMLInputElement)) return;
+        const on = candidate === input;
+        candidate.checked = on;
+        if (on) {
+          candidate.setAttribute('checked', 'checked');
+        } else {
+          candidate.removeAttribute('checked');
+        }
+        candidate.dataset.currentChecked = on ? 'true' : 'false';
+      });
+    }
+    this.updateSelectedOption(input);
   }
 
   #restoreDescribedSelection() {
@@ -755,22 +799,49 @@ export default class VariantPicker extends Component {
       const formatInput = Array.from(formatFieldset.querySelectorAll('input')).find(
         (input) => input instanceof HTMLInputElement && this.#sameOptionValue(input.value, this.#describedFormatValue)
       );
-      if (formatInput instanceof HTMLInputElement && !formatInput.checked) {
-        this.updateSelectedOption(formatInput);
+      if (formatInput instanceof HTMLInputElement) {
+        this.#selectRadio(formatInput);
       }
     }
-
-    const sizeFieldset = this.querySelector('fieldset.variant-option--size');
-    if (sizeFieldset instanceof HTMLFieldSetElement && this.#describedSizeValue) {
-      const sizeInput = Array.from(sizeFieldset.querySelectorAll('input')).find(
-        (input) => input instanceof HTMLInputElement && this.#sameOptionValue(input.value, this.#describedSizeValue)
-      );
-      if (sizeInput instanceof HTMLInputElement && !sizeInput.checked) {
-        this.updateSelectedOption(sizeInput);
-      }
-    }
-
     this.#restoreFrameFinish();
+  }
+
+  #ensureSelectedSize(formatIsDigital, formatValue) {
+    const sizeFieldset = this.#getSizeFieldset();
+    if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
+
+    const inputs = Array.from(sizeFieldset.querySelectorAll('input')).filter(
+      (input) => input instanceof HTMLInputElement
+    );
+    const digitalInput = inputs.find((input) => this.#isDigitalOption(input));
+    const physicalInputs = inputs.filter((input) => !this.#isDigitalOption(input));
+    const availablePhysical = physicalInputs.filter((input) => this.#sizeAvailableForFormat(input, formatValue));
+    const physical = availablePhysical.length > 0 ? availablePhysical : physicalInputs;
+
+    if (formatIsDigital) {
+      if (digitalInput instanceof HTMLInputElement) {
+        this.#selectRadio(digitalInput);
+        this.#describedSizeValue = digitalInput.value;
+      }
+      return;
+    }
+
+    const checked = sizeFieldset.querySelector('input:checked');
+    const checkedIsUsable =
+      checked instanceof HTMLInputElement &&
+      !this.#isDigitalOption(checked) &&
+      physical.includes(checked);
+
+    if (checkedIsUsable) {
+      this.#describedSizeValue = checked.value;
+      return;
+    }
+
+    const next = physical[0];
+    if (next instanceof HTMLInputElement) {
+      this.#selectRadio(next);
+      this.#describedSizeValue = next.value;
+    }
   }
 
   #syncFrameFinishProperty(showFinish) {
@@ -798,40 +869,6 @@ export default class VariantPicker extends Component {
     }
   }
 
-  #ensureSelectedSize(formatIsDigital, formatValue) {
-    const sizeFieldset = this.querySelector('fieldset.variant-option--size');
-    if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
-
-    const inputs = Array.from(sizeFieldset.querySelectorAll('input')).filter(
-      (input) => input instanceof HTMLInputElement
-    );
-    const digitalInput = inputs.find((input) => this.#isDigitalOption(input));
-    const physicalInputs = inputs.filter((input) => !this.#isDigitalOption(input));
-    const availablePhysical = physicalInputs.filter((input) => this.#sizeAvailableForFormat(input, formatValue));
-    const physical = availablePhysical.length > 0 ? availablePhysical : physicalInputs;
-    const checked = sizeFieldset.querySelector('input:checked');
-
-    if (formatIsDigital) {
-      if (digitalInput instanceof HTMLInputElement && !digitalInput.checked) {
-        this.updateSelectedOption(digitalInput);
-      }
-      return;
-    }
-
-    const checkedIsUsable =
-      checked instanceof HTMLInputElement &&
-      !this.#isDigitalOption(checked) &&
-      physical.includes(checked);
-
-    if (checkedIsUsable) return;
-
-    const next = physical[0];
-    if (next instanceof HTMLInputElement && !next.checked) {
-      this.updateSelectedOption(next);
-      this.#describedSizeValue = next.value;
-    }
-  }
-
   #sizeAvailableForFormat(sizeInput, formatValue) {
     const variants = this.#readAllVariants();
     if (!variants?.length) return !this.#isDigitalOption(sizeInput);
@@ -845,7 +882,7 @@ export default class VariantPicker extends Component {
   }
 
   #syncSizeChoices(formatIsDigital, formatValue) {
-    const sizeFieldset = this.querySelector('fieldset.variant-option--size');
+    const sizeFieldset = this.#getSizeFieldset();
     if (!(sizeFieldset instanceof HTMLFieldSetElement)) return;
 
     const labels = Array.from(sizeFieldset.querySelectorAll('.variant-option__button-label'));
@@ -869,10 +906,14 @@ export default class VariantPicker extends Component {
     }
   }
 
-  #syncDescribedAxesVisibility() {
+  #syncDescribedAxesVisibility(preferredFormatInput = null) {
     if (!this.#isDescribedPicker()) return;
 
-    const formatChecked = this.#getSelectedFormatInput();
+    const formatFieldset = this.#getFormatFieldset();
+    const formatChecked =
+      preferredFormatInput instanceof HTMLInputElement && formatFieldset?.contains(preferredFormatInput)
+        ? preferredFormatInput
+        : this.#getSelectedFormatInput();
     const formatValue = formatChecked?.value ?? '';
     const formatIsDigital = this.#isDigitalOption(formatChecked);
     const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
@@ -880,7 +921,7 @@ export default class VariantPicker extends Component {
     this.classList.toggle('is-digital-format', formatIsDigital);
     this.classList.toggle('is-framed-format', showFinish);
 
-    this.querySelectorAll('fieldset.variant-option--size').forEach((fieldset) => {
+    this.querySelectorAll('fieldset.variant-option--size, fieldset[data-axis="size"]').forEach((fieldset) => {
       fieldset.removeAttribute('hidden');
     });
     this.#syncSizeChoices(formatIsDigital, formatValue);
