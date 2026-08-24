@@ -1,0 +1,57 @@
+{%- doc -%}
+  Cross-cutting styles for the custom-artwork product template:
+  preview-ready show/hide, gallery, buy buttons, and step numbering.
+{%- enddoc -%}
+
+{% stylesheet %}
+  custom-artwork-pdp {
+    display: contents;
+  }
+
+  custom-artwork-pdp:not([data-preview-ready]) .custom-artwork-after,
+  custom-artwork-pdp:not([data-preview-ready]) .pdp-prompt,
+  custom-artwork-pdp:not([data-preview-ready]) .pdp-included,
+  custom-artwork-pdp:not([data-preview-ready]) .variant-picker,
+  custom-artwork-pdp:not([data-preview-ready]) .buy-buttons-block,
+  custom-artwork-pdp:not([data-preview-ready]) .sticky-add-to-cart,
+  custom-artwork-pdp:not([data-preview-ready]) .pdp-upload__filled {
+    display: none;
+  }
+
+  custom-artwork-pdp[data-preview-ready] .custom-artwork-before,
+  custom-artwork-pdp[data-preview-ready] .pdp-start-editing,
+  custom-artwork-pdp[data-preview-ready] .pdp-upload__empty {
+    display: none;
+  }
+
+  custom-artwork-pdp[data-preview-ready] .variant-picker--described .variant-picker__form {
+    counter-reset: vp-step 2;
+  }
+
+  custom-artwork-pdp .buy-buttons-block .add-to-cart-button {
+    display: none;
+  }
+
+  custom-artwork-pdp .pdp-buy-now {
+    flex: 1 1 100%;
+  }
+
+  custom-artwork-pdp .pdp-buy-now__button {
+    width: 100%;
+    background: #321c41;
+    color: #fefefd;
+    border-color: #321c41;
+  }
+
+  @media screen and (min-width: 750px) {
+    custom-artwork-pdp .product-information slideshow-controls {
+      display: none;
+    }
+
+    custom-artwork-pdp .product-information .media-gallery--carousel slideshow-component:has(slideshow-controls[thumbnails]) {
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 0;
+    }
+  }
+
+{% endstylesheet %}

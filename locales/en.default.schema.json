@@ -276,7 +276,8 @@
     "seo_sameas_extra": "One URL per line. Added to your organization structured data",
     "enable_faq_schema": "Outputs FAQ structured data from this accordion's rows. Enable on one accordion per page only",
     "breadcrumb_product_category_source": "What to show between Home and the product name on product pages. Structured data uses the SEO theme setting instead",
-    "pdp_collection_browser": "Leave blank to use the product's first collection. Hidden when the collection has fewer than two products."
+    "pdp_collection_browser": "Leave blank to use the product's first collection. Hidden when the collection has fewer than two products.",
+    "pdp_scene_picker": "Leave blank to use the product's collections. The dropdown switches which collection's scenes are shown."
   },
   "names": {
     "column": "Column",
@@ -434,6 +435,12 @@
     "product_review_stars": "Review stars",
     "pdp_reviews": "Reviews",
     "pdp_from_price": "From price",
+    "pdp_intro": "Product intro",
+    "pdp_scene_picker": "Scene picker",
+    "pdp_upload_slot": "Photo upload slot",
+    "pdp_prompt": "Preview prompt",
+    "pdp_included": "Included list",
+    "pdp_start_editing": "Start editing",
     "collection_browser": "Browse the collection",
     "pdp_trust": "Product trust",
     "pdp_faqs": "Product FAQs",

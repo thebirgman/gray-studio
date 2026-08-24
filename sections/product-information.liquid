@@ -20,6 +20,14 @@
   {% content_for 'blocks' %}
 {% endcapture %}
 
+{% if template.suffix == 'custom-artwork' %}
+  <script
+    src="{{ 'pdp-custom-artwork.js' | asset_url }}"
+    type="module"
+  ></script>
+  <custom-artwork-pdp>
+{% endif %}
+
 {% if section.settings.enable_sticky_add_to_cart %}
   {% liquid
     assign product = closest.product
@@ -177,6 +185,10 @@
 %}
 
 {% render 'pdp-main-styles' %}
+{% if template.suffix == 'custom-artwork' %}
+  {% render 'pdp-custom-artwork-styles' %}
+  </custom-artwork-pdp>
+{% endif %}
 
 {% stylesheet %}
   .sticky-add-to-cart__bar {

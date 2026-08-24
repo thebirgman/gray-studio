@@ -17,7 +17,7 @@
   assign gallery_thumb_width = block_settings.thumbnail_width
   assign gallery_media_radius = block_settings.media_radius
 
-  if request.page_type == 'product'
+  if request.page_type == 'product' and template.suffix != 'custom-artwork'
     assign gallery_presentation = 'carousel'
     assign gallery_controls_style = 'thumbnails'
     assign gallery_thumb_position = 'left'

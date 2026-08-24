@@ -1,0 +1,619 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumbs": {
+      "type": "breadcrumbs",
+      "settings": {
+        "home_label": "",
+        "product_category_source": "collection",
+        "separator": "|",
+        "background_color": "",
+        "section_width": "page-width",
+        "padding-block-start": 24,
+        "padding-block-end": 20,
+        "padding-inline-start": 0,
+        "padding-inline-end": 0,
+        "use_mobile_padding": false,
+        "padding-block-start-mobile": 16,
+        "padding-block-end-mobile": 16,
+        "padding-inline-start-mobile": 0,
+        "padding-inline-end-mobile": 0
+      }
+    },
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "disclosures": {
+          "type": "disclosures",
+          "settings": {
+            "heading": "Disclosures",
+            "heading_preset": "h4",
+            "open_by_default": false,
+            "icon": "caret",
+            "disclosure_heading_preset": "h5",
+            "text_color": "",
+            "dividers": true,
+            "divider_color": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "carousel",
+            "media_columns": "two",
+            "image_gap": 8,
+            "large_first_image": false,
+            "icons_style": "none",
+            "slideshow_controls_style": "dots",
+            "slideshow_mobile_controls_style": "dots",
+            "thumbnail_position": "left",
+            "thumbnail_width": 78,
+            "aspect_ratio": "adapt",
+            "constrain_to_viewport": false,
+            "media_fit": "cover",
+            "media_radius": 16,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 20,
+            "use_mobile_gap": false,
+            "mobile_gap": 12,
+            "sticky_details_desktop": false,
+            "background_media": "none",
+            "background_color": "",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 24,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_icgrde": {
+              "type": "group",
+              "name": "Header",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "use_mobile_alignment": false,
+                "mobile_horizontal_alignment": "flex-start",
+                "mobile_vertical_alignment": "center",
+                "mobile_horizontal_alignment_flex_direction_column": "flex-start",
+                "mobile_vertical_alignment_flex_direction_column": "center",
+                "gap": 8,
+                "use_mobile_gap": false,
+                "mobile_gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "background_color": "",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_color": "",
+                "border_radius": 0,
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {
+                "text_xrnftG": {
+                  "type": "text",
+                  "name": "Product title",
+                  "settings": {
+                    "text": "<h1>Create Your Portrait</h1>",
+                    "mobile_text": "<h1>{{ closest.product.title }}</h1>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "height_mode": "auto",
+                    "desktop_height": "",
+                    "mobile_height": "",
+                    "type_preset": "h3",
+                    "font": "var(--font-heading--family)",
+                    "enable_custom_font_weight": false,
+                    "weight": "400",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "custom_line_height": 1.5,
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "type_preset_mobile": "rte",
+                    "mobile_font_size": "1rem",
+                    "mobile_custom_line_height": 1.5,
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "use_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 0,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {}
+                },
+                "review_pdp": {
+                  "type": "pdp-reviews",
+                  "settings": {
+                    "fallback_count": 148
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_xrnftG",
+                "review_pdp"
+              ]
+            },
+            "from_price_pdp": {
+              "type": "pdp-from-price",
+              "settings": {
+                "suffix": "depending on format & size",
+                "show_range_mobile": true
+              },
+              "blocks": {}
+            },
+            "intro_pdp": {
+              "type": "pdp-intro",
+              "settings": {
+                "text": "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+              },
+              "blocks": {}
+            },
+            "scene_picker_pdp": {
+              "type": "pdp-scene-picker",
+              "settings": {
+                "heading": "1. Choose your scene",
+                "heading_mobile": "Browse the collection",
+                "description": "browse the collections to pick your favorite scene. The background you see here is the background you'll get, we only add your dog."
+              },
+              "blocks": {}
+            },
+            "upload_pdp": {
+              "type": "pdp-upload-slot",
+              "settings": {
+                "heading": "2. Upload your dog's photo",
+                "tips_label": "Tips for best results",
+                "empty_label": "Upload photo",
+                "filled_label": "Change photo",
+                "requirements": "JPG or PNG, under 15MB, at least 1000px on the shortest side.",
+                "empty_hint": "Your format, size, and frame options will appear below once your free preview is ready.",
+                "helper": "Up to 3 free tries per photo. Not right? Switching photos usually does it.",
+                "preview_uploaded_state": false
+              },
+              "blocks": {}
+            },
+            "start_editing_pdp": {
+              "type": "pdp-start-editing",
+              "settings": {
+                "label": "Start editing"
+              },
+              "blocks": {}
+            },
+            "prompt_pdp": {
+              "type": "pdp-prompt",
+              "settings": {
+                "heading": "PROMPT",
+                "subheading": "How to ask for a change",
+                "body": "Be specific about what you want changed, not just that something feels off, that's what gets you a better second try.",
+                "example": "Eg: “Have them sitting on the grass instead of standing, ears up and looking at the camera, positioned so the Eiffel Tower stays visible behind him.”",
+                "placeholder": "Describe your image",
+                "button_label": "Submit"
+              },
+              "blocks": {}
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "show_option_descriptions": true,
+                "size_guide_label": "Size guide",
+                "size_guide_link": "",
+                "frame_guide_label": "Frame guide",
+                "frame_guide_link": "",
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 8,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {
+                "desc_digital": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Digital Download",
+                    "description": "High-res file, delivered in minutes",
+                    "badge": ""
+                  },
+                  "blocks": {}
+                },
+                "desc_poster": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Watercolour Poster",
+                    "description": "Fine art matte paper, ships in 3–7 days",
+                    "badge": ""
+                  },
+                  "blocks": {}
+                },
+                "desc_canvas": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Giclée Canvas",
+                    "description": "Gallery-wrapped, ships in 3–7 days",
+                    "badge": "Most loved"
+                  },
+                  "blocks": {}
+                },
+                "desc_framed": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Framed Canvas",
+                    "description": "Canvas + wood frame, ships in 3–7 days",
+                    "badge": ""
+                  },
+                  "blocks": {}
+                },
+                "desc_small": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Small - 12x18\"",
+                    "description": "",
+                    "badge": ""
+                  },
+                  "blocks": {}
+                },
+                "desc_medium": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Medium - 24x36\"",
+                    "description": "",
+                    "badge": "Most loved"
+                  },
+                  "blocks": {}
+                },
+                "desc_large": {
+                  "type": "_option-description",
+                  "settings": {
+                    "option_value": "Large - 32x48\"",
+                    "description": "",
+                    "badge": "Best value"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "desc_digital",
+                "desc_poster",
+                "desc_canvas",
+                "desc_framed",
+                "desc_small",
+                "desc_medium",
+                "desc_large"
+              ]
+            },
+            "included_pdp": {
+              "type": "pdp-included",
+              "settings": {
+                "heading": "Included:",
+                "item_1": "Gallery-Framed Canvas — save $80",
+                "item_2": "Digital version - $29",
+                "item_3": "Complimentary shipping - $15",
+                "item_4": "Lifetime warranty",
+                "item_5": "Letter of Authenticity"
+              },
+              "blocks": {}
+            },
+            "buy_buttons_eYQEYi": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": false,
+                "show_buy_now": true,
+                "text_color": "",
+                "show_pickup_availability": false,
+                "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "border_width": 1,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.foreground }}",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button-secondary",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "trust_pdp": {
+              "type": "pdp-trust",
+              "settings": {
+                "item_1_icon": "shopify://shop_images/Union.svg",
+                "item_1_label": "Free shipping over $100",
+                "item_2_icon": "shopify://shop_images/Frame_2.svg",
+                "item_2_label": "Worldwide Delivery",
+                "item_3_icon": "",
+                "item_3_label": "40+ scene collection"
+              },
+              "blocks": {}
+            },
+            "faqs_pdp": {
+              "type": "pdp-faqs",
+              "settings": {},
+              "blocks": {
+                "faq_materials": {
+                  "type": "_pdp-faq",
+                  "settings": {
+                    "question": "Materials & formats",
+                    "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Watercolour Poster: archival matte paper. Giclée Canvas: gallery-wrapped canvas print, with an optional black, white, or oak frame."
+                  },
+                  "blocks": {}
+                },
+                "faq_sizing": {
+                  "type": "_pdp-faq",
+                  "settings": {
+                    "question": "Sizing guide",
+                    "answer": "Artwork is square-format. Exact size options and dimensions are being finalized with our print partner and will be listed here before launch."
+                  },
+                  "blocks": {}
+                },
+                "faq_shipping": {
+                  "type": "_pdp-faq",
+                  "settings": {
+                    "question": "Shipping",
+                    "answer": "Prints ship worldwide with tracked delivery; orders over $100 ship free. Digital downloads deliver by email in minutes."
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "faq_materials",
+                "faq_sizing",
+                "faq_shipping"
+              ]
+            }
+          },
+          "block_order": [
+            "group_icgrde",
+            "from_price_pdp",
+            "intro_pdp",
+            "scene_picker_pdp",
+            "upload_pdp",
+            "start_editing_pdp",
+            "prompt_pdp",
+            "variant_picker_R3rGDr",
+            "included_pdp",
+            "buy_buttons_eYQEYi",
+            "trust_pdp",
+            "faqs_pdp"
+          ]
+        }
+      },
+      "block_order": [
+        "disclosures"
+      ],
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": true,
+        "limit_details_width": false,
+        "gap": 20,
+        "use_mobile_gap": true,
+        "mobile_gap": 16,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "",
+        "padding-block-start": 0,
+        "padding-block-end": 24
+      }
+    },
+    "why_youll_love_it": {
+      "type": "step-by-step",
+      "blocks": {
+        "benefit_materials": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-1.svg",
+            "title": "Archival-quality materials",
+            "description": "Matte archival paper on posters, gallery-wrapped canvas on the rest. Made to hold its color for years, not fade in a sunny room."
+          }
+        },
+        "benefit_frame": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-2.svg",
+            "title": "Frame it your way",
+            "description": "Canvas pieces can be framed in black, white, or oak, whichever actually matches the room it's going in."
+          }
+        },
+        "benefit_format": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-pdp-icon-3.svg",
+            "title": "Rectangular by design",
+            "description": "Every scene is painted in a rectangular format, giving more size and framing options and a more natural fit on the wall."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_materials",
+        "benefit_frame",
+        "benefit_format"
+      ],
+      "name": "Why you'll love it",
+      "settings": {
+        "image_asset": "step-by-step-pdp-portrait.jpg",
+        "image_alt": "Impressionist portrait of a boxer in an ornate parlor",
+        "image_shape": "square",
+        "heading": "Why you'll love it",
+        "show_numbers": false,
+        "background_color": "#fffdf8",
+        "wave_color": "#c9def4",
+        "card_background": "#ffffff",
+        "title_color": "#242027",
+        "text_color": "#605c64",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "product_recommendations_qggXJq": {
+      "type": "product-recommendations",
+      "name": "t:names.product_recommendations",
+      "settings": {
+        "product": "{{ closest.product }}",
+        "recommendation_type": "related",
+        "max_products": 4,
+        "eyebrow": "MORE TO DISCOVER",
+        "heading": "Prints that actually last",
+        "button_label": "Explore all styles",
+        "button_link": "",
+        "collection": "",
+        "show_badge": true,
+        "badge_label": "Most loved",
+        "badge_position": 3,
+        "background_color": "#fffdf8",
+        "text_color": "#242027",
+        "muted_color": "#605c64",
+        "brand_color": "#321c41",
+        "badge_color": "#8855aa",
+        "star_color": "#f5cd72",
+        "padding-block-start": 100,
+        "padding-block-end": 120,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 60,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
+    }
+  },
+  "order": [
+    "breadcrumbs",
+    "main",
+    "why_youll_love_it",
+    "product_recommendations_qggXJq"
+  ]
+}

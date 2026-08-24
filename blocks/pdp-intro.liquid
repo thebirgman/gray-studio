@@ -1,0 +1,39 @@
+{%- liquid
+  assign intro = block.settings.text | default: "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+-%}
+
+{%- if intro != blank -%}
+  <p class="pdp-intro" {{ block.shopify_attributes }}>{{ intro | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .pdp-intro {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375;
+    color: #242027;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_intro",
+  "tag": null,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.pdp_intro",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

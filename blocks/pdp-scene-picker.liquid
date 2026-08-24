@@ -1,0 +1,470 @@
+{%- liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign picker_collections = block.settings.collections
+  if picker_collections == blank or picker_collections.size == 0
+    assign picker_collections = product.collections
+  endif
+
+  assign scene_name = product.title
+  if product.title contains ' - '
+    assign title_parts = product.title | split: ' - '
+    assign scene_name = title_parts.last | strip
+  endif
+
+  assign heading = block.settings.heading | default: '1. Choose your scene'
+  assign heading_mobile = block.settings.heading_mobile | default: 'Browse the collection'
+  assign description = block.settings.description | default: "browse the collections to pick your favorite scene. The background you see here is the background you'll get, we only add your dog."
+  assign per_page = 11
+  assign first_collection = blank
+  assign active_handle = blank
+  for collection in picker_collections
+    unless collection.handle == 'all' or collection.handle == 'frontpage'
+      if first_collection == blank
+        assign first_collection = collection
+        assign active_handle = collection.handle
+      endif
+    endunless
+  endfor
+  assign matched = false
+  for collection in picker_collections
+    unless collection.handle == 'all' or collection.handle == 'frontpage'
+      if matched == false
+        for product_collection in product.collections
+          if product_collection.handle == collection.handle
+            assign first_collection = collection
+            assign active_handle = collection.handle
+            assign matched = true
+          endif
+        endfor
+      endif
+    endunless
+  endfor
+-%}
+
+<script
+  src="{{ 'pdp-scene-picker.js' | asset_url }}"
+  type="module"
+></script>
+
+{%- if first_collection != blank -%}
+  <pdp-scene-picker
+    class="pdp-scene-picker"
+    data-per-page="{{ per_page }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="pdp-scene-picker__header pdp-scene-picker__header--desktop">
+      <p class="pdp-scene-picker__heading">{{ heading | escape }}</p>
+    </div>
+    {%- if description != blank -%}
+      <p class="pdp-scene-picker__description">{{ description | escape }}</p>
+    {%- endif -%}
+
+    <div class="pdp-scene-picker__header pdp-scene-picker__header--mobile">
+      <div class="pdp-scene-picker__mobile-copy">
+        <span class="pdp-scene-picker__heading pdp-scene-picker__heading--mobile">{{ heading_mobile | escape }}</span>
+        <span class="pdp-scene-picker__scene">{{ scene_name | escape }}</span>
+      </div>
+      <div class="pdp-scene-picker__arrows">
+        <button
+          type="button"
+          class="pdp-scene-picker__arrow"
+          data-scene-prev
+          aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+        >
+          {{ 'pdp-select-chevron.svg' | inline_asset_content }}
+        </button>
+        <button
+          type="button"
+          class="pdp-scene-picker__arrow pdp-scene-picker__arrow--next"
+          data-scene-next
+          aria-label="{{ 'accessibility.slideshow_next' | t }}"
+        >
+          {{ 'pdp-select-chevron.svg' | inline_asset_content }}
+        </button>
+      </div>
+    </div>
+
+    {%- if picker_collections.size > 0 -%}
+      <div class="pdp-scene-picker__select-wrap">
+        <label class="visually-hidden" for="SceneCollection-{{ block.id }}">{{ heading | escape }}</label>
+        <select
+          id="SceneCollection-{{ block.id }}"
+          class="pdp-scene-picker__select"
+          data-scene-collection
+        >
+          {%- for collection in picker_collections -%}
+            {%- unless collection.handle == 'all' or collection.handle == 'frontpage' -%}
+              {%- liquid
+                assign collection_label = collection.title
+                unless collection_label contains 'Collection'
+                  assign collection_label = collection_label | append: ' Collection'
+                endunless
+              -%}
+              <option
+                value="{{ collection.handle }}"
+                {% if collection.handle == active_handle %}
+                  selected
+                {% endif %}
+              >
+                {{ collection_label | escape }}
+              </option>
+            {%- endunless -%}
+          {%- endfor -%}
+        </select>
+        <span class="pdp-scene-picker__select-icon" aria-hidden="true">
+          {{ 'pdp-select-chevron.svg' | inline_asset_content }}
+        </span>
+      </div>
+    {%- endif -%}
+
+    {%- for collection in picker_collections -%}
+      {%- unless collection.handle == 'all' or collection.handle == 'frontpage' -%}
+      {%- liquid
+        assign panel_hidden = true
+        if collection.handle == active_handle
+          assign panel_hidden = false
+        endif
+        assign product_count = collection.products_count | default: 0 | at_most: 50
+        assign page_count = product_count | plus: per_page | minus: 1 | divided_by: per_page
+      -%}
+      <div
+        class="pdp-scene-picker__panel"
+        data-scene-collection-panel="{{ collection.handle }}"
+        {% if panel_hidden %}
+          hidden
+        {% endif %}
+      >
+        <ul class="pdp-scene-picker__grid" role="list" data-scene-grid>
+          {%- for item in collection.products limit: 50 -%}
+            <li class="pdp-scene-picker__item" data-scene-item>
+              <a
+                class="pdp-scene-picker__link{% if item.id == product.id %} pdp-scene-picker__link--current{% endif %}"
+                href="{{ item.url }}"
+                {% if item.id == product.id %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {%- if item.featured_image != blank -%}
+                  {{
+                    item.featured_image
+                    | image_url: width: 120
+                    | image_tag:
+                      class: 'pdp-scene-picker__image',
+                      loading: 'lazy',
+                      widths: '88, 120',
+                      sizes: '44px',
+                      alt: item.title
+                  }}
+                {%- endif -%}
+                <span class="visually-hidden">{{ item.title | escape }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if page_count > 1 -%}
+          <nav class="pdp-scene-picker__pagination" aria-label="{{ heading | escape }}">
+            <button
+              type="button"
+              class="pdp-scene-picker__arrow pdp-scene-picker__arrow--page"
+              data-scene-prev
+              aria-label="{{ 'accessibility.slideshow_previous' | t }}"
+            >
+              {{ 'pdp-select-chevron.svg' | inline_asset_content }}
+            </button>
+            {%- for page in (1..page_count) -%}
+              {%- assign page_index = forloop.index0 -%}
+              <button
+                type="button"
+                class="pdp-scene-picker__page-btn{% if page_index == 0 %} pdp-scene-picker__page-btn--current{% endif %}"
+                data-scene-page-btn="{{ page_index }}"
+                aria-current="{% if page_index == 0 %}page{% else %}false{% endif %}"
+              >
+                {{ page }}
+              </button>
+            {%- endfor -%}
+            <button
+              type="button"
+              class="pdp-scene-picker__arrow pdp-scene-picker__arrow--page pdp-scene-picker__arrow--next"
+              data-scene-next
+              aria-label="{{ 'accessibility.slideshow_next' | t }}"
+            >
+              {{ 'pdp-select-chevron.svg' | inline_asset_content }}
+            </button>
+          </nav>
+        {%- endif -%}
+      </div>
+      {%- endunless -%}
+    {%- endfor -%}
+  </pdp-scene-picker>
+{%- endif -%}
+
+{% stylesheet %}
+  .pdp-scene-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .pdp-scene-picker__heading {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-transform: uppercase;
+    color: #242027;
+  }
+
+  .pdp-scene-picker__heading--mobile {
+    font-size: 0.75rem;
+    color: #321c41;
+  }
+
+  .pdp-scene-picker__description {
+    display: none;
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #605c64;
+  }
+
+  .pdp-scene-picker__header--desktop,
+  .pdp-scene-picker__select-wrap,
+  .pdp-scene-picker__pagination {
+    display: none;
+  }
+
+  .pdp-scene-picker__header--mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .pdp-scene-picker__mobile-copy {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    min-width: 0;
+  }
+
+  .pdp-scene-picker__scene {
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #605c64;
+  }
+
+  .pdp-scene-picker__arrows {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .pdp-scene-picker__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #242027;
+    cursor: pointer;
+  }
+
+  .pdp-scene-picker__arrow svg {
+    display: block;
+    width: 0.8125rem;
+    height: auto;
+  }
+
+  .pdp-scene-picker__arrow--next {
+    transform: rotate(-90deg);
+  }
+
+  .pdp-scene-picker__arrow:not(.pdp-scene-picker__arrow--next) {
+    transform: rotate(90deg);
+  }
+
+  .pdp-scene-picker__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .pdp-scene-picker__select-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .pdp-scene-picker__select {
+    display: block;
+    width: 100%;
+    height: 2.5625rem;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    appearance: none;
+    border: 1px solid #d9d6db;
+    border-radius: 0.5rem;
+    background: #fdfdfe;
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #242027;
+    cursor: pointer;
+  }
+
+  .pdp-scene-picker__select:focus-visible {
+    outline: 2px solid #321c41;
+    outline-offset: 2px;
+  }
+
+  .pdp-scene-picker__select-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    display: flex;
+    width: 1rem;
+    height: 1rem;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .pdp-scene-picker__select-icon svg {
+    display: block;
+    width: 0.8125rem;
+    height: auto;
+  }
+
+  .pdp-scene-picker__panel[hidden],
+  .pdp-scene-picker__item[hidden] {
+    display: none;
+  }
+
+  .pdp-scene-picker__grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.3125rem;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
+
+  .pdp-scene-picker__link {
+    display: block;
+    width: 2.75rem;
+    height: 2.75rem;
+    overflow: hidden;
+    border: 1px solid transparent;
+  }
+
+  .pdp-scene-picker__link--current {
+    width: 2.875rem;
+    height: 2.875rem;
+    border-color: #242027;
+  }
+
+  .pdp-scene-picker__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pdp-scene-picker__pagination {
+    align-items: center;
+    gap: 0.9375rem;
+    width: 100%;
+  }
+
+  .pdp-scene-picker__page-btn {
+    min-width: 1.1875rem;
+    padding: 0;
+    border: 0.5px solid transparent;
+    border-radius: 0.1875rem;
+    background: transparent;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #918d95;
+    cursor: pointer;
+  }
+
+  .pdp-scene-picker__page-btn--current {
+    border-color: #242027;
+    color: #242027;
+  }
+
+  @media screen and (min-width: 750px) {
+    .pdp-scene-picker__description,
+    .pdp-scene-picker__header--desktop,
+    .pdp-scene-picker__select-wrap {
+      display: block;
+    }
+
+    .pdp-scene-picker__pagination {
+      display: flex;
+    }
+
+    .pdp-scene-picker__header--mobile {
+      display: none;
+    }
+
+    .pdp-scene-picker__link--current {
+      border-color: #321c41;
+      border-bottom-width: 3px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_scene_picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "t:settings.collection_list",
+      "info": "t:info.pdp_scene_picker"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "1. Choose your scene"
+    },
+    {
+      "type": "text",
+      "id": "heading_mobile",
+      "label": "Mobile heading",
+      "default": "Browse the collection"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "browse the collections to pick your favorite scene. The background you see here is the background you'll get, we only add your dog."
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.pdp_scene_picker",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

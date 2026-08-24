@@ -1,0 +1,197 @@
+{%- liquid
+  assign heading = block.settings.heading | default: 'PROMPT'
+  assign subheading = block.settings.subheading | default: 'How to ask for a change'
+  assign body = block.settings.body | default: "Be specific about what you want changed, not just that something feels off, that's what gets you a better second try."
+  assign example = block.settings.example | default: 'Eg: “Have them sitting on the grass instead of standing, ears up and looking at the camera, positioned so the Eiffel Tower stays visible behind him.”'
+  assign placeholder = block.settings.placeholder | default: 'Describe your image'
+  assign button_label = block.settings.button_label | default: 'Submit'
+-%}
+
+<script
+  src="{{ 'pdp-prompt.js' | asset_url }}"
+  type="module"
+></script>
+
+<pdp-prompt class="pdp-prompt custom-artwork-after" {{ block.shopify_attributes }}>
+  <div class="pdp-prompt__intro">
+    <p class="pdp-prompt__heading">{{ heading | escape }}</p>
+    <p class="pdp-prompt__subheading">{{ subheading | escape }}</p>
+    <p class="pdp-prompt__body">{{ body | escape }}</p>
+    <p class="pdp-prompt__example">{{ example | escape }}</p>
+  </div>
+  <form class="pdp-prompt__form">
+    <label class="visually-hidden" for="CustomArtworkPrompt-{{ block.id }}">{{ placeholder | escape }}</label>
+    <textarea
+      id="CustomArtworkPrompt-{{ block.id }}"
+      class="pdp-prompt__input"
+      data-prompt-input
+      rows="3"
+      placeholder="{{ placeholder | escape }}"
+    ></textarea>
+    <button type="submit" class="pdp-prompt__submit">
+      <span>{{ button_label | escape }}</span>
+      <span class="pdp-prompt__submit-icon" aria-hidden="true">
+        {{ 'pdp-prompt-arrow.svg' | inline_asset_content }}
+      </span>
+    </button>
+  </form>
+</pdp-prompt>
+
+{% stylesheet %}
+  .pdp-prompt {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .pdp-prompt__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .pdp-prompt__heading {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: #242027;
+  }
+
+  .pdp-prompt__subheading {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #605c64;
+  }
+
+  .pdp-prompt__body,
+  .pdp-prompt__example {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #918d95;
+  }
+
+  .pdp-prompt__form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .pdp-prompt__input {
+    width: 100%;
+    min-height: 5.75rem;
+    padding: 1rem;
+    border: 1px solid #d9d6db;
+    border-radius: 0.625rem;
+    background: #fffefd;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    line-height: 1.375;
+    color: #242027;
+    resize: vertical;
+  }
+
+  .pdp-prompt__input::placeholder {
+    color: #918d95;
+  }
+
+  .pdp-prompt__input:focus-visible {
+    outline: 2px solid #321c41;
+    outline-offset: 2px;
+  }
+
+  .pdp-prompt__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.875rem;
+    padding: 0.75rem 1.5rem;
+    border: 0.5px solid #321c41;
+    border-radius: 0.25rem;
+    background: transparent;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: #321c41;
+    cursor: pointer;
+  }
+
+  .pdp-prompt__submit-icon {
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pdp-prompt__submit-icon svg {
+    display: block;
+    width: 0.875rem;
+    height: auto;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.pdp_prompt",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "PROMPT"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "How to ask for a change"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Description",
+      "default": "Be specific about what you want changed, not just that something feels off, that's what gets you a better second try."
+    },
+    {
+      "type": "textarea",
+      "id": "example",
+      "label": "Example",
+      "default": "Eg: “Have them sitting on the grass instead of standing, ears up and looking at the camera, positioned so the Eiffel Tower stays visible behind him.”"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "Describe your image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Submit"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.pdp_prompt",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

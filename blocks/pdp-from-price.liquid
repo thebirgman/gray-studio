@@ -5,6 +5,9 @@
   endif
 
   assign from_price = product.price_min | money
+  assign max_price = product.price_max | money
+  assign suffix = block.settings.suffix
+  assign show_range_mobile = block.settings.show_range_mobile
 -%}
 
 {%- if product != blank -%}
@@ -12,7 +15,15 @@
     class="pdp-from-price"
     {{ block.shopify_attributes }}
   >
-    From {{ from_price }}
+    <span class="pdp-from-price__desktop{% if show_range_mobile %} hidden--mobile{% endif %}">
+      <span class="pdp-from-price__amount">From {{ from_price }}</span>
+      {%- if suffix != blank -%}
+        <span class="pdp-from-price__suffix">{{ suffix | escape }}</span>
+      {%- endif -%}
+    </span>
+    {%- if show_range_mobile -%}
+      <span class="pdp-from-price__range hidden--desktop">{{ from_price }} – {{ max_price }}</span>
+    {%- endif -%}
   </p>
 {%- endif -%}
 
@@ -24,6 +35,24 @@
     font-weight: 700;
     line-height: 1.5;
     color: #242027;
+  }
+
+  .pdp-from-price__desktop {
+    display: flex;
+    align-items: center;
+    gap: 0.9375rem;
+    flex-wrap: wrap;
+  }
+
+  .pdp-from-price__suffix {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #918d95;
+    white-space: nowrap;
+  }
+
+  .pdp-from-price__range {
     white-space: nowrap;
   }
 {% endstylesheet %}
@@ -32,7 +61,19 @@
 {
   "name": "t:names.pdp_from_price",
   "tag": null,
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "suffix",
+      "label": "Suffix"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_range_mobile",
+      "label": "Show price range on mobile",
+      "default": false
+    }
+  ],
   "presets": [
     {
       "name": "t:names.pdp_from_price",
