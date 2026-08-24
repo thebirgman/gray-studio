@@ -236,39 +236,6 @@
               },
               "blocks": {}
             },
-            "upload_pdp": {
-              "type": "pdp-upload-slot",
-              "settings": {
-                "heading": "2. Upload your dog's photo",
-                "tips_label": "Tips for best results",
-                "empty_label": "Upload photo",
-                "filled_label": "Change photo",
-                "requirements": "JPG or PNG, under 15MB, at least 1000px on the shortest side.",
-                "empty_hint": "Your format, size, and frame options will appear below once your free preview is ready.",
-                "helper": "Up to 3 free tries per photo. Not right? Switching photos usually does it.",
-                "preview_uploaded_state": false
-              },
-              "blocks": {}
-            },
-            "start_editing_pdp": {
-              "type": "pdp-start-editing",
-              "settings": {
-                "label": "Start editing"
-              },
-              "blocks": {}
-            },
-            "prompt_pdp": {
-              "type": "pdp-prompt",
-              "settings": {
-                "heading": "PROMPT",
-                "subheading": "How to ask for a change",
-                "body": "Be specific about what you want changed, not just that something feels off, that's what gets you a better second try.",
-                "example": "Eg: “Have them sitting on the grass instead of standing, ears up and looking at the camera, positioned so the Eiffel Tower stays visible behind him.”",
-                "placeholder": "Describe your image",
-                "button_label": "Submit"
-              },
-              "blocks": {}
-            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -373,18 +340,6 @@
                 "desc_medium",
                 "desc_large"
               ]
-            },
-            "included_pdp": {
-              "type": "pdp-included",
-              "settings": {
-                "heading": "Included:",
-                "item_1": "Gallery-Framed Canvas — save $80",
-                "item_2": "Digital version - $29",
-                "item_3": "Complimentary shipping - $15",
-                "item_4": "Lifetime warranty",
-                "item_5": "Letter of Authenticity"
-              },
-              "blocks": {}
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -500,11 +455,7 @@
             "from_price_pdp",
             "intro_pdp",
             "scene_picker_pdp",
-            "upload_pdp",
-            "start_editing_pdp",
-            "prompt_pdp",
             "variant_picker_R3rGDr",
-            "included_pdp",
             "buy_buttons_eYQEYi",
             "trust_pdp",
             "faqs_pdp"
