@@ -112,60 +112,59 @@ class StickyAddToCartComponent extends Component {
     if (!productForm) return;
 
     const buyButtonsBlock = productForm.closest('.buy-buttons-block');
-    if (!buyButtonsBlock) return;
+    const ctaTarget =
+      productForm.querySelector('[ref="productFormButtons"]') ??
+      buyButtonsBlock?.querySelector('.product-form-buttons') ??
+      buyButtonsBlock;
+    if (!ctaTarget) return;
 
-    // In themes migrated from 2.0, the footer element doesn't exist
-    const footer = document.querySelector('footer') ?? document.querySelector('[class*="footer-group"]');
-    if (!footer) return;
-
-    // Observer for buy buttons visibility
+    // Observer for CTA buttons visibility — show sticky bar only when they leave the viewport
     this.#buyButtonsIntersectionObserver = new IntersectionObserver((entries) => {
       const [entry] = entries;
       if (!entry) return;
 
-      // Only show sticky bar if buy buttons have been scrolled past (above viewport)
       if (!entry.isIntersecting && !this.#isStuck) {
-        // Check if the element is above the viewport (scrolled past) or below (not yet reached)
         const rect = entry.target.getBoundingClientRect();
         if (rect.bottom < 0 || rect.top < 0) {
           if (this.#isChatActive()) return;
           this.#showStickyBar();
         }
-        // If rect.top >= 0, element is below viewport - don't show sticky bar yet
       } else if (entry.isIntersecting && this.#isStuck) {
         this.#hiddenByBottom = false;
         this.#hideStickyBar();
       }
     });
 
-    // Observer for footer visibility - hides sticky bar at page bottom
-    this.#mainBottomObserver = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (!entry) return;
+    this.#buyButtonsIntersectionObserver.observe(ctaTarget);
 
-        if (entry.isIntersecting && this.#isStuck) {
-          this.#hiddenByBottom = true;
-          this.#hideStickyBar();
-        } else if (!entry.isIntersecting && this.#hiddenByBottom) {
-          // Footer out of view - check if we should show sticky bar again
-          const rect = buyButtonsBlock.getBoundingClientRect();
-          // Only show if buy buttons are above the viewport (scrolled past)
-          if (rect.bottom < 0 || rect.top < 0) {
-            this.#hiddenByBottom = false;
-            if (!this.#isChatActive()) {
-              this.#showStickyBar();
+    const footer = document.querySelector('footer') ?? document.querySelector('[class*="footer-group"]');
+    if (footer) {
+      this.#mainBottomObserver = new IntersectionObserver(
+        (entries) => {
+          const [entry] = entries;
+          if (!entry) return;
+
+          if (entry.isIntersecting && this.#isStuck) {
+            this.#hiddenByBottom = true;
+            this.#hideStickyBar();
+          } else if (!entry.isIntersecting && this.#hiddenByBottom) {
+            const rect = ctaTarget.getBoundingClientRect();
+            if (rect.bottom < 0 || rect.top < 0) {
+              this.#hiddenByBottom = false;
+              if (!this.#isChatActive()) {
+                this.#showStickyBar();
+              }
             }
           }
+        },
+        {
+          rootMargin: '200px 0px 0px 0px',
         }
-      },
-      {
-        rootMargin: '200px 0px 0px 0px',
-      }
-    );
+      );
 
-    this.#buyButtonsIntersectionObserver.observe(buyButtonsBlock);
-    this.#mainBottomObserver.observe(footer);
+      this.#mainBottomObserver.observe(footer);
+    }
+
     this.#targetAddToCartButton = productForm.querySelector('[ref="addToCartButton"]');
   }
 

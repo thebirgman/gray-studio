@@ -122,6 +122,16 @@
     text-align: center;
     white-space: nowrap;
   }
+
+  @media screen and (max-width: 768px) {
+    ul.pdp-trust {
+    justify-content: center;
+}
+
+ul.pdp-trust li:not(:first-child) {
+    display: none;
+}
+}
 {% endstylesheet %}
 
 {% schema %}

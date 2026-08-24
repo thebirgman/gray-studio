@@ -13,7 +13,13 @@
 
 {% liquid
   assign block_settings = block.settings
+  assign gift_product_id = settings.cart_reward_gift_product.id
+  assign secret_product_id = settings.cart_reward_secret_product.id
 %}
+
+{%- if context != 'drawer' -%}
+  {% render 'cart-rewards-controller' %}
+{%- endif -%}
 
 {%- if block_settings.input_style == 'custom' -%}
   {%- capture custom_style -%}
@@ -141,8 +147,17 @@
           <tbody role="rowgroup">
             {% for item in cart.items %}
               {%- liquid
+                assign is_reward_item = false
+                if item.properties._cart_reward != blank
+                  assign is_reward_item = true
+                elsif gift_product_id != blank and item.product_id == gift_product_id
+                  assign is_reward_item = true
+                elsif secret_product_id != blank and item.product_id == secret_product_id
+                  assign is_reward_item = true
+                endif
+
                 assign is_complimentary = false
-                if item.final_line_price == 0 or item.properties._cart_reward != blank
+                if item.final_line_price == 0 or is_reward_item
                   assign is_complimentary = true
                 endif
               -%}
@@ -174,15 +189,26 @@
                         assign ratio = item.image.aspect_ratio
                       endif
                     %}
-                    <a
-                      href="{{ item.url }}"
-                      class="cart-items__media-container"
-                      style="--ratio:{{ ratio }};"
-                    >
-                      {%- liquid
-                        echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
-                      -%}
-                    </a>
+                    {%- if is_reward_item -%}
+                      <div
+                        class="cart-items__media-container"
+                        style="--ratio:{{ ratio }};"
+                      >
+                        {%- liquid
+                          echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
+                        -%}
+                      </div>
+                    {%- else -%}
+                      <a
+                        href="{{ item.url }}"
+                        class="cart-items__media-container"
+                        style="--ratio:{{ ratio }};"
+                      >
+                        {%- liquid
+                          echo item.image | image_url: width: 250 | image_tag: class: 'cart-items__media-image border-style', style: border_override
+                        -%}
+                      </a>
+                    {%- endif -%}
                   {%- endif %}
                 </td>
                 <td
@@ -198,20 +224,26 @@
                       endif
                     -%}
                     <div class="cart-items__title-row">
-                      <a
-                        href="{{ item.url }}"
-                        class="cart-items__title"
-                        {% if item.parent_relationship.parent != null %}
-                          aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
-                        {% endif %}
-                      >
-                        {{- item.product.title -}}
-                      </a>
-                      {% render 'cart-disclosure-tooltip',
-                        product: item.product,
-                        unique_id: cart_disclosure_unique_id,
-                        mode: 'trigger'
-                      %}
+                      {%- if is_reward_item -%}
+                        <span class="cart-items__title">{{- item.product.title -}}</span>
+                      {%- else -%}
+                        <a
+                          href="{{ item.url }}"
+                          class="cart-items__title"
+                          {% if item.parent_relationship.parent != null %}
+                            aria-label="{{ 'accessibility.nested_product' | t: product_title: item.product.title, parent_title: item.parent_relationship.parent.title | escape }}"
+                          {% endif %}
+                        >
+                          {{- item.product.title -}}
+                        </a>
+                      {%- endif -%}
+                      {%- unless is_reward_item -%}
+                        {% render 'cart-disclosure-tooltip',
+                          product: item.product,
+                          unique_id: cart_disclosure_unique_id,
+                          mode: 'trigger'
+                        %}
+                      {%- endunless -%}
                     </div>
                     {%- if context == 'drawer' -%}
                       {%- if item.product.type != blank -%}
@@ -294,7 +326,7 @@
                         <p>{{ item.selling_plan_allocation.selling_plan.name }}</p>
                       {%- endif -%}
 
-                      {%- if item.line_level_discount_allocations.size > 0 -%}
+                      {%- if is_reward_item == false and item.line_level_discount_allocations.size > 0 -%}
                         <ul
                           class="list-unstyled"
                           role="list"
@@ -309,7 +341,10 @@
 
                   <div class="cart-items__unit-price-wrapper">
                     <div>
-                      {% if item.original_price != item.final_price %}
+                      {% if is_reward_item %}
+                        <span class="visually-hidden">{{ 'content.price' | t }}</span>
+                        <span>{{ item.final_price | money }}</span>
+                      {% elsif item.original_price != item.final_price %}
                         <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
                         <span>{{ item.final_price | money }}</span>
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>

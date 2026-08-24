@@ -32,11 +32,6 @@
     fetchpriority="low"
   ></script>
   <script
-    src="{{ 'cart-rewards.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-  <script
     src="{{ 'cart-drawer-bestsellers.js' | asset_url }}"
     type="module"
     fetchpriority="low"
@@ -79,36 +74,7 @@
           auto-open
         {% endif %}
       >
-        {%- if settings.cart_free_shipping_enabled -%}
-          {%- liquid
-            assign gift_product = settings.cart_reward_gift_product
-            assign secret_product = settings.cart_reward_secret_product
-            assign gift_variant = gift_product.selected_or_first_available_variant
-            assign secret_variant = secret_product.selected_or_first_available_variant
-            assign gift_threshold_cents = settings.cart_reward_gift_threshold | default: 250 | times: 100
-            assign secret_threshold_cents = settings.cart_reward_secret_threshold | default: 500 | times: 100
-          -%}
-          <cart-rewards-controller>
-            <script type="application/json">
-              [
-                {%- if gift_variant != blank and gift_variant.available -%}
-                  {
-                    "key": "gift",
-                    "variantId": {{ gift_variant.id | json }},
-                    "threshold": {{ gift_threshold_cents | json }}
-                  }{%- if secret_variant != blank and secret_variant.available -%},{%- endif -%}
-                {%- endif -%}
-                {%- if secret_variant != blank and secret_variant.available -%}
-                  {
-                    "key": "secret",
-                    "variantId": {{ secret_variant.id | json }},
-                    "threshold": {{ secret_threshold_cents | json }}
-                  }
-                {%- endif -%}
-              ]
-            </script>
-          </cart-rewards-controller>
-        {%- endif -%}
+        {% render 'cart-rewards-controller' %}
 
         <template id="empty-cart-template">
           {{ empty_cart_drawer_content }}

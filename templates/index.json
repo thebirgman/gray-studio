@@ -221,9 +221,6 @@
       "settings": {
         "image_asset": "step-by-step-portrait.jpg",
         "image_alt": "Custom pup portrait",
-        "image_shape": "rectangle",
-        "heading": "",
-        "show_numbers": true,
         "background_color": "#fffdf8",
         "wave_color": "#e8dff1",
         "card_background": "#ffffff",
@@ -333,7 +330,7 @@
       "type": "featured-prints",
       "name": "t:names.featured_prints",
       "settings": {
-        "collection": "sample-portrait-collection",
+        "collection": "",
         "products_to_show": 4,
         "show_badge": true,
         "badge_label": "Most loved",

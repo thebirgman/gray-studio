@@ -95,13 +95,26 @@
       {% endif %}
       {% if settings.show_add_discount_code %}
         {% liquid
+          assign gift_product_id = settings.cart_reward_gift_product.id
+          assign secret_product_id = settings.cart_reward_secret_product.id
           assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
           for item in cart.items
-            for allocation in item.line_level_discount_allocations
-              if allocation.discount_application.type == 'discount_code'
-                assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
-              endif
-            endfor
+            assign is_reward_item = false
+            if item.properties._cart_reward != blank
+              assign is_reward_item = true
+            elsif gift_product_id != blank and item.product_id == gift_product_id
+              assign is_reward_item = true
+            elsif secret_product_id != blank and item.product_id == secret_product_id
+              assign is_reward_item = true
+            endif
+
+            unless is_reward_item
+              for allocation in item.line_level_discount_allocations
+                if allocation.discount_application.type == 'discount_code'
+                  assign discount_codes = item.line_level_discount_allocations | slice: forloop.index0 | map: 'discount_application' | map: 'title' | concat: discount_codes
+                endif
+              endfor
+            endunless
           endfor
 
           assign discount_codes = discount_codes | uniq
