@@ -230,6 +230,9 @@
             "scene_picker_pdp": {
               "type": "pdp-scene-picker",
               "settings": {
+                "collections": [
+                  "sample-portrait-collection"
+                ],
                 "heading": "1. Choose your scene",
                 "heading_mobile": "Browse the collection",
                 "description": "browse the collections to pick your favorite scene. The background you see here is the background you'll get, we only add your dog."
@@ -409,7 +412,6 @@
                 "item_1_label": "Free shipping over $100",
                 "item_2_icon": "shopify://shop_images/Frame_2.svg",
                 "item_2_label": "Worldwide Delivery",
-                "item_3_icon": "",
                 "item_3_label": "40+ scene collection"
               },
               "blocks": {}
