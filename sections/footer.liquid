@@ -350,6 +350,10 @@
     background-color: var(--pups-footer-bg, #f5cd72);
   }
 
+  body:has(sticky-add-to-cart) .pups-footer {
+    padding-bottom: calc(8.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .pups-footer__inner {
     width: 100%;
     padding: 2.8125rem 1.5625rem 0;
@@ -687,6 +691,10 @@
   }
 
   @media screen and (min-width: 750px) {
+    body:has(sticky-add-to-cart) .pups-footer {
+      padding-bottom: 5.5rem;
+    }
+
     .pups-footer__inner {
       padding: 4.625rem 7.5rem 0;
     }

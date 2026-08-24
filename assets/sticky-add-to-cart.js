@@ -1,5 +1,4 @@
 import { Component } from '@theme/component';
-import { ThemeEvents, QuantitySelectorUpdateEvent } from '@theme/events';
 import { morph } from '@theme/morph';
 import { onAnimationEnd } from '@theme/utilities';
 import { StandardEvents, ProductSelectEvent, CartLinesUpdateEvent, CartErrorEvent } from '@shopify/events';
@@ -28,8 +27,6 @@ import { StandardEvents, ProductSelectEvent, CartLinesUpdateEvent, CartErrorEven
  * @typedef {Object} StickyAddToCartRefs
  * @property {HTMLElement} stickyBar - The floating bar container
  * @property {HTMLButtonElement} addToCartButton - Sticky bar's button
- * @property {HTMLElement} quantityDisplay - Quantity display container
- * @property {HTMLElement} quantityNumber - Quantity number element
  * @property {HTMLImageElement} productImage - Product image element
  */
 
@@ -44,9 +41,6 @@ class StickyAddToCartComponent extends Component {
 
   /** @type {IntersectionObserver | null} */
   #buyButtonsIntersectionObserver = null;
-
-  /** @type {IntersectionObserver | null} */
-  #mainBottomObserver = null;
 
   /** @type {number | undefined} */
   #resetTimeout;
@@ -63,12 +57,6 @@ class StickyAddToCartComponent extends Component {
   /** @type {HTMLButtonElement | null} */
   #targetAddToCartButton = null;
 
-  /** @type {number} */
-  #currentQuantity = 1;
-
-  /** @type {boolean} */
-  #hiddenByBottom = false;
-
   connectedCallback() {
     super.connectedCallback();
 
@@ -80,9 +68,6 @@ class StickyAddToCartComponent extends Component {
 
     document.addEventListener(StandardEvents.cartLinesUpdate, this.#handleCartAddComplete, { signal });
     document.addEventListener(StandardEvents.cartError, this.#handleCartAddComplete, { signal });
-    document.addEventListener(ThemeEvents.quantitySelectorUpdate, this.#handleQuantityUpdate, { signal });
-
-    this.#getInitialQuantity();
 
     // IntersectionObserver callbacks gate visibility on #isChatActive(), but
     // if the shopper scrolls before the Inbox bundle has upgraded
@@ -97,7 +82,6 @@ class StickyAddToCartComponent extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.#buyButtonsIntersectionObserver?.disconnect();
-    this.#mainBottomObserver?.disconnect();
     this.#abortController.abort();
     if (this.#animationTimeout) {
       clearTimeout(this.#animationTimeout);
@@ -130,41 +114,11 @@ class StickyAddToCartComponent extends Component {
           this.#showStickyBar();
         }
       } else if (entry.isIntersecting && this.#isStuck) {
-        this.#hiddenByBottom = false;
         this.#hideStickyBar();
       }
     });
 
     this.#buyButtonsIntersectionObserver.observe(ctaTarget);
-
-    const footer = document.querySelector('footer') ?? document.querySelector('[class*="footer-group"]');
-    if (footer) {
-      this.#mainBottomObserver = new IntersectionObserver(
-        (entries) => {
-          const [entry] = entries;
-          if (!entry) return;
-
-          if (entry.isIntersecting && this.#isStuck) {
-            this.#hiddenByBottom = true;
-            this.#hideStickyBar();
-          } else if (!entry.isIntersecting && this.#hiddenByBottom) {
-            const rect = ctaTarget.getBoundingClientRect();
-            if (rect.bottom < 0 || rect.top < 0) {
-              this.#hiddenByBottom = false;
-              if (!this.#isChatActive()) {
-                this.#showStickyBar();
-              }
-            }
-          }
-        },
-        {
-          rootMargin: '200px 0px 0px 0px',
-        }
-      );
-
-      this.#mainBottomObserver.observe(footer);
-    }
-
     this.#targetAddToCartButton = productForm.querySelector('[ref="addToCartButton"]');
   }
 
@@ -256,8 +210,6 @@ class StickyAddToCartComponent extends Component {
         if (variant == null) {
           this.#handleVariantUnavailable();
         }
-        this.#restoreStickyQuantity();
-        this.#syncFormQuantity(this.#currentQuantity);
       })
       .catch((error) => {
         if (error?.name !== 'AbortError') console.warn('[sticky-add-to-cart] Event promise rejected:', error);
@@ -302,18 +254,6 @@ class StickyAddToCartComponent extends Component {
     } else {
       resetPuppet();
     }
-  };
-
-  /**
-   * Handles quantity selector update events
-   * @param {QuantitySelectorUpdateEvent} event - The quantity update event
-   */
-  #handleQuantityUpdate = (event) => {
-    // Only respond to product page quantity selector updates, not cart drawer
-    if (event.detail.cartLine) return;
-
-    this.#currentQuantity = event.detail.quantity;
-    this.#syncFormQuantity(this.#currentQuantity);
   };
 
   /**
@@ -368,34 +308,6 @@ class StickyAddToCartComponent extends Component {
     return document.querySelector(
       `#shopify-section-${sectionId} product-form-component[data-product-id="${productId}"]`
     );
-  }
-
-  /**
-   * Gets the initial quantity from the data attribute
-   */
-  #getInitialQuantity() {
-    this.#currentQuantity = parseInt(this.dataset.initialQuantity || '1') || 1;
-    this.#restoreStickyQuantity();
-    this.#syncFormQuantity(this.#currentQuantity);
-  }
-
-  /**
-   * Copies sticky quantity onto the (hidden) product-form quantity selector
-   * so Add to cart uses the same amount.
-   * @param {number} quantity
-   */
-  #syncFormQuantity(quantity) {
-    const productForm = this.#getProductForm();
-    const selector = productForm?.querySelector('quantity-selector-component');
-    if (!selector || typeof selector.setValue !== 'function') return;
-    if (String(selector.getValue?.()) === String(quantity)) return;
-    selector.setValue(String(quantity));
-  }
-
-  #restoreStickyQuantity() {
-    const selector = this.querySelector('.sticky-add-to-cart__qty-wrap quantity-selector-component');
-    if (!selector || typeof selector.setValue !== 'function') return;
-    selector.setValue(String(this.#currentQuantity));
   }
 }
 
