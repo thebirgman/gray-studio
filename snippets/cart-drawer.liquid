@@ -74,8 +74,6 @@
           auto-open
         {% endif %}
       >
-        {% render 'cart-rewards-controller' %}
-
         <template id="empty-cart-template">
           {{ empty_cart_drawer_content }}
         </template>
@@ -180,10 +178,6 @@
     --cart-drawer-padding: var(--cart-drawer-pad);
     --font-paragraph--line-height: 1;
     display: contents;
-  }
-
-  cart-rewards-controller {
-    display: none;
   }
 
   .cart-drawer__inner {

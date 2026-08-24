@@ -150,7 +150,29 @@ class CartRewardsController extends Component {
    * @param {RewardConfig} reward
    */
   #findRewardLine(items, reward) {
-    return items.find((item) => this.#rewardKey(item) === reward.key);
+    return items.find((item) => {
+      if (this.#rewardKey(item) === reward.key) return true;
+      const variantId = Number(item.variant_id ?? item.id ?? 0);
+      const productId = Number(item.product_id ?? 0);
+      if (reward.variantId && variantId === reward.variantId) return true;
+      if (reward.productId && productId === reward.productId) return true;
+      return false;
+    });
+  }
+
+  /**
+   * @param {Record<string, unknown>} item
+   * @returns {boolean}
+   */
+  #isRewardItem(item) {
+    if (this.#rewardKey(item)) return true;
+    const variantId = Number(item.variant_id ?? item.id ?? 0);
+    const productId = Number(item.product_id ?? 0);
+    return this.#rewards.some(
+      (reward) =>
+        (Boolean(reward.variantId) && variantId === reward.variantId) ||
+        (Boolean(reward.productId) && productId === reward.productId)
+    );
   }
 
   /** @param {string} key */
