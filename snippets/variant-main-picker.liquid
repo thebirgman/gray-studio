@@ -86,7 +86,12 @@
       data-shopify-visual-preview
     {% endif %}
   >
-    <form class="variant-picker__form">
+    <div
+      class="variant-picker__form{% if template.suffix == 'custom-artwork' %} variant-picker__form--from-step-3{% endif %}"
+      {% if template.suffix == 'custom-artwork' %}
+        style="counter-reset: vp-step 2;"
+      {% endif %}
+    >
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
@@ -722,7 +727,7 @@
           {%- endfor -%}
         ]
       </script>
-    </form>
+    </div>
   </variant-picker>
 {% endunless %}
 
