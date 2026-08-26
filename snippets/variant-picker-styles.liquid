@@ -486,12 +486,6 @@
     text-overflow: unset;
   }
 
-  .variant-option--described.variant-option--finish .variant-option__size-guide {
-    gap: 0.3125rem;
-    font-size: 0.875rem;
-    line-height: 1.25;
-  }
-
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish .variant-option__button-label,
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish .variant-option__button-label:hover,
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish
@@ -551,11 +545,13 @@
     font: inherit;
   }
 
-  .pdp-guide-modal__dialog {
-    width: min(36rem, calc(100vw - 2rem));
-    max-width: min(36rem, calc(100vw - 2rem));
+  .pdp-guide-modal__dialog.dialog-modal {
+    width: 90%;
+    max-width: 800px;
     max-height: min(90dvh, 56rem);
+    height: auto;
     margin: auto;
+    inset: 0;
     padding: 0;
     border: 1px solid #e8dff1;
     border-radius: 0.75rem;
@@ -563,16 +559,6 @@
     color: #242027;
     box-shadow: 0 1.25rem 3rem rgb(36 32 39 / 0.18);
     overflow: hidden;
-  }
-
-  @media screen and (max-width: 749px) {
-    .pdp-guide-modal__dialog {
-      width: min(100vw - 1.25rem, 36rem);
-      max-width: min(100vw - 1.25rem, 36rem);
-      max-height: min(92dvh, 56rem);
-      height: auto;
-      border-radius: 0.75rem;
-    }
   }
 
   .pdp-guide-modal__panel {
@@ -628,12 +614,15 @@
     overflow: auto;
     padding: 1rem 1.25rem 1.25rem;
     -webkit-overflow-scrolling: touch;
+    text-align: center;
   }
 
   .pdp-guide-modal__image {
     display: block;
     width: 100%;
+    max-width: 100%;
     height: auto;
+    margin-inline: auto;
     border-radius: 0.5rem;
   }
 {% endstylesheet %}

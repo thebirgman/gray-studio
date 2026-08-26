@@ -215,10 +215,7 @@
             },
             "from_price_pdp": {
               "type": "pdp-from-price",
-              "settings": {
-                "suffix": "",
-                "show_range_mobile": false
-              },
+              "settings": {},
               "blocks": {}
             },
             "collection_browser_pdp": {
@@ -237,11 +234,11 @@
                 "show_option_descriptions": true,
                 "size_guide_label": "Size guide",
                 "size_guide_heading": "Size guide",
-                "size_guide_image": "shopify://shop_images/size_guide_pups.jpg",
+                "size_guide_image": "",
                 "size_guide_link": "",
                 "frame_guide_label": "Frame guide",
                 "frame_guide_heading": "Frame guide",
-                "frame_guide_image": "shopify://shop_images/size_guide_pups.jpg",
+                "frame_guide_image": "",
                 "frame_guide_link": "",
                 "option_label_text_color": "",
                 "variant_style_class": "default",
