@@ -88,17 +88,15 @@
           class="facets__label"
           id="sort-label-{{ section_id }}"
         >
-          Sort by:
+          Sort By
         </span>
-        <span
-          class="facets__status"
-        >
-          {{- status -}}
-        </span>
-        <span class="svg-wrapper icon-caret icon-animated sorting-filter__chevron">
-          <svg width="13" height="7" viewBox="0 0 13 7" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-            <path d="M11.6864 -3.39903e-08L12.7265 1.04108L7.05794 6.71157C6.96711 6.80297 6.8591 6.87551 6.74013 6.92502C6.62115 6.97452 6.49357 7 6.36471 7C6.23584 7 6.10826 6.97452 5.98928 6.92502C5.87031 6.87551 5.7623 6.80297 5.67147 6.71157L0 1.04108L1.0401 0.000981762L6.36323 5.32314L11.6864 -3.39903e-08Z" fill="currentColor"/>
-          </svg>
+        <span class="facets__status">
+          <span class="facets__status-text">{{- status -}}</span>
+          <span class="svg-wrapper icon-caret icon-animated sorting-filter__chevron">
+            <svg width="13" height="7" viewBox="0 0 13 7" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M11.6864 -3.39903e-08L12.7265 1.04108L7.05794 6.71157C6.96711 6.80297 6.8591 6.87551 6.74013 6.92502C6.62115 6.97452 6.49357 7 6.36471 7C6.23584 7 6.10826 6.97452 5.98928 6.92502C5.87031 6.87551 5.7623 6.80297 5.67147 6.71157L0 1.04108L1.0401 0.000981762L6.36323 5.32314L11.6864 -3.39903e-08Z" fill="currentColor"/>
+            </svg>
+          </span>
         </span>
       </summary>
       <floating-panel-component
@@ -322,6 +320,22 @@
     font-size: var(--font-size--sm);
     color: var(--color-foreground);
     margin-inline: 0.2rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sorting-filter .facets__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sorting-filter .sorting-filter__chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .facets-mobile-wrapper:has(> :nth-child(2)) .sorting-filter .sorting-filter__options {

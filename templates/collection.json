@@ -9,168 +9,62 @@
  */
 {
   "sections": {
-    "breadcrumbs": {
-      "type": "breadcrumbs",
-      "settings": {
-        "product_category_source": "auto",
-        "separator": "/",
-        "section_width": "page-width",
-        "padding-block-start": 24,
-        "padding-block-end": 8,
-        "padding-inline-start": 0,
-        "padding-inline-end": 0,
-        "use_mobile_padding": false,
-        "padding-block-start-mobile": 16,
-        "padding-block-end-mobile": 16,
-        "padding-inline-start-mobile": 0,
-        "padding-inline-end-mobile": 0
-      }
-    },
-    "section": {
-      "type": "section",
+    "collection_header": {
+      "type": "collection-header",
       "blocks": {
-        "text_tqQTNE": {
-          "type": "text",
-          "name": "Title",
+        "destination_all": {
+          "type": "destination",
           "settings": {
-            "text": "<h1>{{ closest.collection.title }}</h1>",
-            "mobile_text": "",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "height_mode": "auto",
-            "desktop_height": "",
-            "mobile_height": "",
-            "type_preset": "h2",
-            "font": "var(--font-primary--family)",
-            "enable_custom_font_weight": false,
-            "weight": "400",
-            "font_size": "",
-            "line_height": "normal",
-            "custom_line_height": 1.5,
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "type_preset_mobile": "rte",
-            "mobile_font_size": "1rem",
-            "mobile_custom_line_height": 1.5,
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "use_mobile_padding": false,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
-          },
-          "blocks": {}
+            "label": "All destinations"
+          }
         },
-        "text_twGGkJ": {
-          "type": "text",
-          "name": "Description",
+        "destination_city": {
+          "type": "destination",
           "settings": {
-            "text": "{{ closest.collection.description }}",
-            "mobile_text": "",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "height_mode": "auto",
-            "desktop_height": "",
-            "mobile_height": "",
-            "type_preset": "rte",
-            "font": "var(--font-primary--family)",
-            "enable_custom_font_weight": false,
-            "weight": "400",
-            "font_size": "",
-            "line_height": "normal",
-            "custom_line_height": 1.5,
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "type_preset_mobile": "rte",
-            "mobile_font_size": "1rem",
-            "mobile_custom_line_height": 1.5,
-            "text_color": "",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "use_mobile_padding": false,
-            "padding-block-start-mobile": 0,
-            "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
-          },
-          "blocks": {}
+            "label": "City & landmarks"
+          }
+        },
+        "destination_coastal": {
+          "type": "destination",
+          "settings": {
+            "label": "Coastal & lakeside"
+          }
+        },
+        "destination_countryside": {
+          "type": "destination",
+          "settings": {
+            "label": "Countryside & gardens"
+          }
+        },
+        "destination_cozy": {
+          "type": "destination",
+          "settings": {
+            "label": "Cozy & fireside"
+          }
         }
       },
       "block_order": [
-        "text_tqQTNE",
-        "text_twGGkJ"
+        "destination_all",
+        "destination_city",
+        "destination_coastal",
+        "destination_countryside",
+        "destination_cozy"
       ],
-      "name": "Collection heading",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "use_mobile_gap": false,
-        "mobile_gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "background_media": "none",
-        "background_color": "",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "floating_media_type": "image",
-        "floating_media_text": "",
-        "floating_media_text_preset": "paragraph",
-        "floating_media_text_preset_mobile": "",
-        "floating_media_text_alignment": "center",
-        "floating_media_text_padding_y": 8,
-        "floating_media_text_padding_x": 16,
-        "floating_media_width": 120,
-        "floating_media_anchor": "top-right",
-        "floating_media_offset_x": 0,
-        "floating_media_offset_y": 0,
-        "floating_media_rotation": 0,
-        "floating_media_hide_mobile": false,
-        "use_floating_media_mobile_settings": false,
-        "floating_media_width_mobile": 120,
-        "floating_media_anchor_mobile": "",
-        "floating_media_offset_x_mobile": 0,
-        "floating_media_offset_y_mobile": 0,
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_color": "",
-        "border_radius": 0,
-        "padding-block-start": 48,
-        "padding-block-end": 48,
+        "title": "",
+        "description": "",
+        "learn_more_label": "Learn more",
+        "show_less_label": "Show less",
+        "breadcrumb_home": "Home",
+        "breadcrumb_current": "Collection",
+        "pills_label": "Destinations",
+        "show_filter_button": true,
+        "filter_label": "Filter by city",
+        "background_color": "#FFFFFF",
+        "padding-block-start": 24,
+        "padding-block-end": 20,
         "padding-inline-start": 0,
-        "padding-inline-end": 0,
-        "use_mobile_padding": false,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
-        "padding-inline-start-mobile": 0,
-        "padding-inline-end-mobile": 0
+        "padding-inline-end": 0
       }
     },
     "main": {
@@ -188,14 +82,14 @@
             "show_swatch_label": false,
             "show_filter_label": false,
             "enable_sorting": true,
-            "enable_grid_density": true,
+            "enable_grid_density": false,
             "background_color": "",
             "text_color": "",
-            "padding-block-start": 8,
-            "padding-block-end": 8,
+            "padding-block-start": 0,
+            "padding-block-end": 24,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "facets_margin_bottom": 8,
+            "facets_margin_bottom": 24,
             "facets_margin_right": 20
           },
           "blocks": {}
@@ -206,9 +100,9 @@
           "settings": {
             "layout": "vertical",
             "horizontal_image_width": 96,
-            "product_card_gap": 4,
+            "product_card_gap": 15,
             "use_mobile_gap": false,
-            "mobile_product_card_gap": 16,
+            "mobile_product_card_gap": 15,
             "background_color": "",
             "border": "none",
             "border_width": 1,
@@ -244,6 +138,13 @@
               },
               "blocks": {}
             },
+            "product_eyebrow": {
+              "type": "product-eyebrow",
+              "settings": {
+                "text": ""
+              },
+              "blocks": {}
+            },
             "product_title_4nY4eT": {
               "type": "product-title",
               "name": "t:names.product_title",
@@ -261,11 +162,11 @@
                 "type_preset_mobile": "rte",
                 "mobile_font_size": "1rem",
                 "mobile_custom_line_height": 1.5,
-                "text_color": "",
+                "text_color": "#242027",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 4,
+                "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -278,7 +179,7 @@
                 "show_sale_price_first": true,
                 "show_installments": false,
                 "show_tax_info": false,
-                "type_preset": "h6",
+                "type_preset": "custom",
                 "width": "100%",
                 "alignment": "left",
                 "font": "var(--font-body--family)",
@@ -286,16 +187,16 @@
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
-                "text_color": "",
+                "text_color": "#242027",
                 "type_preset_mobile": "",
                 "mobile_font_size": "1rem",
                 "mobile_custom_line_height": 1.5,
-                "padding-block-start": 0,
+                "padding-block-start": 6,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "use_mobile_padding": false,
-                "padding-block-start-mobile": 0,
+                "padding-block-start-mobile": 6,
                 "padding-block-end-mobile": 0,
                 "padding-inline-start-mobile": 0,
                 "padding-inline-end-mobile": 0
@@ -305,32 +206,232 @@
           },
           "block_order": [
             "card-gallery",
+            "product_eyebrow",
             "product_title_4nY4eT",
             "price_EzJzMm"
           ]
+        },
+        "featured_card_1": {
+          "type": "_collection-featured-card",
+          "settings": {
+            "position": 4,
+            "size": "1x",
+            "hide_on_mobile": false,
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 12,
+            "width": "fill",
+            "height": "fill",
+            "background_color": "",
+            "background_media": "image",
+            "background_image_position": "cover",
+            "video_position": "cover",
+            "toggle_overlay": true,
+            "overlay_color": "#242027a6",
+            "overlay_style": "gradient",
+            "gradient_direction": "to bottom",
+            "border_radius": 0,
+            "link": "",
+            "open_in_new_tab": false,
+            "padding-block-start": 50,
+            "padding-block-end": 24,
+            "padding-inline-start": 24,
+            "padding-inline-end": 24
+          },
+          "blocks": {
+            "featured_heading_1": {
+              "type": "text",
+              "settings": {
+                "text": "<h3>Take your dog anywhere</h3>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h4",
+                "font": "var(--font-primary--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            },
+            "featured_text_1": {
+              "type": "text",
+              "settings": {
+                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            },
+            "featured_button_1": {
+              "type": "button",
+              "settings": {
+                "label": "Create your portrait",
+                "link": "",
+                "open_in_new_tab": false,
+                "style_class": "button-unstyled",
+                "link_text_color": "#ffffff",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              }
+            }
+          },
+          "block_order": [
+            "featured_heading_1",
+            "featured_text_1",
+            "featured_button_1"
+          ]
+        },
+        "featured_card_2": {
+          "type": "_collection-featured-card",
+          "settings": {
+            "position": 15,
+            "size": "1x",
+            "hide_on_mobile": false,
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 12,
+            "width": "fill",
+            "height": "fill",
+            "background_color": "",
+            "background_media": "image",
+            "background_image_position": "cover",
+            "video_position": "cover",
+            "toggle_overlay": true,
+            "overlay_color": "#242027a6",
+            "overlay_style": "gradient",
+            "gradient_direction": "to bottom",
+            "border_radius": 0,
+            "link": "",
+            "open_in_new_tab": false,
+            "padding-block-start": 50,
+            "padding-block-end": 24,
+            "padding-inline-start": 24,
+            "padding-inline-end": 24
+          },
+          "blocks": {
+            "featured_heading_2": {
+              "type": "text",
+              "settings": {
+                "text": "<h3>Take your dog anywhere</h3>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "h4",
+                "font": "var(--font-primary--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            },
+            "featured_text_2": {
+              "type": "text",
+              "settings": {
+                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            },
+            "featured_button_2": {
+              "type": "button",
+              "settings": {
+                "label": "Create your portrait",
+                "link": "",
+                "open_in_new_tab": false,
+                "style_class": "button-unstyled",
+                "link_text_color": "#ffffff",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              }
+            }
+          },
+          "block_order": [
+            "featured_heading_2",
+            "featured_text_2",
+            "featured_button_2"
+          ]
         }
       },
+      "block_order": [
+        "featured_card_1",
+        "featured_card_2"
+      ],
       "settings": {
         "layout_type": "grid",
-        "product_card_size": "medium",
-        "mobile_product_card_size": "small",
-        "enable_infinite_scroll": true,
-        "products_per_page": 24,
+        "product_card_size": "large",
+        "mobile_product_card_size": "large",
+        "enable_infinite_scroll": false,
+        "products_per_page": 20,
         "product_grid_width": "centered",
-        "full_width_on_mobile": true,
-        "columns_gap_horizontal": 16,
-        "columns_gap_vertical": 24,
+        "full_width_on_mobile": false,
+        "columns_gap_horizontal": 24,
+        "columns_gap_vertical": 45,
         "padding-inline-start": 0,
         "padding-inline-end": 0,
         "background_color": "",
         "padding-block-start": 0,
-        "padding-block-end": 32
+        "padding-block-end": 80
       }
     }
   },
   "order": [
-    "breadcrumbs",
-    "section",
+    "collection_header",
     "main"
   ]
 }

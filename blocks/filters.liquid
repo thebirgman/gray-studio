@@ -148,7 +148,16 @@
           {% if products_count > 25000 %}
             {{- 'content.item_count_cutoff' | t: count: 25000 -}}
           {% else %}
-            {{- 'content.item_count' | t: count: products_count -}}
+            {%- liquid
+              assign visible_count = section.settings.products_per_page | default: 24
+              if section.settings.enable_infinite_scroll
+                assign visible_count = 24
+              endif
+              if products_count < visible_count
+                assign visible_count = products_count
+              endif
+            -%}
+            {{- 'content.products_shown_of_total' | t: shown: visible_count, total: products_count -}}
           {% endif %}
         </span>
       </div>
@@ -337,7 +346,16 @@
                   {% if products_count > 25000 %}
                     {{- 'content.item_count_cutoff' | t: count: 25000 -}}
                   {% else %}
-                    {{- 'content.item_count' | t: count: products_count -}}
+                    {%- liquid
+                      assign visible_count = section.settings.products_per_page | default: 24
+                      if section.settings.enable_infinite_scroll
+                        assign visible_count = 24
+                      endif
+                      if products_count < visible_count
+                        assign visible_count = products_count
+                      endif
+                    -%}
+                    {{- 'content.products_shown_of_total' | t: shown: visible_count, total: products_count -}}
                   {% endif %}
                 </span>
               </div>
@@ -450,6 +468,21 @@
       {% if block_settings.enable_grid_density %}
         {% render 'grid-density-controls', viewport: 'mobile' %}
       {% endif %}
+    </div>
+
+    <div class="products-count-wrapper products-count-wrapper--mobile" data-testid="products-count-mobile">
+      <span role="status">
+        {%- liquid
+          assign visible_count_mobile = section.settings.products_per_page | default: 24
+          if section.settings.enable_infinite_scroll
+            assign visible_count_mobile = 24
+          endif
+          if products_count < visible_count_mobile
+            assign visible_count_mobile = products_count
+          endif
+        -%}
+        {{- 'content.products_shown_of_total' | t: shown: visible_count_mobile, total: products_count -}}
+      </span>
     </div>
   </div>
 {% else %}
@@ -1384,10 +1417,16 @@
       display: none;
     }
 
-    /* Drawer mode: drop the product count and push the filter button + sort
-       + grid density to the right of the bar */
+    /* Drawer mode: keep product count visible for collection chrome */
     .facets-block-wrapper--horizontal.facets--desktop-drawer .products-count-wrapper,
     .facets.facets-controls-wrapper.facets--desktop-drawer .products-count-wrapper {
+      display: flex;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    body:has(.collection-header) .facets-block-wrapper--horizontal.facets--desktop-drawer .facets-desktop-toggle,
+    body:has(.collection-header) .facets.facets-controls-wrapper.facets--desktop-drawer .facets-desktop-toggle {
       display: none;
     }
 
@@ -1422,6 +1461,156 @@
   }
   scroll-hint.facets-drawer__filters summary {
     padding-block: 1rem;
+  }
+
+  body:has(.collection-header) .facets--horizontal .sorting-filter::before {
+    display: none;
+  }
+
+  /* Collection template chrome — matches Figma collection header / filters */
+  body:has(.collection-header) .facets-toggle__button {
+    display: none;
+  }
+
+  body:has(.collection-header) .facets--horizontal .products-count-wrapper,
+  body:has(.collection-header) .facets-controls-wrapper .products-count-wrapper {
+    font-family: var(--font-body--family);
+    font-size: 0.84375rem;
+    font-weight: 400;
+    line-height: normal;
+    color: #605c64;
+    text-transform: none;
+    height: auto;
+  }
+
+  body:has(.collection-header) .facets--horizontal .facets__form {
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  body:has(.collection-header) .sorting-filter__horizontal .facets__summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.375rem;
+  }
+
+  body:has(.collection-header) .sorting-filter__horizontal .facets__label {
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    color: #605c64;
+    text-transform: none;
+    margin: 0;
+  }
+
+  body:has(.collection-header) .sorting-filter__horizontal .facets__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-width: 8.5rem;
+    min-height: 2.375rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #aeb2b8;
+    border-radius: 1000px;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    color: #918d95;
+  }
+
+  body:has(.collection-header) .sorting-filter__horizontal .sorting-filter__chevron {
+    width: 0.625rem;
+    height: 0.375rem;
+    color: #918d95;
+    flex-shrink: 0;
+  }
+
+  body:has(.collection-header) .sorting-filter__horizontal .sorting-filter__chevron svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .products-count-wrapper--mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    body:has(.collection-header) .facets-toggle {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.5625rem;
+      width: 100%;
+      padding-inline: 0;
+    }
+
+    body:has(.collection-header) .facets-toggle__wrapper {
+      display: none;
+    }
+
+    body:has(.collection-header) .facets-toggle .sorting-filter {
+      width: 100%;
+    }
+
+    body:has(.collection-header) .facets-mobile-wrapper {
+      width: 100%;
+    }
+
+    body:has(.collection-header) .products-count-wrapper--mobile {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      font-family: var(--font-body--family);
+      font-size: 0.84375rem;
+      color: #605c64;
+      text-align: center;
+      text-transform: none;
+    }
+
+    body:has(.collection-header) .sorting-filter .facets__summary {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    body:has(.collection-header) .sorting-filter .facets__label {
+      flex-shrink: 0;
+      font-size: 1rem;
+      color: #605c64;
+      text-transform: none;
+    }
+
+    body:has(.collection-header) .sorting-filter .facets__status {
+      flex: 1 1 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      min-height: 2.375rem;
+      padding: 0.75rem 1rem;
+      border: 1px solid #aeb2b8;
+      border-radius: 1000px;
+      color: #918d95;
+      font-size: 1rem;
+    }
+
+    body:has(.collection-header) .sorting-filter .sorting-filter__chevron {
+      width: 0.625rem;
+      height: 0.375rem;
+      color: #918d95;
+      flex-shrink: 0;
+    }
+
+    body:has(.collection-header) .sorting-filter .sorting-filter__chevron svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 {% endstylesheet %}
 

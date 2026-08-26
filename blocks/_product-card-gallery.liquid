@@ -35,6 +35,16 @@
         <p class="card-hover-panel__tagline">{{ hover_tagline }}</p>
       </div>
     {%- endif -%}
+    {%- liquid
+      assign show_bestseller_badge = false
+      assign show_new_badge = false
+      if product.tags contains 'best-seller' or product.tags contains 'bestseller' or product.tags contains 'Best Seller'
+        assign show_bestseller_badge = true
+      endif
+      if product.tags contains 'new' or product.tags contains 'New'
+        assign show_new_badge = true
+      endif
+    -%}
     <div
       class="product-badges product-badges--{{ settings.badge_position }}"
       style="
@@ -42,6 +52,15 @@
         --badge-font-family: var(--font-{{ settings.badge_font_family }}--family); --badge-font-weight: var(--font-{{ settings.badge_font_family }}--weight); --badge-text-transform: {{ settings.badge_text_transform }};
       "
     >
+      {%- if show_bestseller_badge -%}
+        <div class="product-badges__badge product-badges__badge--rectangle product-badges__badge--best-seller">
+          {{ 'content.product_badge_best_seller' | t }}
+        </div>
+      {%- elsif show_new_badge -%}
+        <div class="product-badges__badge product-badges__badge--rectangle product-badges__badge--new">
+          {{ 'content.product_badge_new' | t }}
+        </div>
+      {%- endif -%}
       {%- if product.available == false or product.compare_at_price > product.price -%}
         <div
           class="
