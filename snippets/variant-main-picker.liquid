@@ -221,14 +221,24 @@
             assign show_option_guide = false
             assign guide_label = ''
             assign guide_link = ''
+            assign guide_image = blank
+            assign guide_modal_id = ''
             if described_layout == 'size'
               assign guide_label = block_settings.size_guide_label | default: 'Size guide'
-              assign guide_link = block_settings.size_guide_link | default: '#sizing-guide'
-              assign show_option_guide = true
+              assign guide_link = block_settings.size_guide_link
+              assign guide_image = block_settings.size_guide_image
+              assign guide_modal_id = 'pdp-size-guide-' | append: block.id
+              if guide_image != blank or guide_link != blank
+                assign show_option_guide = true
+              endif
             elsif described_layout == 'finish'
               assign guide_label = block_settings.frame_guide_label | default: 'Frame guide'
-              assign guide_link = block_settings.frame_guide_link | default: '#frame-guide'
-              assign show_option_guide = true
+              assign guide_link = block_settings.frame_guide_link
+              assign guide_image = block_settings.frame_guide_image
+              assign guide_modal_id = 'pdp-frame-guide-' | append: block.id
+              if guide_image != blank or guide_link != blank
+                assign show_option_guide = true
+              endif
             endif
           -%}
           <fieldset
@@ -257,15 +267,12 @@
                   </span>
                 </span>
                 {%- if show_option_guide and guide_label != blank -%}
-                    <a
-                      class="variant-option__size-guide"
-                      href="{{ guide_link }}"
-                    >
-                      <span class="variant-option__size-guide-icon" aria-hidden="true">
-                        {{ 'variant-size-guide.svg' | inline_asset_content }}
-                      </span>
-                      <span class="variant-option__size-guide-label">{{ guide_label | escape }}</span>
-                    </a>
+                  {% render 'pdp-option-guide',
+                    label: guide_label,
+                    image: guide_image,
+                    url: guide_link,
+                    modal_id: guide_modal_id
+                  %}
                 {%- endif -%}
               {%- else -%}
                 {{ product_option.name | escape -}}
@@ -669,6 +676,31 @@
           product_resource: product_resource,
           section: section,
           block: block
+        %}
+      {%- endif -%}
+
+      {%- if block_settings.show_option_descriptions -%}
+        {%- liquid
+          assign size_guide_modal_id = 'pdp-size-guide-' | append: block.id
+          assign frame_guide_modal_id = 'pdp-frame-guide-' | append: block.id
+          assign size_guide_modal_heading = block_settings.size_guide_heading | default: block_settings.size_guide_label | default: 'Size guide'
+          assign frame_guide_modal_heading = block_settings.frame_guide_heading | default: block_settings.frame_guide_label | default: 'Frame guide'
+        -%}
+        <script
+          src="{{ 'dialog.js' | asset_url }}"
+          type="module"
+        ></script>
+        {% render 'pdp-guide-modal',
+          id: size_guide_modal_id,
+          heading: size_guide_modal_heading,
+          image: block_settings.size_guide_image,
+          label: block_settings.size_guide_label
+        %}
+        {% render 'pdp-guide-modal',
+          id: frame_guide_modal_id,
+          heading: frame_guide_modal_heading,
+          image: block_settings.frame_guide_image,
+          label: block_settings.frame_guide_label
         %}
       {%- endif -%}
 

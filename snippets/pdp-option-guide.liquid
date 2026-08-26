@@ -1,0 +1,36 @@
+{%- doc -%}
+  Size / Frame guide trigger. Opens an image modal when an image is set,
+  otherwise falls back to a URL link.
+
+  @param {string} label - Link/button text
+  @param {image} [image] - Guide image
+  @param {string} [url] - Fallback URL when no image
+  @param {string} modal_id - Target dialog-component id
+{%- enddoc -%}
+
+{%- if label != blank -%}
+  {%- if image != blank -%}
+    <button
+      type="button"
+      class="variant-option__size-guide"
+      on:click="#{{ modal_id }}/showDialog"
+    >
+      <span class="variant-option__size-guide-icon" aria-hidden="true">
+        {{ 'variant-size-guide.svg' | inline_asset_content }}
+      </span>
+      <span class="variant-option__size-guide-label">{{ label | escape }}</span>
+    </button>
+  {%- elsif url != blank -%}
+    <a
+      class="variant-option__size-guide"
+      href="{{ url }}"
+      target="_blank"
+      rel="noopener"
+    >
+      <span class="variant-option__size-guide-icon" aria-hidden="true">
+        {{ 'variant-size-guide.svg' | inline_asset_content }}
+      </span>
+      <span class="variant-option__size-guide-label">{{ label | escape }}</span>
+    </a>
+  {%- endif -%}
+{%- endif -%}

@@ -66,9 +66,24 @@
       "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
+      "type": "text",
+      "id": "size_guide_heading",
+      "label": "Size guide modal title",
+      "default": "Size guide",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "size_guide_image",
+      "label": "Size guide image",
+      "info": "Opens in a modal when Size guide is clicked.",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
       "type": "url",
       "id": "size_guide_link",
       "label": "Size guide link",
+      "info": "Used only if no size guide image is uploaded.",
       "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
@@ -79,9 +94,24 @@
       "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
+      "type": "text",
+      "id": "frame_guide_heading",
+      "label": "Frame guide modal title",
+      "default": "Frame guide",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "frame_guide_image",
+      "label": "Frame guide image",
+      "info": "Opens in a modal when Frame guide is clicked.",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
       "type": "url",
       "id": "frame_guide_link",
       "label": "Frame guide link",
+      "info": "Used only if no frame guide image is uploaded.",
       "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
