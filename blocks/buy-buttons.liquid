@@ -66,6 +66,8 @@
           ref="variantId"
           value="{{ product.selected_or_first_available_variant.id }}"
         >
+        {% # App blocks (e.g. portrait widget) render here so line-item properties submit with ATC %}
+        {% content_for 'blocks' %}
         {%- if block_settings.gift_card_form and product.gift_card? -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
           <span class="buy-buttons-block__bar">
@@ -409,6 +411,14 @@
 {
   "name": "t:names.product_buy_buttons",
   "tag": null,
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "variant-picker"
+    }
+  ],
   "settings": [
     {
       "type": "checkbox",

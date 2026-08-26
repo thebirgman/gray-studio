@@ -435,6 +435,22 @@ class ProductFormComponent extends Component {
       formData.set('utf8', utf8.value);
     }
 
+    // Line-item properties from app blocks / custom fields inside (or form-associated with) the product form.
+    // Frame Finish is handled separately below via the variant picker control.
+    for (const el of form.elements) {
+      if (
+        !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
+      ) {
+        continue;
+      }
+      const name = el.name;
+      if (!name || !name.startsWith('properties[') || name === 'properties[Frame Finish]') continue;
+      if (el.disabled) continue;
+      if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) continue;
+      if (el.value === '') continue;
+      formData.append(name, el.value);
+    }
+
     const finish = document.querySelector(
       `variant-picker[data-product-id="${this.dataset.productId}"] [data-frame-finish-property] input[name]:checked`
     );

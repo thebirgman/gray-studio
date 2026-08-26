@@ -227,125 +227,6 @@
               },
               "blocks": {}
             },
-            "scene_picker_pdp": {
-              "type": "pdp-scene-picker",
-              "settings": {
-                "collections": [
-                  "sample-portrait-collection"
-                ],
-                "heading": "1. Choose your scene",
-                "heading_mobile": "Browse the collection",
-                "description": "browse the collections to pick your favorite scene. The background you see here is the background you'll get, we only add your dog."
-              },
-              "blocks": {}
-            },
-            "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA": {
-              "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-widget/019fcb85-cdee-7125-9e57-d241767d6aa5",
-              "settings": {
-                "scene_heading": "Choose a scene",
-                "upload_heading": "Upload your dog's photo",
-                "scene_ids": "paris,provence",
-                "scene_labels": "Paris,Provence",
-                "frame_collection": ""
-              }
-            },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "show_option_descriptions": true,
-                "size_guide_label": "Size guide",
-                "size_guide_heading": "Size guide",
-                "size_guide_link": "",
-                "frame_guide_label": "Frame guide",
-                "frame_guide_heading": "Frame guide",
-                "frame_guide_link": "",
-                "option_label_text_color": "",
-                "variant_style_class": "default",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "use_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 8,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
-              },
-              "blocks": {
-                "desc_digital": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Digital Download",
-                    "description": "High-res file, delivered in minutes",
-                    "badge": ""
-                  },
-                  "blocks": {}
-                },
-                "desc_poster": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Archival Quality Print",
-                    "description": "Fine art matte paper, ships in 3–7 days",
-                    "badge": ""
-                  },
-                  "blocks": {}
-                },
-                "desc_canvas": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Giclée Canvas",
-                    "description": "Gallery-wrapped, ships in 3–7 days",
-                    "badge": "Most loved"
-                  },
-                  "blocks": {}
-                },
-                "desc_small": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Small - 12x18\"",
-                    "description": "",
-                    "badge": ""
-                  },
-                  "blocks": {}
-                },
-                "desc_medium": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Medium - 24x36\"",
-                    "description": "",
-                    "badge": "Most loved"
-                  },
-                  "blocks": {}
-                },
-                "desc_large": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Large - 32x48\"",
-                    "description": "",
-                    "badge": "Best value"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "desc_digital",
-                "desc_poster",
-                "desc_canvas",
-                "desc_small",
-                "desc_medium",
-                "desc_large"
-              ]
-            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -374,6 +255,107 @@
                 "padding-inline-end": 0
               },
               "blocks": {
+                "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA": {
+                  "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-widget/019fcb85-cdee-7125-9e57-d241767d6aa5",
+                  "settings": {}
+                },
+                "variant_picker_R3rGDr": {
+                  "type": "variant-picker",
+                  "settings": {
+                    "variant_style": "buttons",
+                    "show_swatches": false,
+                    "show_option_descriptions": true,
+                    "size_guide_label": "Size guide",
+                    "size_guide_heading": "Size guide",
+                    "size_guide_link": "",
+                    "frame_guide_label": "Frame guide",
+                    "frame_guide_heading": "Frame guide",
+                    "frame_guide_link": "",
+                    "option_label_text_color": "",
+                    "variant_style_class": "default",
+                    "custom_variant_background": "{{ settings.color_palette.background }}",
+                    "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                    "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                    "selected_variant_style_class": "default",
+                    "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                    "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                    "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                    "alignment": "left",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "use_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 8,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {
+                    "desc_digital": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Digital Download",
+                        "description": "High-res file, delivered in minutes",
+                        "badge": ""
+                      },
+                      "blocks": {}
+                    },
+                    "desc_poster": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Archival Quality Print",
+                        "description": "Fine art matte paper, ships in 3–7 days",
+                        "badge": ""
+                      },
+                      "blocks": {}
+                    },
+                    "desc_canvas": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Giclée Canvas",
+                        "description": "Gallery-wrapped, ships in 3–7 days",
+                        "badge": "Most loved"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_small": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Small - 12x18\"",
+                        "description": "",
+                        "badge": ""
+                      },
+                      "blocks": {}
+                    },
+                    "desc_medium": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Medium - 24x36\"",
+                        "description": "",
+                        "badge": "Most loved"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_large": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Large - 32x48\"",
+                        "description": "",
+                        "badge": "Best value"
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "desc_digital",
+                    "desc_poster",
+                    "desc_canvas",
+                    "desc_small",
+                    "desc_medium",
+                    "desc_large"
+                  ]
+                },
                 "quantity": {
                   "type": "quantity",
                   "static": true,
@@ -405,7 +387,10 @@
                   "blocks": {}
                 }
               },
-              "block_order": []
+              "block_order": [
+                "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA",
+                "variant_picker_R3rGDr"
+              ]
             },
             "trust_pdp": {
               "type": "pdp-trust",
@@ -458,9 +443,6 @@
             "group_icgrde",
             "from_price_pdp",
             "intro_pdp",
-            "scene_picker_pdp",
-            "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA",
-            "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "trust_pdp",
             "faqs_pdp"
