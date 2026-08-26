@@ -26,6 +26,21 @@
     </summary>
 
     <div class="details-content">
+      {%- if block_settings.content_image != blank -%}
+        {%- assign accordion_image_alt = block_settings.heading -%}
+        <div class="details-content__image">
+          {{
+            block_settings.content_image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'details-content__image-img',
+              widths: '480, 720, 960, 1200, 1600',
+              sizes: '(min-width: 750px) 40rem, 92vw',
+              loading: 'lazy',
+              alt: accordion_image_alt
+          }}
+        </div>
+      {%- endif -%}
       {% content_for 'blocks' %}
     </div>
   </details>
@@ -60,6 +75,12 @@
       "id": "open_by_default",
       "label": "t:settings.open_row_by_default",
       "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "content_image",
+      "label": "Image",
+      "info": "Optional. Shown in the accordion body when opened."
     },
     {
       "type": "header",

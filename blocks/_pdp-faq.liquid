@@ -1,9 +1,15 @@
+{%- liquid
+  assign faq_question = block.settings.question
+  assign faq_answer = block.settings.answer
+  assign faq_image = block.settings.image
+-%}
+
 <details
   class="pdp-faqs__item"
   {{ block.shopify_attributes }}
 >
   <summary class="pdp-faqs__question">
-    <span class="pdp-faqs__question-text">{{ block.settings.question | escape }}</span>
+    <span class="pdp-faqs__question-text">{{ faq_question | escape }}</span>
     <span class="pdp-faqs__icon" aria-hidden="true">
       <span class="pdp-faqs__icon-circle">
         {{ 'faq-icon-circle.svg' | inline_asset_content }}
@@ -14,9 +20,25 @@
     </span>
   </summary>
 
-  {%- if block.settings.answer != blank -%}
+  {%- if faq_answer != blank or faq_image != blank -%}
     <div class="pdp-faqs__answer">
-      <p class="pdp-faqs__answer-text">{{ block.settings.answer | newline_to_br }}</p>
+      {%- if faq_answer != blank -%}
+        <p class="pdp-faqs__answer-text">{{ faq_answer | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if faq_image != blank -%}
+        <div class="pdp-faqs__answer-image">
+          {{
+            faq_image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'pdp-faqs__image',
+              widths: '480, 720, 960, 1200, 1600',
+              sizes: '(min-width: 990px) 28rem, (min-width: 750px) 40vw, 92vw',
+              loading: 'lazy',
+              alt: faq_question
+          }}
+        </div>
+      {%- endif -%}
     </div>
   {%- endif -%}
 </details>
@@ -36,6 +58,12 @@
       "type": "textarea",
       "id": "answer",
       "label": "Answer"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Optional. Shown below the answer text when the accordion is open."
     }
   ]
 }
