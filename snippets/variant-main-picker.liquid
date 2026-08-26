@@ -307,11 +307,6 @@
                   endif
                 endif
                 assign is_pairing_value = false
-                if described_layout == 'finish'
-                  if value_handle contains 'none' or value_handle contains 'unframed' or value_handle == 'n-a' or value_handle contains 'no-frame'
-                    assign is_pairing_value = true
-                  endif
-                endif
                 assign option_selectable = product_option_value.available
                 assign format_fallback_variant = blank
                 if described_layout == 'format' or described_layout == 'cards'

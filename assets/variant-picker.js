@@ -1289,6 +1289,12 @@ export default class VariantPicker extends Component {
     );
     if (!inputs.length) return;
 
+    // Unhide all finish labels — No Frame is a real selectable option now.
+    inputs.forEach((input) => {
+      input.closest('label')?.removeAttribute('hidden');
+      input.disabled = false;
+    });
+
     const finishIndex = this.#shopifyOptionIndex(fieldset);
     const variants = this.#readAllVariants();
     const usable = inputs.filter((input) => {
@@ -1304,14 +1310,16 @@ export default class VariantPicker extends Component {
     });
     const pool = usable.length ? usable : inputs;
 
-    // Prefer current finish when still valid; otherwise No Frame, then first.
+    // Prefer the user's current check when still valid — never fight a click.
+    const currentlyChecked = inputs.find((input) => input.checked);
     const preferred =
+      (currentlyChecked && pool.includes(currentlyChecked) ? currentlyChecked : null) ??
       pool.find((input) => this.#sameOptionValue(input.value, this.#frameFinishValue)) ??
       pool.find((input) => /no\s*frame/i.test(input.value)) ??
       pool[0];
 
     if (preferred) {
-      this.#selectRadio(preferred);
+      if (preferred !== currentlyChecked) this.#selectRadio(preferred);
       this.#frameFinishValue = preferred.value;
     }
 
