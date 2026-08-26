@@ -7,8 +7,9 @@
     display: contents;
   }
 
-  custom-artwork-pdp .buy-buttons-block .add-to-cart-button {
-    display: none;
+  /* Scene + upload are steps 1–2; format/size pickers continue from 3. */
+  custom-artwork-pdp .variant-picker--described .variant-picker__form {
+    counter-reset: vp-step 2;
   }
 
   custom-artwork-pdp .buy-buttons-block form[data-type='add-to-cart-form'] {
@@ -17,12 +18,7 @@
     gap: var(--gap-md, 20px);
   }
 
-  custom-artwork-pdp .pdp-buy-now {
-    flex: 1 1 100%;
-  }
-
   custom-artwork-pdp .pdp-buy-now__button {
-    width: 100%;
     background: #321c41;
     color: #fefefd;
     border-color: #321c41;
