@@ -55,7 +55,6 @@ export default class VariantPicker extends Component {
     if (!(target instanceof Element)) return;
     const input = target instanceof HTMLInputElement ? target : target.closest('label')?.querySelector('input');
     if (!(input instanceof HTMLInputElement)) return;
-    if (input.name?.startsWith('properties')) return;
     this.#debug('click before change?', {
       value: input.value,
       handle: input.dataset.optionHandle,
@@ -85,7 +84,7 @@ export default class VariantPicker extends Component {
   #debugSnapshot() {
     const formatFieldset = this.#getFormatFieldset();
     const sizeFieldset = this.#getSizeFieldset();
-    const finish = this.#getFrameFinishProperty();
+    const finish = this.#getFrameFinishFieldset();
     const format = this.#getSelectedFormatInput();
     const sizeInputs = sizeFieldset
       ? Array.from(sizeFieldset.querySelectorAll('input')).filter((input) => input instanceof HTMLInputElement)
@@ -174,7 +173,6 @@ export default class VariantPicker extends Component {
     this.addEventListener('click', this.#onVariantClick, true);
     this.#resizeObserver.observe(this);
     try {
-      this.#disableNativeFinishOption();
       this.recomputeAvailability();
       this.#syncDescribedAxesVisibility();
       this.#pairSizeToFormat();
@@ -207,12 +205,6 @@ export default class VariantPicker extends Component {
    */
   variantChanged(event) {
     if (!(event.target instanceof HTMLElement)) return;
-
-    if (event.target instanceof HTMLInputElement && event.target.name.startsWith('properties')) {
-      this.#captureFrameFinish();
-      this.#debug('change: frame finish property', { value: event.target.value });
-      return;
-    }
 
     const selectedOption =
       event.target instanceof HTMLSelectElement ? event.target.options[event.target.selectedIndex] : event.target;
@@ -836,7 +828,6 @@ export default class VariantPicker extends Component {
     /** @type {(string | null)[]} */
     const selected = [];
     this.#optionFieldsets().forEach((fieldset) => {
-      if (fieldset.classList.contains('variant-option--finish-native')) return;
       const shopifyIndex = this.#shopifyOptionIndex(fieldset);
       const checked = fieldset.querySelector('input:checked');
       if (shopifyIndex == null || !(checked instanceof HTMLInputElement)) return;
@@ -935,21 +926,13 @@ export default class VariantPicker extends Component {
         `product-form-component[data-product-id="${this.dataset.productId}"] input[name="id"]`
       )?.value,
       allVariants: this.#readAllVariants(),
-      finishNativeChecked: Array.from(
-        this.querySelectorAll('fieldset.variant-option--finish-native input:checked')
-      ).map((input) => ({
-        name: input.name,
-        value: input.value,
-        disabled: input.disabled,
-        optionValueId: input.dataset.optionValueId,
-      })),
       frameFinish: {
         physicalClass: this.classList.contains('is-physical-format'),
-        named: Array.from(this.querySelectorAll('[data-frame-finish-property] input[name]')).map((input) => ({
-          name: input.getAttribute('name'),
+        selected: this.#frameFinishValue,
+        checked: Array.from(this.querySelectorAll('fieldset.variant-option--finish input:checked')).map((input) => ({
+          name: input.name,
           value: input.value,
-          checked: input.checked,
-          disabled: input.disabled,
+          optionValueId: input.dataset.optionValueId,
         })),
       },
     };
@@ -958,11 +941,9 @@ export default class VariantPicker extends Component {
   }
 
   /**
-   * Keep the buy button form on the Format×Size variant from our table.
-   * Hidden leftover options (finish-native) and stale morph HTML must not drive ATC.
+   * Keep the buy button form on the currently selected variant from our table.
    */
   #syncProductFormVariant() {
-    this.#disableNativeFinishOption();
     const resolved = this.#findSelectedVariant();
     this.#debug('sync form variant', {
       resolved,
@@ -988,17 +969,6 @@ export default class VariantPicker extends Component {
       if (resolved.available) addContainer.enable();
       else addContainer.disable();
     }
-  }
-
-  /** Leftover Shopify Frame Finish / Digital-file axes must never affect cart or option_values. */
-  #disableNativeFinishOption() {
-    this.querySelectorAll('fieldset.variant-option--finish-native input').forEach((input) => {
-      if (!(input instanceof HTMLInputElement)) return;
-      input.disabled = true;
-      input.checked = false;
-      input.removeAttribute('checked');
-      input.dataset.currentChecked = 'false';
-    });
   }
 
   /** @returns {boolean} */
@@ -1050,6 +1020,7 @@ export default class VariantPicker extends Component {
     return (
       this.#optionFieldsets().find((fieldset) => {
         if (fieldset.classList.contains('variant-option--size')) return false;
+        if (fieldset.classList.contains('variant-option--finish')) return false;
         if (fieldset.classList.contains('variant-option--finish-native')) return false;
         return Array.from(fieldset.querySelectorAll('input')).some((input) => {
           if (!(input instanceof HTMLInputElement)) return false;
@@ -1076,26 +1047,26 @@ export default class VariantPicker extends Component {
   }
 
   /** @returns {HTMLFieldSetElement | null} */
-  #getFrameFinishProperty() {
-    const root = this.querySelector('[data-frame-finish-property]');
-    return root instanceof HTMLFieldSetElement ? root : null;
+  #getFrameFinishFieldset() {
+    const byClass = this.querySelector('fieldset.variant-option--finish, fieldset[data-axis="finish"]');
+    return byClass instanceof HTMLFieldSetElement ? byClass : null;
   }
 
   #captureFrameFinish() {
-    const checked = this.#getFrameFinishProperty()?.querySelector('input:checked');
+    const checked = this.#getFrameFinishFieldset()?.querySelector('input:checked');
     if (checked instanceof HTMLInputElement && !checked.disabled) {
       this.#frameFinishValue = checked.value;
     }
   }
 
   #restoreFrameFinish() {
-    const fieldset = this.#getFrameFinishProperty();
+    const fieldset = this.#getFrameFinishFieldset();
     if (!fieldset) return;
     const match = Array.from(fieldset.querySelectorAll('input')).find(
       (input) => input instanceof HTMLInputElement && input.value === this.#frameFinishValue
     );
     if (match instanceof HTMLInputElement) {
-      match.checked = true;
+      this.#selectRadio(match);
     }
   }
 
@@ -1115,6 +1086,7 @@ export default class VariantPicker extends Component {
     return (
       this.#optionFieldsets().find((fieldset) => {
         if (fieldset.classList.contains('variant-option--format')) return false;
+        if (fieldset.classList.contains('variant-option--finish')) return false;
         if (fieldset.classList.contains('variant-option--finish-native')) return false;
         return Array.from(fieldset.querySelectorAll('input')).some((input) => {
           if (!(input instanceof HTMLInputElement)) return false;
@@ -1207,7 +1179,7 @@ export default class VariantPicker extends Component {
       this.#restoreDescribedSelection();
       this.#pairSizeToFormat();
       const format = this.#getSelectedFormatInput();
-      this.#syncFrameFinishProperty(this.#isPhysicalFormat(format));
+      this.#syncFrameFinishOption(this.#isPhysicalFormat(format), format?.value ?? '');
     };
     requestAnimationFrame(() => rerun('rAF'));
     this.#pairSizeTimer = window.setTimeout(() => {
@@ -1298,52 +1270,55 @@ export default class VariantPicker extends Component {
     });
   }
 
-  #syncFrameFinishProperty(showFinish) {
-    const fieldset = this.#getFrameFinishProperty();
+  /**
+   * Show/hide Frame Finish via CSS (.is-physical-format). Keep a valid finish
+   * selected so Format×Size×Finish always resolves to a Shopify variant.
+   * @param {boolean} showFinish
+   * @param {string} [formatValue]
+   */
+  #syncFrameFinishOption(showFinish, formatValue = '') {
+    const fieldset = this.#getFrameFinishFieldset();
     if (!fieldset) {
       this.#debug('frame finish BAIL: fieldset missing', { showFinish });
       return;
     }
 
-    // Visibility is CSS :has() / .is-physical-format. Do not use [hidden] —
-    // the UA stylesheet's display:none !important survives author CSS and
-    // Shopify morph puts the attribute back from server HTML.
     fieldset.removeAttribute('hidden');
     const inputs = Array.from(fieldset.querySelectorAll('input')).filter(
       (input) => input instanceof HTMLInputElement
     );
+    if (!inputs.length) return;
 
-    inputs.forEach((input) => {
-      input.disabled = !showFinish;
-      // Drop name when hidden so these never ride along on add-to-cart.
-      if (showFinish) {
-        input.setAttribute('name', 'properties[Frame Finish]');
-      } else {
-        input.removeAttribute('name');
-      }
-    });
-
-    if (!showFinish) {
-      this.#debug('frame finish hide', {
-        pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
-        display: getComputedStyle(fieldset).display,
+    const finishIndex = this.#shopifyOptionIndex(fieldset);
+    const variants = this.#readAllVariants();
+    const usable = inputs.filter((input) => {
+      if (!variants?.length || finishIndex == null) return true;
+      return variants.some((variant) => {
+        if (!variant.available) return false;
+        if (!this.#sameOptionValue(variant.options[finishIndex], input.value)) return false;
+        if (formatValue && !variant.options.some((option) => this.#sameOptionValue(option, formatValue))) {
+          return false;
+        }
+        return true;
       });
-      return;
+    });
+    const pool = usable.length ? usable : inputs;
+
+    // Prefer current finish when still valid; otherwise No Frame, then first.
+    const preferred =
+      pool.find((input) => this.#sameOptionValue(input.value, this.#frameFinishValue)) ??
+      pool.find((input) => /no\s*frame/i.test(input.value)) ??
+      pool[0];
+
+    if (preferred) {
+      this.#selectRadio(preferred);
+      this.#frameFinishValue = preferred.value;
     }
 
-    const selected =
-      inputs.find((input) => input.value === this.#frameFinishValue) ??
-      inputs.find((input) => input.checked) ??
-      inputs[0];
-    if (selected) {
-      selected.checked = true;
-      selected.disabled = false;
-      selected.setAttribute('name', 'properties[Frame Finish]');
-      this.#frameFinishValue = selected.value;
-    }
-    this.#debug('frame finish show', {
-      selected: selected?.value ?? null,
-      display: getComputedStyle(fieldset).display,
+    this.#debug('frame finish sync', {
+      showFinish,
+      selected: preferred?.value ?? null,
+      pool: pool.map((input) => input.value),
       pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
     });
   }
@@ -1420,7 +1395,7 @@ export default class VariantPicker extends Component {
     });
     this.#syncSizeChoices(formatIsDigital, formatValue);
     this.#ensureSelectedSize(formatIsDigital, formatValue);
-    this.#syncFrameFinishProperty(showFinish);
+    this.#syncFrameFinishOption(showFinish, formatValue);
   }
 
   /**
@@ -1434,8 +1409,8 @@ export default class VariantPicker extends Component {
    * available.
    *
    * Described Format/Size cards skip combination checks on Format (so Digital
-   * vs poster stays clickable) and never draw strikethroughs. A leftover
-   * Shopify Frame Finish option stays hidden and is not a cart variant.
+   * vs poster stays clickable) and never draw strikethroughs. Frame Finish is a
+   * real Shopify option and participates in variant resolution.
    */
   recomputeAvailability() {
     const variants = this.#readAllVariants();
@@ -1449,7 +1424,6 @@ export default class VariantPicker extends Component {
     /** @type {(string | null)[]} */
     const selectedByShopifyIndex = [];
     fieldsets.forEach((fieldset) => {
-      if (fieldset.classList.contains('variant-option--finish-native')) return;
       const shopifyIndex = this.#shopifyOptionIndex(fieldset);
       if (shopifyIndex == null) return;
       const checked = fieldset.querySelector('input:checked');
@@ -1457,7 +1431,6 @@ export default class VariantPicker extends Component {
     });
 
     fieldsets.forEach((fieldset) => {
-      if (fieldset.classList.contains('variant-option--finish-native')) return;
       const shopifyIndex = this.#shopifyOptionIndex(fieldset);
       if (shopifyIndex == null) return;
 
@@ -1637,8 +1610,6 @@ export default class VariantPicker extends Component {
       this.querySelectorAll('select option[selected], fieldset input:checked[data-option-value-id]')
     ).find((option) => {
       if (!(option instanceof HTMLInputElement || option instanceof HTMLOptionElement)) return false;
-      if (option instanceof HTMLInputElement && option.name.startsWith('properties')) return false;
-      if (option.closest('fieldset.variant-option--finish-native')) return false;
       return true;
     });
 
@@ -1671,8 +1642,6 @@ export default class VariantPicker extends Component {
     const checkedInputs = this.querySelectorAll('fieldset input:checked');
     for (const input of checkedInputs) {
       if (!input.dataset?.optionName) continue;
-      if (input.name.startsWith('properties')) continue;
-      if (input.closest('fieldset.variant-option--finish-native')) continue;
       options.push({ name: input.dataset.optionName, value: input.value });
     }
 
@@ -1703,12 +1672,7 @@ export default class VariantPicker extends Component {
     /** @type {HTMLElement[]} */
     const selectedOptions = Array.from(
       this.querySelectorAll('select option[selected], fieldset input:checked')
-    ).filter((option) => {
-      if (!option.dataset.optionValueId) return false;
-      if (option instanceof HTMLInputElement && option.name.startsWith('properties')) return false;
-      if (option.closest('fieldset.variant-option--finish-native')) return false;
-      return true;
-    });
+    ).filter((option) => Boolean(option.dataset.optionValueId));
 
     return selectedOptions.map((option) => option.dataset.optionValueId);
   }

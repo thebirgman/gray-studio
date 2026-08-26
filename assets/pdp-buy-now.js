@@ -41,16 +41,11 @@ class PdpBuyNow extends HTMLElement {
         continue;
       }
       const name = el.name;
-      if (!name || !name.startsWith('properties[') || name === 'properties[Frame Finish]') continue;
+      if (!name || !name.startsWith('properties[')) continue;
       if (el.disabled) continue;
       if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) continue;
       if (el.value === '') continue;
       formData.append(name, el.value);
-    }
-
-    const finish = picker?.querySelector('[data-frame-finish-property] input[name]:checked');
-    if (finish instanceof HTMLInputElement && finish.value) {
-      formData.set('properties[Frame Finish]', finish.value);
     }
 
     const addUrl = this.dataset.addUrl?.endsWith('.js')

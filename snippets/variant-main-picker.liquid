@@ -134,9 +134,12 @@
               assign described_layout = 'size'
             elsif option_handle == 'format' or option_handle contains 'format' or option_handle contains 'print'
               assign described_layout = 'format'
+            elsif is_finish_option
+              assign described_layout = 'finish'
+              assign is_finish_option = false
             endif
           endif
-          if is_finish_option == false and described_layout != 'size' and described_layout != 'format'
+          if is_finish_option == false and described_layout != 'size' and described_layout != 'format' and described_layout != 'finish'
             if option_handle == 'digital-file' or option_handle == 'digital-files'
               assign is_finish_option = true
             endif
@@ -207,22 +210,6 @@
           {%- liquid
             assign default_option_index = product_option.position | minus: 1
             assign default_value_at_position = default_variant.options[default_option_index]
-            assign hide_finish_axis = false
-            if described_layout == 'finish'
-              assign selected_format_is_digital = false
-              for option in product_resource.options_with_values
-                assign format_handle = option.name | handleize
-                if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
-                  assign format_value_handle = option.selected_value | handleize
-                  if format_value_handle contains 'digital'
-                    assign selected_format_is_digital = true
-                  endif
-                endif
-              endfor
-              if selected_format_is_digital
-                assign hide_finish_axis = true
-              endif
-            endif
             assign show_option_guide = false
             assign guide_label = ''
             assign guide_link = ''
@@ -253,9 +240,6 @@
               data-axis="{{ described_layout }}"
             {% endif %}
             ref="fieldsets[]"
-            {% if hide_finish_axis %}
-              hidden
-            {% endif %}
             {{ option_id_attribute }}
           >
             <legend>
@@ -265,7 +249,7 @@
                     {%- if described_layout == 'size' -%}
                       Choose a Size
                     {%- elsif described_layout == 'finish' -%}
-                      Frame finish
+                      Choose a frame
                     {%- else -%}
                       Choose a {{ product_option.name | downcase | escape }}
                     {%- endif -%}
@@ -675,14 +659,6 @@
           </div>
         {%- endif -%}
       {%- endfor -%}
-
-      {%- if block_settings.variant_style == 'buttons' -%}
-        {% render 'pdp-frame-finish',
-          product_resource: product_resource,
-          section: section,
-          block: block
-        %}
-      {%- endif -%}
 
       {%- if block_settings.show_option_descriptions -%}
         {%- liquid

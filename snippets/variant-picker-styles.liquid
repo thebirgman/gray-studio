@@ -139,19 +139,26 @@
     display: none;
   }
 
-  /* Never use the HTML hidden attribute on Frame Finish: [hidden] is
-     display:none !important in the UA stylesheet, so morph can pin it closed.
-     Visibility is driven by the selected format radio. */
-  .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
+  /* Frame finish visibility: CSS class only — do not use [hidden]
+     (UA display:none !important survives morph). */
+  .variant-picker--described fieldset.variant-option--finish {
     display: none;
   }
 
-  .variant-picker--described.is-physical-format
-    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
-  .variant-picker--described:has([data-format-kind='physical']:checked)
-    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
+  .variant-picker--described.is-physical-format fieldset.variant-option--finish,
+  .variant-picker--described:has([data-format-kind='physical']:checked) fieldset.variant-option--finish {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .variant-picker--described.is-digital-format fieldset.variant-option--finish > legend,
+  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='digital'])
+    fieldset.variant-option--finish
+    > legend,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='digital'])
+    fieldset.variant-option--finish
+    > legend {
+    counter-increment: none;
   }
 
   .variant-picker--described.is-digital-format
@@ -470,7 +477,7 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     column-gap: 0.5rem;
     row-gap: 0.5rem;
     align-items: start;

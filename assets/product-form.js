@@ -417,7 +417,7 @@ class ProductFormComponent extends Component {
         : Number(this.refs.quantitySelector?.getValue?.()) || Number(this.dataset.quantityDefault) || 1;
 
     // Build a clean payload — do not reuse FormData(form), which was pulling in
-    // associated Frame Finish radios and other extras.
+    // associated radios and other extras.
     const formData = new FormData();
     formData.set('id', String(resolvedId));
     formData.set('quantity', String(quantity));
@@ -436,7 +436,6 @@ class ProductFormComponent extends Component {
     }
 
     // Line-item properties from app blocks / custom fields inside (or form-associated with) the product form.
-    // Frame Finish is handled separately below via the variant picker control.
     for (const el of form.elements) {
       if (
         !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)
@@ -444,18 +443,11 @@ class ProductFormComponent extends Component {
         continue;
       }
       const name = el.name;
-      if (!name || !name.startsWith('properties[') || name === 'properties[Frame Finish]') continue;
+      if (!name || !name.startsWith('properties[')) continue;
       if (el.disabled) continue;
       if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) continue;
       if (el.value === '') continue;
       formData.append(name, el.value);
-    }
-
-    const finish = document.querySelector(
-      `variant-picker[data-product-id="${this.dataset.productId}"] [data-frame-finish-property] input[name]:checked`
-    );
-    if (finish instanceof HTMLInputElement && finish.value) {
-      formData.set('properties[Frame Finish]', finish.value);
     }
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');
@@ -475,7 +467,6 @@ class ProductFormComponent extends Component {
       url: Theme.routes.cart_add_url,
       id: String(formData.get('id')),
       quantity: String(formData.get('quantity')),
-      frameFinish: formData.get('properties[Frame Finish]'),
       hasToken: Boolean(formData.get('authenticity_token')),
       sections: formData.get('sections'),
       resolved,

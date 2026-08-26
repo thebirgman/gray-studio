@@ -1,76 +1,8 @@
 {%- doc -%}
-  Frame picker for physical formats (Archival Quality Print, Giclée Canvas).
-  This is a cart line-item property, not a Shopify variant option.
+  Legacy Frame Finish line-item property UI.
 
-  @param {object} product_resource - The product object
-  @param {object} section - The section object
-  @param {object} [block] - The variant picker block
+  Frame Finish is now a real Shopify variant option rendered by
+  `variant-main-picker` with `described_layout == 'finish'`. This snippet is
+  kept only so existing theme references do not break; it is no longer rendered
+  from the product form.
 {%- enddoc -%}
-
-{%- liquid
-  assign block_settings = block.settings
-  assign product_form_id = 'BuyButtons-ProductForm-' | append: section.id
-  assign guide_label = block_settings.frame_guide_label | default: 'Frame guide'
-  assign guide_link = block_settings.frame_guide_link
-  assign guide_image = block_settings.frame_guide_image
-  assign guide_modal_id = 'pdp-frame-guide-' | append: block.id
-  assign show_frame_finish = false
-  assign show_frame_guide = false
-  if guide_image != blank or guide_link != blank
-    assign show_frame_guide = true
-  endif
-
-  for option in product_resource.options_with_values
-    assign format_handle = option.name | handleize
-    if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
-      assign format_value_handle = option.selected_value | handleize
-      unless format_value_handle contains 'digital'
-        assign show_frame_finish = true
-      endunless
-    endif
-  endfor
-
-  assign finish_values = 'No Frame,Black Frame,White Frame' | split: ','
--%}
-
-<fieldset
-  class="variant-option variant-option--buttons variant-option--described variant-option--finish pdp-frame-finish"
-  data-frame-finish-property
-  data-key="pdp-frame-finish"
->
-  <legend>
-    <span class="variant-option__legend-heading">
-      <span class="variant-option__legend-text">Choose a frame</span>
-    </span>
-    {%- if show_frame_guide and guide_label != blank -%}
-      {% render 'pdp-option-guide',
-        label: guide_label,
-        image: guide_image,
-        url: guide_link,
-        modal_id: guide_modal_id
-      %}
-    {%- endif -%}
-  </legend>
-  {%- for finish_value in finish_values -%}
-    <label class="variant-option__button-label variant-option__button-label--described">
-      <input
-        type="radio"
-        value="{{ finish_value | escape }}"
-        form="{{ product_form_id }}"
-        data-option-handle="{{ finish_value | handleize }}"
-        {% if forloop.first %}
-          checked
-        {% endif %}
-        {% if show_frame_finish %}
-          name="properties[Frame Finish]"
-        {% endif %}
-        {% unless show_frame_finish %}
-          disabled
-        {% endunless %}
-      >
-      <span class="variant-option__card-title" data-key="variant-option-text">
-        {{- finish_value | escape -}}
-      </span>
-    </label>
-  {%- endfor -%}
-</fieldset>
