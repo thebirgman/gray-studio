@@ -546,12 +546,16 @@
   }
 
   .pdp-guide-modal__dialog.dialog-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
     width: 90%;
     max-width: 800px;
-    max-height: min(90dvh, 56rem);
-    height: auto;
-    margin: auto;
-    inset: 0;
+    height: fit-content;
+    max-height: 90dvh;
+    margin: 0;
     padding: 0;
     border: 1px solid #e8dff1;
     border-radius: 0.75rem;
@@ -559,12 +563,55 @@
     color: #242027;
     box-shadow: 0 1.25rem 3rem rgb(36 32 39 / 0.18);
     overflow: hidden;
+    transform: translate(-50%, -50%);
+  }
+
+  .pdp-guide-modal__dialog.dialog-modal[open] {
+    animation: pdp-guide-modal-in 0.25s var(--animation-easing, ease) forwards;
+  }
+
+  .pdp-guide-modal__dialog.dialog-modal.dialog-closing {
+    animation: pdp-guide-modal-out 0.2s var(--animation-easing, ease) forwards;
+  }
+
+  .pdp-guide-modal__dialog.dialog-modal::backdrop {
+    background: rgb(36 32 39 / 0.55);
+    backdrop-filter: none;
+  }
+
+  .pdp-guide-modal__dialog.dialog-modal[open]::backdrop {
+    animation: none;
+  }
+
+  @keyframes pdp-guide-modal-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + 0.5rem));
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @keyframes pdp-guide-modal-out {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    to {
+      opacity: 0;
+      transform: translate(-50%, calc(-50% + 0.5rem));
+    }
   }
 
   .pdp-guide-modal__panel {
     display: flex;
     flex-direction: column;
-    max-height: inherit;
+    height: fit-content;
+    max-height: 90dvh;
   }
 
   .pdp-guide-modal__header {
