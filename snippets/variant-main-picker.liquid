@@ -27,18 +27,15 @@
   endif
   assign fieldset_index = 0
   assign picker_is_digital = false
-  assign picker_is_framed = false
+  assign picker_is_physical = false
   for option in product_resource.options_with_values
     assign format_handle = option.name | handleize
     if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
       assign format_value_handle = option.selected_value | handleize
       if format_value_handle contains 'digital'
         assign picker_is_digital = true
-      endif
-      if format_value_handle contains 'framed' or format_value_handle contains 'frame-canvas' or format_value_handle contains 'canvas-frame'
-        unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
-          assign picker_is_framed = true
-        endunless
+      else
+        assign picker_is_physical = true
       endif
     endif
   endfor
@@ -58,7 +55,7 @@
     {% render 'variant-button-custom-styles', block_settings: block_settings, block_id: block.id %}
   {% endif %}
   <variant-picker
-    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if show_option_descriptions %} variant-picker--described{% endif %}{% if picker_is_digital %} is-digital-format{% endif %}{% if picker_is_framed %} is-framed-format{% endif %}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if show_option_descriptions %} variant-picker--described{% endif %}{% if picker_is_digital %} is-digital-format{% endif %}{% if picker_is_physical %} is-physical-format{% endif %}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
     style="
       {% render 'spacing-style', settings: block_settings %}
        {% if block_settings.option_label_text_color != blank %}
@@ -207,7 +204,6 @@
             assign default_value_at_position = default_variant.options[default_option_index]
             assign hide_finish_axis = false
             if described_layout == 'finish'
-              assign selected_format_is_framed = false
               assign selected_format_is_digital = false
               for option in product_resource.options_with_values
                 assign format_handle = option.name | handleize
@@ -215,14 +211,10 @@
                   assign format_value_handle = option.selected_value | handleize
                   if format_value_handle contains 'digital'
                     assign selected_format_is_digital = true
-                  elsif format_value_handle contains 'framed'
-                    unless format_value_handle contains 'unframed'
-                      assign selected_format_is_framed = true
-                    endunless
                   endif
                 endif
               endfor
-              if selected_format_is_digital or selected_format_is_framed == false
+              if selected_format_is_digital
                 assign hide_finish_axis = true
               endif
             endif
@@ -307,10 +299,6 @@
                 if described_layout == 'format' or described_layout == 'cards'
                   if value_handle contains 'digital'
                     assign format_kind = 'digital'
-                  elsif value_handle contains 'framed' or value_handle contains 'frame-canvas' or value_handle contains 'canvas-frame'
-                    unless value_handle contains 'unframed'
-                      assign format_kind = 'framed'
-                    endunless
                   else
                     assign format_kind = 'physical'
                   endif
@@ -409,13 +397,11 @@
                     if described_layout == 'format' or described_layout == 'cards'
                       if value_handle == 'digital-download' or value_handle contains 'digital-download'
                         assign option_description = 'High-res file, delivered in minutes'
-                      elsif value_handle == 'watercolour-poster' or value_handle == 'watercolor-poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
+                      elsif value_handle contains 'archival' or value_handle contains 'poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
                         assign option_description = 'Fine art matte paper, ships in 3–7 days'
                       elsif value_handle == 'giclee-canvas' or value_handle contains 'giclee'
                         assign option_description = 'Gallery-wrapped, ships in 3–7 days'
                         assign option_badge = 'Most loved'
-                      elsif value_handle == 'framed-canvas' or value_handle contains 'framed-canvas' or value_handle contains 'framed'
-                        assign option_description = 'Canvas + wood frame, ships in 3–7 days'
                       endif
                     elsif described_layout == 'size'
                       if value_handle contains 'digital'

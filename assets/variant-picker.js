@@ -30,7 +30,7 @@ export default class VariantPicker extends Component {
   #radios = [];
 
   /** @type {string} */
-  #frameFinishValue = 'Black frame';
+  #frameFinishValue = 'No Frame';
 
   /** @type {string} */
   #describedFormatValue = '';
@@ -113,7 +113,7 @@ export default class VariantPicker extends Component {
             handle: format.dataset.optionHandle,
             kind: format.dataset.formatKind,
             digital: this.#isDigitalOption(format),
-            framed: this.#isFramedFormat(format),
+            physical: this.#isPhysicalFormat(format),
           }
         : null,
       sizeFieldset: sizeFieldset
@@ -944,7 +944,7 @@ export default class VariantPicker extends Component {
         optionValueId: input.dataset.optionValueId,
       })),
       frameFinish: {
-        framedClass: this.classList.contains('is-framed-format'),
+        physicalClass: this.classList.contains('is-physical-format'),
         named: Array.from(this.querySelectorAll('[data-frame-finish-property] input[name]')).map((input) => ({
           name: input.getAttribute('name'),
           value: input.value,
@@ -1024,17 +1024,22 @@ export default class VariantPicker extends Component {
   }
 
   /** @param {Element | null} input */
-  #isFramedFormat(input) {
+  #isPhysicalFormat(input) {
     if (!(input instanceof HTMLInputElement)) return false;
-    if (input.dataset.formatKind === 'framed') return true;
+    if (this.#isDigitalOption(input)) return false;
+    if (input.dataset.formatKind === 'physical') return true;
     const handle = (input.dataset.optionHandle || '').toLowerCase();
     const value = (input.value || '').toLowerCase();
     const haystack = `${handle} ${value}`;
-    if (haystack.includes('digital') || haystack.includes('unframed') || haystack.includes('no-frame')) {
-      return false;
-    }
-    if (haystack.includes('framed')) return true;
-    return haystack.includes('frame') && haystack.includes('canvas');
+    return (
+      haystack.includes('archival') ||
+      haystack.includes('poster') ||
+      haystack.includes('print') ||
+      haystack.includes('giclee') ||
+      haystack.includes('canvas') ||
+      haystack.includes('watercolour') ||
+      haystack.includes('watercolor')
+    );
   }
 
   /** @returns {HTMLFieldSetElement | null} */
@@ -1051,6 +1056,7 @@ export default class VariantPicker extends Component {
           const handle = input.dataset.optionHandle || '';
           return (
             handle.includes('digital-download') ||
+            handle.includes('archival') ||
             handle.includes('poster') ||
             handle.includes('giclee') ||
             handle.includes('canvas')
@@ -1201,7 +1207,7 @@ export default class VariantPicker extends Component {
       this.#restoreDescribedSelection();
       this.#pairSizeToFormat();
       const format = this.#getSelectedFormatInput();
-      this.#syncFrameFinishProperty(this.#isFramedFormat(format) && !this.#isDigitalOption(format));
+      this.#syncFrameFinishProperty(this.#isPhysicalFormat(format));
     };
     requestAnimationFrame(() => rerun('rAF'));
     this.#pairSizeTimer = window.setTimeout(() => {
@@ -1299,7 +1305,7 @@ export default class VariantPicker extends Component {
       return;
     }
 
-    // Visibility is CSS :has() / .is-framed-format. Do not use [hidden] —
+    // Visibility is CSS :has() / .is-physical-format. Do not use [hidden] —
     // the UA stylesheet's display:none !important survives author CSS and
     // Shopify morph puts the attribute back from server HTML.
     fieldset.removeAttribute('hidden');
@@ -1319,7 +1325,7 @@ export default class VariantPicker extends Component {
 
     if (!showFinish) {
       this.#debug('frame finish hide', {
-        pickerHasFramedClass: this.classList.contains('is-framed-format'),
+        pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
         display: getComputedStyle(fieldset).display,
       });
       return;
@@ -1338,7 +1344,7 @@ export default class VariantPicker extends Component {
     this.#debug('frame finish show', {
       selected: selected?.value ?? null,
       display: getComputedStyle(fieldset).display,
-      pickerHasFramedClass: this.classList.contains('is-framed-format'),
+      pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
     });
   }
 
@@ -1392,7 +1398,7 @@ export default class VariantPicker extends Component {
         : this.#getSelectedFormatInput();
     const formatValue = formatChecked?.value ?? '';
     const formatIsDigital = this.#isDigitalOption(formatChecked);
-    const showFinish = this.#isFramedFormat(formatChecked) && !formatIsDigital;
+    const showFinish = this.#isPhysicalFormat(formatChecked);
 
     this.#debug('sync axes', {
       preferred: preferredFormatInput instanceof HTMLInputElement ? preferredFormatInput.value : null,
@@ -1400,14 +1406,16 @@ export default class VariantPicker extends Component {
       formatHandle: formatChecked?.dataset.optionHandle ?? null,
       formatKind: formatChecked?.dataset.formatKind ?? null,
       formatIsDigital,
-      isFramed: this.#isFramedFormat(formatChecked),
+      isPhysical: showFinish,
       showFinish,
     });
 
     this.classList.toggle('is-digital-format', formatIsDigital);
-    this.classList.toggle('is-framed-format', showFinish);
+    this.classList.toggle('is-physical-format', showFinish);
 
     this.querySelectorAll('fieldset.variant-option--size, fieldset[data-axis="size"]').forEach((fieldset) => {
+      // Visibility for Digital is CSS (.is-digital-format). Keep attribute off
+      // so morph does not pin size closed when switching back to print.
       fieldset.removeAttribute('hidden');
     });
     this.#syncSizeChoices(formatIsDigital, formatValue);

@@ -41,7 +41,7 @@
   if fp_columns < 1
     assign fp_columns = 4
   endif
-  assign placeholder_titles = 'Digital Download,Watercolour Poster,Giclée Canvas,Framed Canvas' | split: ','
+  assign placeholder_titles = 'Digital Download,Archival Quality Print,Giclée Canvas' | split: ','
   assign placeholder_prices = '29,79,149,194' | split: ','
 -%}
 
@@ -937,7 +937,7 @@
         {
           "type": "product",
           "settings": {
-            "title": "Watercolour Poster",
+            "title": "Archival Quality Print",
             "price": 79,
             "rating_count": 49,
             "image_asset": "featured-prints-product-2.jpg"
@@ -953,19 +953,10 @@
             "badge_label": "Most loved",
             "image_asset": "featured-prints-product-3.jpg"
           }
-        },
-        {
-          "type": "product",
-          "settings": {
-            "title": "Framed Canvas",
-            "price": 194,
-            "rating_count": 49,
-            "image_asset": "featured-prints-product-4.jpg"
-          }
         }
       ],
       "settings": {
-        "products_to_show": 4,
+        "products_to_show": 3,
         "show_badge": true,
         "badge_label": "Most loved",
         "badge_position": 3,

@@ -435,14 +435,11 @@ class ProductFormComponent extends Component {
       formData.set('utf8', utf8.value);
     }
 
-    const framed = picker?.classList?.contains('is-framed-format');
-    if (framed) {
-      const finish = document.querySelector(
-        `variant-picker[data-product-id="${this.dataset.productId}"] [data-frame-finish-property] input:checked`
-      );
-      if (finish instanceof HTMLInputElement && finish.value) {
-        formData.set('properties[Frame Finish]', finish.value);
-      }
+    const finish = document.querySelector(
+      `variant-picker[data-product-id="${this.dataset.productId}"] [data-frame-finish-property] input[name]:checked`
+    );
+    if (finish instanceof HTMLInputElement && finish.value) {
+      formData.set('properties[Frame Finish]', finish.value);
     }
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');

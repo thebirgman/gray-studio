@@ -142,18 +142,33 @@
     display: none;
   }
 
-  .variant-picker--described.is-framed-format
+  .variant-picker--described.is-physical-format
     .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
-  .variant-picker--described:has([data-format-kind='framed']:checked)
-    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
-  .variant-picker--described:has(.variant-option--format [data-option-handle*='framed']:checked)
-    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
-  .variant-picker--described:has(.variant-option--format [data-option-handle*='frame-canvas']:checked)
-    .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described,
-  .variant-picker--described:has(input:checked[data-option-handle*='framed']:not([name^='properties']))
+  .variant-picker--described:has([data-format-kind='physical']:checked)
     .pdp-frame-finish.variant-option.variant-option--buttons.variant-option--described {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .variant-picker--described.is-digital-format
+    fieldset.variant-option--size,
+  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='digital'])
+    fieldset.variant-option--size,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='digital'])
+    fieldset.variant-option--size {
+    display: none;
+  }
+
+  .variant-picker--described.is-digital-format
+    fieldset.variant-option--size
+    > legend,
+  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='digital'])
+    fieldset.variant-option--size
+    > legend,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='digital'])
+    fieldset.variant-option--size
+    > legend {
+    counter-increment: none;
   }
 
   .variant-option.variant-option--buttons.variant-option--described[hidden] > legend {

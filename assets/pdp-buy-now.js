@@ -34,11 +34,9 @@ class PdpBuyNow extends HTMLElement {
     formData.set('id', variantId);
     formData.set('quantity', quantity);
 
-    if (picker?.classList?.contains('is-framed-format')) {
-      const finish = picker.querySelector('[data-frame-finish-property] input:checked');
-      if (finish instanceof HTMLInputElement && finish.value) {
-        formData.set('properties[Frame Finish]', finish.value);
-      }
+    const finish = picker?.querySelector('[data-frame-finish-property] input[name]:checked');
+    if (finish instanceof HTMLInputElement && finish.value) {
+      formData.set('properties[Frame Finish]', finish.value);
     }
 
     const addUrl = this.dataset.addUrl?.endsWith('.js')

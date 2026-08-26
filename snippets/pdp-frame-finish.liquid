@@ -1,6 +1,6 @@
 {%- doc -%}
-  Frame finish picker for Framed Canvas. This is a cart line-item property,
-  not a Shopify variant option.
+  Frame picker for physical formats (Archival Quality Print, Giclée Canvas).
+  This is a cart line-item property, not a Shopify variant option.
 
   @param {object} product_resource - The product object
   @param {object} section - The section object
@@ -18,15 +18,13 @@
     assign format_handle = option.name | handleize
     if format_handle == 'format' or format_handle contains 'format' or format_handle contains 'print'
       assign format_value_handle = option.selected_value | handleize
-      if format_value_handle contains 'framed' or format_value_handle contains 'frame-canvas' or format_value_handle contains 'canvas-frame'
-        unless format_value_handle contains 'unframed' or format_value_handle contains 'digital'
-          assign show_frame_finish = true
-        endunless
-      endif
+      unless format_value_handle contains 'digital'
+        assign show_frame_finish = true
+      endunless
     endif
   endfor
 
-  assign finish_values = 'Black frame,White frame' | split: ','
+  assign finish_values = 'No Frame,Black Frame,White Frame' | split: ','
 -%}
 
 <fieldset
@@ -36,7 +34,7 @@
 >
   <legend>
     <span class="variant-option__legend-heading">
-      <span class="variant-option__legend-text">Frame finish</span>
+      <span class="variant-option__legend-text">Choose a frame</span>
     </span>
     {%- if guide_label != blank -%}
       <a class="variant-option__size-guide" href="{{ guide_link }}">

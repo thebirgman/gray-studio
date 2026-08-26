@@ -282,7 +282,7 @@
                 "desc_poster": {
                   "type": "_option-description",
                   "settings": {
-                    "option_value": "Watercolour Poster",
+                    "option_value": "Archival Quality Print",
                     "description": "Fine art matte paper, ships in 3–7 days",
                     "badge": ""
                   },
@@ -294,15 +294,6 @@
                     "option_value": "Giclée Canvas",
                     "description": "Gallery-wrapped, ships in 3–7 days",
                     "badge": "Most loved"
-                  },
-                  "blocks": {}
-                },
-                "desc_framed": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Framed Canvas",
-                    "description": "Canvas + wood frame, ships in 3–7 days",
-                    "badge": ""
                   },
                   "blocks": {}
                 },
@@ -338,7 +329,6 @@
                 "desc_digital",
                 "desc_poster",
                 "desc_canvas",
-                "desc_framed",
                 "desc_small",
                 "desc_medium",
                 "desc_large"
@@ -424,7 +414,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Materials & formats",
-                    "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Watercolour Poster: archival matte paper. Giclée Canvas: gallery-wrapped canvas print, with an optional black, white, or oak frame."
+                    "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Archival Quality Print: archival matte paper. Giclée Canvas: gallery-wrapped canvas print. Both prints can be ordered with no frame, a black frame, or a white frame."
                   },
                   "blocks": {}
                 },
@@ -489,7 +479,7 @@
           "settings": {
             "icon_asset": "step-by-step-pdp-icon-1.svg",
             "title": "Archival-quality materials",
-            "description": "Matte archival paper on posters, gallery-wrapped canvas on the rest. Made to hold its color for years, not fade in a sunny room."
+            "description": "Matte archival paper on Archival Quality Prints, gallery-wrapped canvas on Giclée. Made to hold its color for years, not fade in a sunny room."
           }
         },
         "benefit_frame": {
@@ -497,7 +487,7 @@
           "settings": {
             "icon_asset": "step-by-step-pdp-icon-2.svg",
             "title": "Frame it your way",
-            "description": "Canvas pieces can be framed in black, white, or oak, whichever actually matches the room it's going in."
+            "description": "Prints can ship with no frame, a black frame, or a white frame — whichever actually matches the room it's going in."
           }
         },
         "benefit_format": {
