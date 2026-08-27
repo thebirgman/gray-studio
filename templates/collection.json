@@ -24,7 +24,7 @@
           "type": "destination",
           "settings": {
             "label": "City & landmarks",
-            "collection": "",
+            "collection": "city-and-landmarks",
             "link": ""
           }
         },
@@ -32,7 +32,7 @@
           "type": "destination",
           "settings": {
             "label": "Coastal & lakeside",
-            "collection": "",
+            "collection": "coastal-and-lakeside",
             "link": ""
           }
         },
@@ -40,7 +40,7 @@
           "type": "destination",
           "settings": {
             "label": "Countryside & gardens",
-            "collection": "",
+            "collection": "countryside-and-gardens",
             "link": ""
           }
         },
@@ -48,7 +48,7 @@
           "type": "destination",
           "settings": {
             "label": "Cozy & fireside",
-            "collection": "",
+            "collection": "cozy-and-fireside",
             "link": ""
           }
         }
