@@ -183,8 +183,15 @@
 
   body:has(.collection-header) .product-grid .card-gallery .product-media-container {
     aspect-ratio: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
+    /* Figma inset ~10.5% each side so gray shows L/R around the print */
+    padding-inline: 10.5%;
+    padding-block: 6%;
     background-color: #f2f2f2;
     --product-media-fit: contain;
   }
@@ -193,10 +200,16 @@
     --product-media-fit: contain;
   }
 
-  body:has(.collection-header) .product-grid .card-gallery .product-media,
+  body:has(.collection-header) .product-grid .card-gallery .product-media {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+  }
+
   body:has(.collection-header) .product-grid .card-gallery .product-media-container :is(img, video, .deferred-media__poster-image) {
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     object-fit: contain;
     object-position: center;
   }
