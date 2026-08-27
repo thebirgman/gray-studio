@@ -65,7 +65,11 @@
         <div
           class="
             product-badges__badge product-badges__badge--rectangle
-            {% if product.available == false %} color-custom-badge-sold-out{% elsif product.compare_at_price > product.price %} color-custom-badge-sale{% endif %}
+            {% if product.available == false %}
+              product-badges__badge--sold-out color-custom-badge-sold-out
+            {% elsif product.compare_at_price > product.price %}
+              product-badges__badge--sale color-custom-badge-sale
+            {% endif %}
           "
         >
           {%- if product.available == false -%}
@@ -181,8 +185,8 @@
         }
       ],
       "default": "portrait",
-      "label": "t:settings.aspect_ratio",
-      "info": "t:info.aspect_ratio_adjusted"
+      "label": "Media aspect ratio",
+      "info": "Applies to the product media frame (image, video, and model). Portrait matches the collection design."
     },
     {
       "type": "checkbox",

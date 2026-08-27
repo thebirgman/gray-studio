@@ -49,25 +49,31 @@
     padding-inline: var(--badge-rectangle-padding-inline);
   }
 
-  .product-badges__badge--best-seller {
-    background: #f5cd72;
-    color: #242027;
+  .product-badges__badge--best-seller,
+  .product-badges__badge--new,
+  .product-badges__badge--sale {
     border-radius: 4px;
     font-family: var(--font-body--family);
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.25rem;
     text-transform: none;
+    padding-block: 0.25rem;
+    padding-inline: 0.5rem;
+  }
+
+  .product-badges__badge--best-seller {
+    background: #f5cd72;
+    color: #242027;
   }
 
   .product-badges__badge--new {
     background: #c0d933;
     color: #595a1b;
+  }
+
+  /* Sale keeps theme sale colors; shape/type match New & Best Seller */
+  .product-badges__badge--sale {
     border-radius: 4px;
-    font-family: var(--font-body--family);
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.25rem;
-    text-transform: none;
   }
 {% endstylesheet %}
