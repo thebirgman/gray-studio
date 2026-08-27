@@ -15,31 +15,41 @@
         "destination_all": {
           "type": "destination",
           "settings": {
-            "label": "All destinations"
+            "label": "All destinations",
+            "collection": "",
+            "link": ""
           }
         },
         "destination_city": {
           "type": "destination",
           "settings": {
-            "label": "City & landmarks"
+            "label": "City & landmarks",
+            "collection": "",
+            "link": ""
           }
         },
         "destination_coastal": {
           "type": "destination",
           "settings": {
-            "label": "Coastal & lakeside"
+            "label": "Coastal & lakeside",
+            "collection": "",
+            "link": ""
           }
         },
         "destination_countryside": {
           "type": "destination",
           "settings": {
-            "label": "Countryside & gardens"
+            "label": "Countryside & gardens",
+            "collection": "",
+            "link": ""
           }
         },
         "destination_cozy": {
           "type": "destination",
           "settings": {
-            "label": "Cozy & fireside"
+            "label": "Cozy & fireside",
+            "collection": "",
+            "link": ""
           }
         }
       },
@@ -60,7 +70,7 @@
         "pills_label": "Destinations",
         "show_filter_button": true,
         "filter_label": "Filter by city",
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "padding-block-start": 24,
         "padding-block-end": 20,
         "padding-inline-start": 0,
@@ -70,6 +80,274 @@
     "main": {
       "type": "main-collection",
       "blocks": {
+        "featured_card_1": {
+          "type": "_collection-featured-card",
+          "settings": {
+            "position": 4,
+            "size": "1x",
+            "hide_on_mobile": false,
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 12,
+            "width": "fill",
+            "height": "fill",
+            "background_color": "",
+            "background_media": "image",
+            "background_image_position": "cover",
+            "video_position": "cover",
+            "toggle_overlay": true,
+            "overlay_color": "#242027a6",
+            "overlay_style": "gradient",
+            "gradient_direction": "to bottom",
+            "border_radius": 0,
+            "link": "",
+            "open_in_new_tab": false,
+            "padding-block-start": 50,
+            "padding-block-end": 24,
+            "padding-inline-start": 24,
+            "padding-inline-end": 24
+          },
+          "blocks": {
+            "featured_heading_1": {
+              "type": "text",
+              "settings": {
+                "text": "<h3>Take your dog anywhere</h3>",
+                "mobile_text": "",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "height_mode": "auto",
+                "desktop_height": "",
+                "mobile_height": "",
+                "type_preset": "h4",
+                "font": "var(--font-primary--family)",
+                "enable_custom_font_weight": false,
+                "weight": "400",
+                "font_size": "",
+                "line_height": "normal",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "type_preset_mobile": "rte",
+                "mobile_font_size": "1rem",
+                "mobile_custom_line_height": 1.5,
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {}
+            },
+            "featured_text_1": {
+              "type": "text",
+              "settings": {
+                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
+                "mobile_text": "",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "height_mode": "auto",
+                "desktop_height": "",
+                "mobile_height": "",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "enable_custom_font_weight": false,
+                "weight": "400",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "type_preset_mobile": "rte",
+                "mobile_font_size": "1rem",
+                "mobile_custom_line_height": 1.5,
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {}
+            },
+            "featured_button_1": {
+              "type": "button",
+              "settings": {
+                "label": "Create your portrait",
+                "link": "",
+                "open_in_new_tab": false,
+                "style_class": "button-unstyled",
+                "custom_button_background": "{{ settings.color_palette.foreground }}",
+                "custom_button_text": "{{ settings.color_palette.background }}",
+                "custom_button_border": "{{ settings.color_palette.background }}",
+                "link_text_color": "#ffffff",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "featured_heading_1",
+            "featured_text_1",
+            "featured_button_1"
+          ]
+        },
+        "featured_card_2": {
+          "type": "_collection-featured-card",
+          "settings": {
+            "position": 15,
+            "size": "1x",
+            "hide_on_mobile": false,
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "center",
+            "vertical_alignment_flex_direction_column": "flex-start",
+            "gap": 12,
+            "width": "fill",
+            "height": "fill",
+            "background_color": "",
+            "background_media": "image",
+            "background_image_position": "cover",
+            "video_position": "cover",
+            "toggle_overlay": true,
+            "overlay_color": "#242027a6",
+            "overlay_style": "gradient",
+            "gradient_direction": "to bottom",
+            "border_radius": 0,
+            "link": "",
+            "open_in_new_tab": false,
+            "padding-block-start": 50,
+            "padding-block-end": 24,
+            "padding-inline-start": 24,
+            "padding-inline-end": 24
+          },
+          "blocks": {
+            "featured_heading_2": {
+              "type": "text",
+              "settings": {
+                "text": "<h3>Take your dog anywhere</h3>",
+                "mobile_text": "",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "height_mode": "auto",
+                "desktop_height": "",
+                "mobile_height": "",
+                "type_preset": "h4",
+                "font": "var(--font-primary--family)",
+                "enable_custom_font_weight": false,
+                "weight": "400",
+                "font_size": "",
+                "line_height": "normal",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "type_preset_mobile": "rte",
+                "mobile_font_size": "1rem",
+                "mobile_custom_line_height": 1.5,
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {}
+            },
+            "featured_text_2": {
+              "type": "text",
+              "settings": {
+                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
+                "mobile_text": "",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "height_mode": "auto",
+                "desktop_height": "",
+                "mobile_height": "",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "enable_custom_font_weight": false,
+                "weight": "400",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "custom_line_height": 1.5,
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "type_preset_mobile": "rte",
+                "mobile_font_size": "1rem",
+                "mobile_custom_line_height": 1.5,
+                "text_color": "#ffffff",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0,
+                "use_mobile_padding": false,
+                "padding-block-start-mobile": 0,
+                "padding-block-end-mobile": 0,
+                "padding-inline-start-mobile": 0,
+                "padding-inline-end-mobile": 0
+              },
+              "blocks": {}
+            },
+            "featured_button_2": {
+              "type": "button",
+              "settings": {
+                "label": "Create your portrait",
+                "link": "",
+                "open_in_new_tab": false,
+                "style_class": "button-unstyled",
+                "custom_button_background": "{{ settings.color_palette.foreground }}",
+                "custom_button_text": "{{ settings.color_palette.background }}",
+                "custom_button_border": "{{ settings.color_palette.background }}",
+                "link_text_color": "#ffffff",
+                "width": "fit-content",
+                "custom_width": 100,
+                "width_mobile": "fit-content",
+                "custom_width_mobile": 100
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "featured_heading_2",
+            "featured_text_2",
+            "featured_button_2"
+          ]
+        },
         "filters": {
           "type": "filters",
           "static": true,
@@ -210,202 +488,6 @@
             "product_title_4nY4eT",
             "price_EzJzMm"
           ]
-        },
-        "featured_card_1": {
-          "type": "_collection-featured-card",
-          "settings": {
-            "position": 4,
-            "size": "1x",
-            "hide_on_mobile": false,
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 12,
-            "width": "fill",
-            "height": "fill",
-            "background_color": "",
-            "background_media": "image",
-            "background_image_position": "cover",
-            "video_position": "cover",
-            "toggle_overlay": true,
-            "overlay_color": "#242027a6",
-            "overlay_style": "gradient",
-            "gradient_direction": "to bottom",
-            "border_radius": 0,
-            "link": "",
-            "open_in_new_tab": false,
-            "padding-block-start": 50,
-            "padding-block-end": 24,
-            "padding-inline-start": 24,
-            "padding-inline-end": 24
-          },
-          "blocks": {
-            "featured_heading_1": {
-              "type": "text",
-              "settings": {
-                "text": "<h3>Take your dog anywhere</h3>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h4",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "#ffffff",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "featured_text_1": {
-              "type": "text",
-              "settings": {
-                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "0.875rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "#ffffff",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "featured_button_1": {
-              "type": "button",
-              "settings": {
-                "label": "Create your portrait",
-                "link": "",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "link_text_color": "#ffffff",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              }
-            }
-          },
-          "block_order": [
-            "featured_heading_1",
-            "featured_text_1",
-            "featured_button_1"
-          ]
-        },
-        "featured_card_2": {
-          "type": "_collection-featured-card",
-          "settings": {
-            "position": 15,
-            "size": "1x",
-            "hide_on_mobile": false,
-            "content_direction": "column",
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "flex-start",
-            "gap": 12,
-            "width": "fill",
-            "height": "fill",
-            "background_color": "",
-            "background_media": "image",
-            "background_image_position": "cover",
-            "video_position": "cover",
-            "toggle_overlay": true,
-            "overlay_color": "#242027a6",
-            "overlay_style": "gradient",
-            "gradient_direction": "to bottom",
-            "border_radius": 0,
-            "link": "",
-            "open_in_new_tab": false,
-            "padding-block-start": 50,
-            "padding-block-end": 24,
-            "padding-inline-start": 24,
-            "padding-inline-end": 24
-          },
-          "blocks": {
-            "featured_heading_2": {
-              "type": "text",
-              "settings": {
-                "text": "<h3>Take your dog anywhere</h3>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h4",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "#ffffff",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "featured_text_2": {
-              "type": "text",
-              "settings": {
-                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "0.875rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "#ffffff",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              }
-            },
-            "featured_button_2": {
-              "type": "button",
-              "settings": {
-                "label": "Create your portrait",
-                "link": "",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "link_text_color": "#ffffff",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              }
-            }
-          },
-          "block_order": [
-            "featured_heading_2",
-            "featured_text_2",
-            "featured_button_2"
-          ]
         }
       },
       "block_order": [
@@ -428,10 +510,148 @@
         "padding-block-start": 0,
         "padding-block-end": 80
       }
+    },
+    "step_by_step_AraMM3": {
+      "type": "step-by-step",
+      "blocks": {
+        "step_hdyPkd": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-1.svg",
+            "title": "Pick a scene",
+            "description": "Choose from 40+ destinations, browsed by place or by mood."
+          }
+        },
+        "step_MYpWi7": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-2.svg",
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
+          }
+        },
+        "step_6tCmpW": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-3.svg",
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        "step_JnGPpV": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-4.svg",
+            "title": "Pick a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
+          }
+        }
+      },
+      "block_order": [
+        "step_hdyPkd",
+        "step_MYpWi7",
+        "step_6tCmpW",
+        "step_JnGPpV"
+      ],
+      "name": "t:names.steps",
+      "settings": {
+        "image_asset": "step-by-step-portrait.jpg",
+        "image_alt": "Custom pup portrait",
+        "image_shape": "rectangle",
+        "heading": "",
+        "show_numbers": true,
+        "background_color": "#fffdf8",
+        "wave_color": "#e8dff1",
+        "card_background": "#ffffff",
+        "title_color": "#242027",
+        "text_color": "#605c64",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "faqs_khGEdD": {
+      "type": "faqs",
+      "blocks": {
+        "faq_k7tLXb": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes your portraits different?",
+            "answer": "Most pet-portrait sites give you a bold, high-contrast oil-painting look. Ours are softer and more romantic, a gentle, dreamy impressionist style, set in beautiful places all around the world."
+          }
+        },
+        "faq_e9CLmz": {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "Free preview first, then up to three free adjustments. Still off? Try a new photo — until it's unmistakably them."
+          }
+        },
+        "faq_BFEdYx": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes. We ship portraits globally with fully tracked shipping. Free shipping on all orders over $100."
+          }
+        },
+        "faq_mNmDrr": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to arrive?",
+            "answer": "Digital downloads are ready right away. Printed portraits typically ship within a few business days and arrive with tracked delivery."
+          }
+        },
+        "faq_794Bg4": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Yes. Most portraits find their way to someone else first. Add a note at checkout and we'll make it feel like a gift, not an order."
+          }
+        }
+      },
+      "block_order": [
+        "faq_k7tLXb",
+        "faq_e9CLmz",
+        "faq_BFEdYx",
+        "faq_mNmDrr",
+        "faq_794Bg4"
+      ],
+      "name": "FAQs",
+      "settings": {
+        "heading": "Frequently asked questions",
+        "button_label": "Read all FAQ",
+        "button_link": "shopify://pages/faq",
+        "background_color": "#fffdf8",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "border_color": "#d9d6db"
+      }
+    },
+    "join_the_pack_PFQXHU": {
+      "type": "join-the-pack",
+      "name": "Join the Pack",
+      "settings": {
+        "heading": "Join the Pack",
+        "description": "Collect a daisy stamp with every commission. The sixth portrait is on us, plus early access to new scenes.",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "background_image": "shopify://shop_images/Frame_2147228212.png",
+        "inset_image": "shopify://shop_images/Rectangle_5.png",
+        "background_image_asset": "join-the-pack-bg.jpg",
+        "inset_image_asset": "join-the-pack-inset.jpg",
+        "inset_image_alt": "Pup sitting on a fountain with a croissant and coffee",
+        "panel_color": "#faf8f0",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "input_border": "#d9d6db",
+        "placeholder_color": "#918d95"
+      }
     }
   },
   "order": [
     "collection_header",
-    "main"
+    "main",
+    "step_by_step_AraMM3",
+    "faqs_khGEdD",
+    "join_the_pack_PFQXHU"
   ]
 }
