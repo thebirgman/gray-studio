@@ -1,0 +1,198 @@
+{%- liquid
+  assign heading = section.settings.heading | default: 'About us'
+  assign marquee_text = section.settings.marquee_text | default: heading
+  assign background_color = section.settings.background_color | default: '#FBEECA'
+  assign heading_color = section.settings.heading_color | default: '#733014'
+  assign marquee_color = section.settings.marquee_color | default: '#FEF9EC'
+-%}
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap"
+  media="print"
+  onload="this.media='all'"
+>
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap">
+</noscript>
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: heading_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="about-hero color-custom-{{ section.id }}"
+  id="AboutHero-{{ section.id }}"
+  style="
+    --ah-bg: {{ background_color }};
+    --ah-heading: {{ heading_color }};
+    --ah-marquee: {{ marquee_color }};
+  "
+>
+  {%- if marquee_text != blank -%}
+    <div class="about-hero__marquee" aria-hidden="true">
+      <div class="about-hero__marquee-track">
+        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if heading != blank -%}
+    <h1 class="about-hero__heading">{{ heading }}</h1>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .about-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 14.1875rem;
+    padding: 5.5rem 1.4375rem 3.5rem;
+    overflow: clip;
+    background-color: var(--ah-bg, #fbeeca);
+  }
+
+  .about-hero__marquee {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 0;
+    height: 9.6875rem;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .about-hero__marquee-track {
+    display: flex;
+    width: max-content;
+    height: 100%;
+    align-items: flex-end;
+    gap: 4rem;
+  }
+
+  .about-hero__marquee-text {
+    margin: 0;
+    flex-shrink: 0;
+    font-family: 'Alex Brush', cursive;
+    font-size: 10.5rem;
+    font-weight: 400;
+    line-height: 0.67;
+    color: var(--ah-marquee, #fef9ec);
+    white-space: nowrap;
+  }
+
+  .about-hero__heading {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: 21.5rem;
+    font-family: var(--font-heading--family);
+    font-size: 2.25rem;
+    font-weight: 400;
+    line-height: 2.75rem;
+    letter-spacing: -0.0036px;
+    text-align: center;
+    color: var(--ah-heading, #733014);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .about-hero__marquee-track {
+      animation: about-hero-marquee 60s linear infinite;
+    }
+  }
+
+  @keyframes about-hero-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .about-hero {
+      min-height: 21.375rem;
+      padding: 7rem 7.5rem 5rem;
+    }
+
+    .about-hero__marquee {
+      height: 14.3125rem;
+    }
+
+    .about-hero__marquee-text {
+      font-size: 21.5625rem;
+      line-height: 1;
+    }
+
+    .about-hero__heading {
+      max-width: 44.875rem;
+      font-size: 3rem;
+      line-height: 4.1875rem;
+      letter-spacing: -0.0048px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About hero",
+  "tag": "section",
+  "class": "about-hero-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "About us"
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Script watermark text",
+      "default": "About us",
+      "info": "Large scrolling script behind the heading"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FBEECA"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#733014"
+    },
+    {
+      "type": "color",
+      "id": "marquee_color",
+      "label": "Watermark",
+      "default": "#FEF9EC"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About hero",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

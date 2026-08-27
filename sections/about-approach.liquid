@@ -1,0 +1,327 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign text_color = section.settings.text_color | default: '#F8F5FB'
+  assign overlay_color = section.settings.overlay_color | default: '#242027'
+  assign overlay_opacity = section.settings.overlay_opacity | default: 55
+  assign rule_color = section.settings.rule_color | default: '#FFFDF8'
+  assign image = section.settings.image
+  assign image_asset = section.settings.image_asset | default: 'about-approach.jpg'
+  assign image_alt = section.settings.image_alt | default: ''
+-%}
+
+{% render 'contrast-override',
+  background_color: overlay_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="about-approach color-custom-{{ section.id }}"
+  id="AboutApproach-{{ section.id }}"
+  style="
+    --aa-text: {{ text_color }};
+    --aa-rule: {{ rule_color }};
+    --aa-overlay: {{ overlay_color }};
+    --aa-overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};
+  "
+>
+  <div class="about-approach__media" aria-hidden="true">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 2880
+        | image_tag:
+          class: 'about-approach__img',
+          widths: '750, 1100, 1600, 2000, 2400, 2880',
+          sizes: '100vw',
+          loading: 'lazy',
+          alt: image_alt
+      }}
+    {%- else -%}
+      <img
+        class="about-approach__img"
+        src="{{ image_asset | asset_url }}"
+        alt="{{ image_alt | escape }}"
+        width="2880"
+        height="1200"
+        loading="lazy"
+      >
+    {%- endif -%}
+    <div class="about-approach__overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="about-approach__content">
+    <div class="about-approach__intro">
+      {%- if eyebrow != blank -%}
+        <p class="about-approach__eyebrow">{{ eyebrow }}</p>
+      {%- endif -%}
+      {%- if heading != blank -%}
+        <h2 class="about-approach__heading">{{ heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="about-approach__points">
+        {%- for block in section.blocks -%}
+          <div class="about-approach__point" {{ block.shopify_attributes }}>
+            {%- if block.settings.title != blank -%}
+              <h3 class="about-approach__point-title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="about-approach__point-text">{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .about-approach {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 38.0625rem;
+    padding: 3.75rem 1.5625rem;
+    overflow: hidden;
+    color: var(--aa-text, #f8f5fb);
+  }
+
+  .about-approach__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .about-approach__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-approach__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--aa-overlay, #242027);
+    opacity: var(--aa-overlay-opacity, 0.55);
+  }
+
+  .about-approach__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5625rem;
+    width: 100%;
+    max-width: 26.5rem;
+    padding-block: 0.625rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 1px solid var(--aa-rule, #fffdf8);
+  }
+
+  .about-approach__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+  }
+
+  .about-approach__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .about-approach__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.032px;
+    color: inherit;
+  }
+
+  .about-approach__points {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .about-approach__point {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+  }
+
+  .about-approach__point-title {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.375rem;
+    text-transform: uppercase;
+    color: inherit;
+  }
+
+  .about-approach__point-text {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .about-approach {
+      min-height: 37.5rem;
+      justify-content: flex-end;
+      padding: 5rem 13.9375rem 5rem 7.5rem;
+    }
+
+    .about-approach__content {
+      padding-block: 1.25rem;
+      padding-inline-start: 3.75rem;
+    }
+
+    .about-approach__img {
+      object-position: left center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About approach",
+  "tag": "section",
+  "class": "about-approach-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "OUR APPROACH"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Art first, always"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Image asset filename",
+      "default": "about-approach.jpg",
+      "info": "Used when no image is selected"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#F8F5FB"
+    },
+    {
+      "type": "color",
+      "id": "rule_color",
+      "label": "Accent rule",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#242027"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Approach point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "The place matters as much as the pup"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Every scene is a real destination, chosen for its light and mood, not a generic backdrop. The story is where your dog gets to go, not just how they look going there."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About approach",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "title": "The place matters as much as the pup",
+            "text": "Every scene is a real destination, chosen for its light and mood, not a generic backdrop. The story is where your dog gets to go, not just how they look going there."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Soft over bold",
+            "text": "Most pet portraits lean bold and high-contrast. Ours lean softer and more romantic on purpose, a dreamy, impressionist style instead of a poster print."
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "See it before you commit",
+            "text": "Every portrait starts as a free preview. You know exactly what you're getting before you ever pay for it."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

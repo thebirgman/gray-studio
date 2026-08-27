@@ -143,12 +143,13 @@
     grid-column: span 3;
   }
 
-  /* Collection template product cards */
+  /* Collection template product cards — gray mat + contained artwork (Figma) */
   body:has(.collection-header) .product-grid .card-gallery {
     background-color: #f2f2f2;
     margin-block-end: 0.9375rem;
-    /* Figma media frame: 395 × 444.6 — merchant can still switch via Aspect ratio setting */
+    /* Figma media frame: 395 × 444.6 — change via Media aspect ratio in the card */
     aspect-ratio: var(--gallery-aspect-ratio, 395 / 445);
+    overflow: hidden;
   }
 
   body:has(.collection-header) .product-grid .card-gallery[data-image-ratio='portrait'] {
@@ -177,6 +178,7 @@
   body:has(.collection-header) .product-grid .card-gallery slideshow-slides {
     height: 100%;
     min-height: 100%;
+    background-color: #f2f2f2;
   }
 
   body:has(.collection-header) .product-grid .card-gallery .product-media-container {
@@ -189,6 +191,18 @@
 
   body:has(.collection-header) .product-grid .card-gallery .product-media-container.media-fit {
     --product-media-fit: contain;
+  }
+
+  body:has(.collection-header) .product-grid .card-gallery .product-media,
+  body:has(.collection-header) .product-grid .card-gallery .product-media-container :is(img, video, .deferred-media__poster-image) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  body:has(.collection-header) .product-grid .card-gallery .product-media-container img {
+    box-shadow: 3px 3px 5px rgb(0 0 0 / 0.15);
   }
 
   body:has(.collection-header) .product-grid .product-card__content {

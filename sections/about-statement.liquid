@@ -1,0 +1,148 @@
+{%- liquid
+  assign quote = section.settings.quote
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign quote_color = section.settings.quote_color | default: '#6FA5DF'
+  assign squiggle_asset = section.settings.squiggle_asset | default: 'about-quote-squiggle.svg'
+-%}
+
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap"
+  media="print"
+  onload="this.media='all'"
+>
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap">
+</noscript>
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: quote_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="about-statement color-custom-{{ section.id }}"
+  id="AboutStatement-{{ section.id }}"
+  style="
+    --as-bg: {{ background_color }};
+    --as-quote: {{ quote_color }};
+  "
+>
+  <div class="about-statement__inner">
+    {%- if quote != blank -%}
+      <p class="about-statement__quote">{{ quote | newline_to_br }}</p>
+    {%- endif -%}
+
+    <img
+      class="about-statement__squiggle"
+      src="{{ squiggle_asset | asset_url }}"
+      alt=""
+      width="44"
+      height="8"
+      loading="lazy"
+      aria-hidden="true"
+    >
+  </div>
+</div>
+
+{% stylesheet %}
+  .about-statement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12.5rem 1.625rem;
+    background-color: var(--as-bg, #fffdf8);
+  }
+
+  .about-statement__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    width: 100%;
+    max-width: 21.125rem;
+  }
+
+  .about-statement__quote {
+    margin: 0;
+    width: 100%;
+    font-family: 'Alex Brush', cursive;
+    font-size: 3.75rem;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    color: var(--as-quote, #6fa5df);
+  }
+
+  .about-statement__squiggle {
+    display: block;
+    width: 2.5625rem;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .about-statement {
+      padding: 12.5rem 7.5rem;
+    }
+
+    .about-statement__inner {
+      max-width: 56.25rem;
+    }
+
+    .about-statement__quote {
+      font-size: 4.375rem;
+      line-height: 1.08;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About statement",
+  "tag": "section",
+  "class": "about-statement-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Statement",
+      "default": "We create portraits that feel personal,\nconsidered, and worth keeping"
+    },
+    {
+      "type": "text",
+      "id": "squiggle_asset",
+      "label": "Squiggle asset filename",
+      "default": "about-quote-squiggle.svg"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Statement color",
+      "default": "#6FA5DF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About statement",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,294 @@
+{%- liquid
+  assign eyebrow = section.settings.eyebrow
+  assign greeting = section.settings.greeting
+  assign letter = section.settings.letter
+  assign signature = section.settings.signature
+  assign panel_color = section.settings.panel_color | default: '#321C41'
+  assign text_color = section.settings.text_color | default: '#F8F5FB'
+  assign page_color = section.settings.page_color | default: '#FFFDF8'
+  assign image = section.settings.image
+  assign image_asset = section.settings.image_asset | default: 'about-founder.jpg'
+  assign image_alt = section.settings.image_alt | default: 'Kathryn Gray'
+-%}
+
+{% render 'contrast-override',
+  background_color: panel_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="about-founder color-custom-{{ section.id }}"
+  id="AboutFounder-{{ section.id }}"
+  style="
+    --af-page: {{ page_color }};
+    --af-panel: {{ panel_color }};
+    --af-text: {{ text_color }};
+  "
+>
+  <div class="about-founder__inner">
+    <div class="about-founder__media">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1600
+          | image_tag:
+            class: 'about-founder__img',
+            widths: '400, 600, 800, 1200, 1600',
+            sizes: '(min-width: 750px) 600px, 100vw',
+            loading: 'lazy',
+            alt: image_alt
+        }}
+      {%- else -%}
+        <img
+          class="about-founder__img"
+          src="{{ image_asset | asset_url }}"
+          alt="{{ image_alt | escape }}"
+          width="1200"
+          height="1200"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </div>
+
+    <div class="about-founder__panel">
+      <div class="about-founder__content">
+        {%- if eyebrow != blank -%}
+          <p class="about-founder__eyebrow">{{ eyebrow }}</p>
+        {%- endif -%}
+        {%- if greeting != blank -%}
+          <h2 class="about-founder__greeting">{{ greeting }}</h2>
+        {%- endif -%}
+        {%- if letter != blank -%}
+          <div class="about-founder__letter rte">{{ letter }}</div>
+        {%- endif -%}
+        {%- if signature != blank -%}
+          <p class="about-founder__signature">{{ signature }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .about-founder {
+    width: 100%;
+    background-color: var(--af-page, #fffdf8);
+    padding: 3.75rem 0 0;
+  }
+
+  .about-founder__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .about-founder__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 368 / 600;
+    overflow: hidden;
+  }
+
+  .about-founder__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .about-founder__panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: var(--af-panel, #321c41);
+    color: var(--af-text, #f8f5fb);
+    padding: 1.25rem 0.9375rem;
+  }
+
+  .about-founder__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+    max-width: 26.5rem;
+  }
+
+  .about-founder__eyebrow {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.03125rem;
+    text-transform: uppercase;
+  }
+
+  .about-founder__greeting {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.032px;
+    color: inherit;
+  }
+
+  .about-founder__letter {
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  .about-founder__letter > *:first-child {
+    margin-block-start: 0;
+  }
+
+  .about-founder__letter > *:last-child {
+    margin-block-end: 0;
+  }
+
+  .about-founder__letter p {
+    margin: 0 0 1.375rem;
+  }
+
+  .about-founder__letter p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-founder__signature {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.125rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  @media screen and (min-width: 750px) {
+    .about-founder {
+      padding: 5rem 7.5rem 0;
+    }
+
+    .about-founder__inner {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 0.9375rem;
+      max-width: 75.9375rem;
+      margin-inline: auto;
+    }
+
+    .about-founder__media {
+      order: 2;
+      flex: 0 0 37.5rem;
+      width: 37.5rem;
+      max-width: 50%;
+      aspect-ratio: 1 / 1;
+      min-height: 37.5rem;
+    }
+
+    .about-founder__panel {
+      order: 1;
+      flex: 1 1 37.5rem;
+      max-width: 37.5rem;
+      min-height: 37.5rem;
+      padding: 1.75rem 5.5rem 1.4375rem;
+    }
+
+    .about-founder__content {
+      max-width: 26.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About founder note",
+  "tag": "section",
+  "class": "about-founder-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "A note from the founder"
+    },
+    {
+      "type": "text",
+      "id": "greeting",
+      "label": "Greeting",
+      "default": "Dear friend,"
+    },
+    {
+      "type": "richtext",
+      "id": "letter",
+      "label": "Letter",
+      "default": "<p>I started Pups Around the World because I've spent twenty-five years painting people's favorite places, and somewhere along the way I noticed the thing missing from most portraits wasn't the person. It was their dog.</p><p>I curate every scene in this collection myself, the palette, the light, the mood, long before your pup ever steps into it. Paris isn't Paris because a prompt said so. It's Paris because I know what that light actually looks like in the evening, and I wanted your dog standing in it.</p><p>I still believe the artist should lead and the tools should follow, not the other way around. That's the whole idea behind every portrait here: your dog, painted the way I'd paint anyone I loved, somewhere I'd want to send them.</p>"
+    },
+    {
+      "type": "text",
+      "id": "signature",
+      "label": "Signature",
+      "default": "~ Kathryn Gray"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Founder image"
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Image asset filename",
+      "default": "about-founder.jpg",
+      "info": "Used when no image is selected"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Kathryn Gray"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "page_color",
+      "label": "Page background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panel background",
+      "default": "#321C41"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#F8F5FB"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About founder note",
+      "category": "t:categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

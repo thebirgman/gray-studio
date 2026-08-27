@@ -5430,3 +5430,8 @@ main > .shopify-section:first-child .section:not(.disable-section-top-offset) {
 .variant-option__button-label:not(.variant-option__button-label--has-swatch):before, .variant-option__button-label:has([data-option-available=false]):not(.variant-option__button-label--has-swatch):after {
   display: none;
 }
+
+p.pp-prompt-help {
+  display: block;
+  margin-bottom: 10px!important;
+}
