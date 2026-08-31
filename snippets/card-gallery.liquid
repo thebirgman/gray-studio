@@ -17,9 +17,17 @@
   assign has_badges = false
   assign badge_position = null
   if product != blank
-    if product.available == false or product.compare_at_price > product.price
+    if product.available == false
       assign has_badges = true
       assign badge_position = settings.badge_position
+    else
+      for variant in product.variants
+        if variant.compare_at_price > variant.price
+          assign has_badges = true
+          assign badge_position = settings.badge_position
+          break
+        endif
+      endfor
     endif
   endif
 

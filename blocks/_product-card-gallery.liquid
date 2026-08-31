@@ -52,8 +52,15 @@
 
       if product.available == false
         assign show_sold_out_badge = true
-      elsif product.compare_at_price != blank and product.compare_at_price > product.price
-        assign show_sale_badge = true
+      else
+        # Product-level compare_at_price vs price can false-positive when those
+        # mins come from different variants. Require a real per-variant discount.
+        for variant in product.variants
+          if variant.compare_at_price > variant.price
+            assign show_sale_badge = true
+            break
+          endif
+        endfor
       endif
     -%}
     <div
