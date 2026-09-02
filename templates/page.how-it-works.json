@@ -150,11 +150,69 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "faqs_G8cBzE": {
+      "type": "faqs",
+      "blocks": {
+        "faq_DFfdBW": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes your portraits different?",
+            "answer": "Most pet-portrait sites give you a bold, high-contrast oil-painting look. Ours are softer and more romantic, a gentle, dreamy impressionist style, set in beautiful places all around the world."
+          }
+        },
+        "faq_w8Qm3h": {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "Free preview first, then up to three free adjustments. Still off? Try a new photo — until it's unmistakably them."
+          }
+        },
+        "faq_f7tCEU": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes. We ship portraits globally with fully tracked shipping. Free shipping on all orders over $100."
+          }
+        },
+        "faq_LEq4px": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to arrive?",
+            "answer": "Digital downloads are ready right away. Printed portraits typically ship within a few business days and arrive with tracked delivery."
+          }
+        },
+        "faq_YwCnRV": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Yes. Most portraits find their way to someone else first. Add a note at checkout and we'll make it feel like a gift, not an order."
+          }
+        }
+      },
+      "block_order": [
+        "faq_DFfdBW",
+        "faq_w8Qm3h",
+        "faq_f7tCEU",
+        "faq_LEq4px",
+        "faq_YwCnRV"
+      ],
+      "name": "FAQs",
+      "settings": {
+        "heading": "Frequently asked questions",
+        "button_label": "Read all FAQ",
+        "button_link": "shopify://pages/faq",
+        "background_color": "#fffdf8",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "border_color": "#d9d6db"
+      }
     }
   },
   "order": [
     "breadcrumbs",
     "main",
-    "step_by_step_E4ffKH"
+    "step_by_step_E4ffKH",
+    "faqs_G8cBzE"
   ]
 }
