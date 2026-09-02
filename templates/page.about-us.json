@@ -82,12 +82,145 @@
         "overlay_color": "#242027",
         "overlay_opacity": 55
       }
+    },
+    "testimonials_about": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_maria": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The free preview sold me instantly. I saw my Luna in the Provence scene and knew it had to be real.",
+            "author": "Maria S.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_james": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Gave this as a gift and my sister cried, in a good way. The packaging alone felt like a real gift.",
+            "author": "James O.",
+            "meta": "Verified buyer · Lavender Fields"
+          }
+        },
+        "testimonial_priya": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Ordered from Australia, shipped without a hitch. The “mood” browsing made it so much easier to pick.",
+            "author": "Priya K.",
+            "meta": "Verified buyer · Coastal Morning"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_maria",
+        "testimonial_james",
+        "testimonial_priya"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "eyebrow": "Testimonials",
+        "heading": "What our lovely humans say",
+        "marquee_text": "Soft impressionist style   ·   Free preview, always   ·   Ships worldwide   ·   Scenes from around the world",
+        "button_label": "",
+        "button_link": "",
+        "dots_label": "Review slides",
+        "star_asset": "testimonials-star.svg",
+        "background_color": "#f2f7fc",
+        "text_color": "#242027",
+        "muted_color": "#605c64",
+        "card_border": "#c9def4",
+        "button_color": "#212c4a",
+        "marquee_color": "#c9def4"
+      }
+    },
+    "faqs_about": {
+      "type": "faqs",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes your portraits different?",
+            "answer": "Most pet-portrait sites give you a bold, high-contrast oil-painting look. Ours are softer and more romantic, a gentle, dreamy impressionist style, set in beautiful places all around the world."
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "Free preview first, then up to three free adjustments. Still off? Try a new photo — until it's unmistakably them."
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes. We ship portraits globally with fully tracked shipping. Free shipping on all orders over $100."
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does it take to arrive?",
+            "answer": "Digital downloads are ready right away. Printed portraits typically ship within a few business days and arrive with tracked delivery."
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Yes. Most portraits find their way to someone else first. Add a note at checkout and we'll make it feel like a gift, not an order."
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5"
+      ],
+      "name": "FAQs",
+      "settings": {
+        "heading": "Frequently asked questions",
+        "button_label": "Read all FAQ",
+        "button_link": "shopify://pages/faq",
+        "background_color": "#fffdf8",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "border_color": "#d9d6db"
+      }
+    },
+    "join_the_pack_about": {
+      "type": "join-the-pack",
+      "name": "Join the Pack",
+      "settings": {
+        "heading": "Join the Pack",
+        "description": "Collect a daisy stamp with every commission. The sixth portrait is on us, plus early access to new scenes.",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "background_image": "shopify://shop_images/Frame_2147228212.png",
+        "inset_image": "shopify://shop_images/Rectangle_5.png",
+        "background_image_asset": "join-the-pack-bg.jpg",
+        "inset_image_asset": "join-the-pack-inset.jpg",
+        "inset_image_alt": "Pup sitting on a fountain with a croissant and coffee",
+        "panel_color": "#faf8f0",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "input_border": "#d9d6db",
+        "placeholder_color": "#918d95"
+      }
     }
   },
   "order": [
     "about_hero",
     "about_founder",
     "about_statement",
-    "about_approach"
+    "about_approach",
+    "testimonials_about",
+    "faqs_about",
+    "join_the_pack_about"
   ]
 }
