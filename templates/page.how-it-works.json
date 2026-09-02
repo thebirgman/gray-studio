@@ -211,11 +211,11 @@
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "use_mobile_padding": false,
+            "use_mobile_padding": true,
             "padding-block-start-mobile": 0,
             "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-inline-start-mobile": 13,
+            "padding-inline-end-mobile": 13
           },
           "blocks": {
             "text_GmRh4t": {
@@ -240,9 +240,9 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
-                "type_preset_mobile": "rte",
-                "mobile_font_size": "1rem",
-                "mobile_custom_line_height": 1.5,
+                "type_preset_mobile": "custom",
+                "mobile_font_size": "1.5625rem",
+                "mobile_custom_line_height": 1.3,
                 "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
@@ -351,11 +351,11 @@
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "use_mobile_padding": false,
+            "use_mobile_padding": true,
             "padding-block-start-mobile": 0,
             "padding-block-end-mobile": 0,
-            "padding-inline-start-mobile": 0,
-            "padding-inline-end-mobile": 0
+            "padding-inline-start-mobile": 13,
+            "padding-inline-end-mobile": 13
           },
           "blocks": {
             "group_F4fip7": {
