@@ -267,6 +267,55 @@
         "padding-inline-end-mobile": 0
       }
     },
+    "trust_strip_GdBfF3": {
+      "type": "trust-strip",
+      "blocks": {
+        "trust_item_tPRQLN": {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-brush.svg",
+            "title": "No Risk of a Bad Fit",
+            "description": "Free preview first, then up to three free adjustments. Still off? Try a new photo."
+          }
+        },
+        "trust_item_htGCnN": {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-heart.svg",
+            "title": "Real Humans Who Love Dogs Too",
+            "description": "Questions about a scene, a photo, or an order? Reach us anytime by email or live chat."
+          }
+        },
+        "trust_item_H3hQ7h": {
+          "type": "trust_item",
+          "settings": {
+            "icon_asset": "trust-strip-icon-box.svg",
+            "title": "Worldwide Delivery",
+            "description": "We ship portraits globally with fully tracked shipping methods. Free shipping on all orders over $100!"
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_tPRQLN",
+        "trust_item_htGCnN",
+        "trust_item_H3hQ7h"
+      ],
+      "name": "t:names.trust_strip",
+      "settings": {
+        "background_color": "#c8afde",
+        "text_color": "#321c41",
+        "dots_label": "Trust highlights",
+        "padding-block-start": 40,
+        "padding-block-end": 40,
+        "padding-inline-start": 120,
+        "padding-inline-end": 120,
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 18,
+        "padding-block-end-mobile": 40,
+        "padding-inline-start-mobile": 25,
+        "padding-inline-end-mobile": 25
+      }
+    },
     "section_9tQT87": {
       "type": "section",
       "blocks": {
@@ -4085,6 +4134,7 @@
     "main",
     "page_hero_ADwFbC",
     "section_i9AcQ4",
+    "trust_strip_GdBfF3",
     "section_9tQT87",
     "step_by_step_E4ffKH",
     "section_GytibF",
