@@ -8,23 +8,25 @@
   assign image = section.settings.image
   assign image_asset = section.settings.image_asset | default: 'about-approach.jpg'
   assign image_alt = section.settings.image_alt | default: ''
+
+  if section.settings.overlay_color != blank
+    assign overlay_rgb = section.settings.overlay_color.rgb
+  else
+    assign overlay_rgb = '36, 32, 39'
+  endif
 -%}
 
-{% render 'contrast-override',
-  background_color: overlay_color,
-  text_color: text_color,
-  section_id: section.id,
-  skip_contrast: true
-%}
-
 <div
-  class="about-approach color-custom-{{ section.id }}"
+  class="about-approach"
   id="AboutApproach-{{ section.id }}"
   style="
     --aa-text: {{ text_color }};
     --aa-rule: {{ rule_color }};
     --aa-overlay: {{ overlay_color }};
-    --aa-overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }};
+    --aa-overlay-rgb: {{ overlay_rgb }};
+    --aa-overlay-opacity: {{ overlay_opacity | times: 0.01 }};
+    --color: {{ text_color }};
+    --color-foreground: {{ text_color }};
   "
 >
   <div class="about-approach__media" aria-hidden="true">
@@ -94,6 +96,7 @@
     min-height: 38.0625rem;
     padding: 3.75rem 1.5625rem;
     overflow: hidden;
+    background-color: transparent;
     color: var(--aa-text, #f8f5fb);
   }
 
@@ -114,14 +117,14 @@
   .about-approach__overlay {
     position: absolute;
     inset: 0;
-    background-color: var(--aa-overlay, #242027);
-    opacity: var(--aa-overlay-opacity, 0.55);
+    z-index: 1;
+    background-color: rgb(var(--aa-overlay-rgb) / var(--aa-overlay-opacity, 0.55));
     pointer-events: none;
   }
 
   .about-approach__content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     gap: 1.5625rem;
@@ -139,6 +142,13 @@
     gap: 0.3125rem;
   }
 
+  .about-approach,
+  .about-approach p,
+  .about-approach h2,
+  .about-approach h3 {
+    color: var(--aa-text, #f8f5fb);
+  }
+
   .about-approach .about-approach__eyebrow {
     margin: 0;
     font-family: var(--font-body--family);
@@ -147,7 +157,6 @@
     line-height: 1.5;
     letter-spacing: 0;
     text-transform: uppercase;
-    color: inherit;
   }
 
   .about-approach h2.about-approach__heading {
@@ -159,7 +168,6 @@
     line-height: 1.12;
     letter-spacing: 0.1px;
     text-transform: none;
-    color: inherit;
   }
 
   .about-approach__points {
@@ -183,7 +191,6 @@
     line-height: 1.375rem;
     letter-spacing: 0;
     text-transform: uppercase;
-    color: inherit;
   }
 
   .about-approach .about-approach__point-text {
@@ -193,22 +200,27 @@
     font-weight: 400;
     line-height: 1.375rem;
     letter-spacing: 0;
-    color: inherit;
   }
 
   @media screen and (min-width: 750px) {
     .about-approach {
       min-height: 37.5rem;
       justify-content: flex-end;
-      padding: 5rem clamp(1.5625rem, 15.486vw, 13.9375rem);
+      padding: 5rem 0;
     }
 
     .about-approach__content {
-      width: 30.25rem;
-      max-width: 30.25rem;
+      width: 50%;
+      max-width: 50%;
       flex-shrink: 0;
       padding-block: 1.25rem;
       padding-inline-start: 3.75rem;
+      padding-inline-end: clamp(1.5625rem, 15.486vw, 13.9375rem);
+    }
+
+    .about-approach__intro,
+    .about-approach__points {
+      max-width: 26.5rem;
     }
   }
 {% endstylesheet %}
