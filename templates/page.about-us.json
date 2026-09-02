@@ -9,10 +9,11 @@
  */
 {
   "sections": {
-    "about_hero": {
-      "type": "about-hero",
+    "page_hero": {
+      "type": "page-hero",
       "settings": {
         "heading": "About us",
+        "heading_tag": "h1",
         "marquee_text": "About us",
         "background_color": "#FBEECA",
         "heading_color": "#733014",
@@ -27,6 +28,7 @@
         "letter": "<p>I started Pups Around the World because I've spent twenty-five years painting people's favorite places, and somewhere along the way I noticed the thing missing from most portraits wasn't the person. It was their dog.</p><p>I curate every scene in this collection myself, the palette, the light, the mood, long before your pup ever steps into it. Paris isn't Paris because a prompt said so. It's Paris because I know what that light actually looks like in the evening, and I wanted your dog standing in it.</p><p>I still believe the artist should lead and the tools should follow, not the other way around. That's the whole idea behind every portrait here: your dog, painted the way I'd paint anyone I loved, somewhere I'd want to send them.</p>",
         "signature": "~ Kathryn Gray",
         "image_asset": "about-founder.jpg",
+        "mobile_image_asset": "about-founder-mobile.jpg",
         "image_alt": "Kathryn Gray",
         "page_color": "#FFFDF8",
         "panel_color": "#321C41",
@@ -105,7 +107,7 @@
     }
   },
   "order": [
-    "about_hero",
+    "page_hero",
     "about_founder",
     "about_statement",
     "about_approach",

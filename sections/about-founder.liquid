@@ -6,8 +6,10 @@
   assign panel_color = section.settings.panel_color | default: '#321C41'
   assign text_color = section.settings.text_color | default: '#F8F5FB'
   assign page_color = section.settings.page_color | default: '#FFFDF8'
-  assign image = section.settings.image
-  assign image_asset = section.settings.image_asset | default: 'about-founder.jpg'
+  assign desktop_image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+  assign desktop_asset = section.settings.image_asset | default: 'about-founder.jpg'
+  assign mobile_asset = section.settings.mobile_image_asset | default: 'about-founder-mobile.jpg'
   assign image_alt = section.settings.image_alt | default: 'Kathryn Gray'
 -%}
 
@@ -29,36 +31,58 @@
 >
   <div class="about-founder__inner">
     <div class="about-founder__media">
-      {%- if image != blank -%}
-        {{
-          image
-          | image_url: width: 1600
-          | image_tag:
-            class: 'about-founder__img',
-            widths: '400, 600, 800, 1200, 1600',
-            sizes: '(min-width: 750px) 600px, 100vw',
-            loading: 'lazy',
-            alt: image_alt
-        }}
-      {%- else -%}
-        <img
-          class="about-founder__img"
-          src="{{ image_asset | asset_url }}"
-          alt="{{ image_alt | escape }}"
-          width="1200"
-          height="1200"
-          loading="lazy"
-        >
-      {%- endif -%}
+      <picture>
+        {%- if mobile_image != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {{ mobile_image | image_url: width: 736 }} 736w,
+              {{ mobile_image | image_url: width: 1104 }} 1104w
+            "
+            sizes="(max-width: 749px) calc(100vw - 22px), 600px"
+          >
+        {%- else -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ mobile_asset | asset_url }}"
+          >
+        {%- endif -%}
+
+        {%- if desktop_image != blank -%}
+          {{
+            desktop_image
+            | image_url: width: 1200
+            | image_tag:
+              class: 'about-founder__img',
+              widths: '600, 800, 1200, 1600',
+              sizes: '(min-width: 750px) min(600px, 50vw), calc(100vw - 22px)',
+              loading: 'lazy',
+              alt: image_alt
+          }}
+        {%- else -%}
+          <img
+            class="about-founder__img"
+            src="{{ desktop_asset | asset_url }}"
+            alt="{{ image_alt | escape }}"
+            width="1200"
+            height="1200"
+            loading="lazy"
+          >
+        {%- endif -%}
+      </picture>
     </div>
 
     <div class="about-founder__panel">
       <div class="about-founder__content">
-        {%- if eyebrow != blank -%}
-          <p class="about-founder__eyebrow">{{ eyebrow }}</p>
-        {%- endif -%}
-        {%- if greeting != blank -%}
-          <h2 class="about-founder__greeting">{{ greeting }}</h2>
+        {%- if eyebrow != blank or greeting != blank -%}
+          <div class="about-founder__intro">
+            {%- if eyebrow != blank -%}
+              <p class="about-founder__eyebrow">{{ eyebrow }}</p>
+            {%- endif -%}
+            {%- if greeting != blank -%}
+              <h2 class="about-founder__greeting">{{ greeting }}</h2>
+            {%- endif -%}
+          </div>
         {%- endif -%}
         {%- if letter != blank -%}
           <div class="about-founder__letter rte">{{ letter }}</div>
@@ -82,7 +106,9 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    width: 100%;
+    width: calc(100% - 1.375rem);
+    max-width: 75.9375rem;
+    margin-inline: auto;
   }
 
   .about-founder__media {
@@ -92,12 +118,16 @@
     overflow: hidden;
   }
 
+  .about-founder__media picture,
   .about-founder__img {
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  .about-founder__img {
     object-fit: cover;
-    object-position: center top;
+    object-position: center;
   }
 
   .about-founder__panel {
@@ -105,6 +135,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    min-height: 36.3125rem;
     background-color: var(--af-panel, #321c41);
     color: var(--af-text, #f8f5fb);
     padding: 1.25rem 0.9375rem;
@@ -116,6 +147,13 @@
     gap: 0.625rem;
     width: 100%;
     max-width: 26.5rem;
+  }
+
+  .about-founder__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1875rem;
+    align-items: flex-start;
   }
 
   .about-founder__eyebrow {
@@ -172,36 +210,28 @@
 
   @media screen and (min-width: 750px) {
     .about-founder {
-      padding: 5rem 7.5rem 0;
+      padding: 5rem clamp(1.5rem, 8.33vw, 7.5rem) 0;
     }
 
     .about-founder__inner {
-      flex-direction: row;
-      align-items: stretch;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 0.9375rem;
-      max-width: 75.9375rem;
-      margin-inline: auto;
+      width: 100%;
+      align-items: stretch;
     }
 
     .about-founder__media {
       order: 2;
-      flex: 0 0 37.5rem;
-      width: 37.5rem;
-      max-width: 50%;
       aspect-ratio: 1 / 1;
-      min-height: 37.5rem;
     }
 
     .about-founder__panel {
       order: 1;
-      flex: 1 1 37.5rem;
-      max-width: 37.5rem;
-      min-height: 37.5rem;
-      padding: 1.75rem 5.5rem 1.4375rem;
-    }
-
-    .about-founder__content {
-      max-width: 26.5rem;
+      aspect-ratio: 1 / 1;
+      min-height: 0;
+      height: auto;
+      padding: 1.75rem 14.666% 1.4375rem;
     }
   }
 {% endstylesheet %}
@@ -246,14 +276,26 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Founder image"
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image"
     },
     {
       "type": "text",
       "id": "image_asset",
-      "label": "Image asset filename",
+      "label": "Desktop image asset filename",
       "default": "about-founder.jpg",
-      "info": "Used when no image is selected"
+      "info": "Used when no desktop image is selected"
+    },
+    {
+      "type": "text",
+      "id": "mobile_image_asset",
+      "label": "Mobile image asset filename",
+      "default": "about-founder-mobile.jpg",
+      "info": "Used when no mobile image is selected"
     },
     {
       "type": "text",

@@ -1,9 +1,14 @@
 {%- liquid
-  assign heading = section.settings.heading | default: 'About us'
+  assign heading = section.settings.heading
   assign marquee_text = section.settings.marquee_text | default: heading
+  assign heading_tag = section.settings.heading_tag | default: 'h1'
   assign background_color = section.settings.background_color | default: '#FBEECA'
   assign heading_color = section.settings.heading_color | default: '#733014'
   assign marquee_color = section.settings.marquee_color | default: '#FEF9EC'
+
+  unless heading_tag == 'h1' or heading_tag == 'h2'
+    assign heading_tag = 'h1'
+  endunless
 -%}
 
 <link
@@ -24,37 +29,52 @@
 %}
 
 <div
-  class="about-hero color-custom-{{ section.id }}"
-  id="AboutHero-{{ section.id }}"
+  class="page-hero color-custom-{{ section.id }}"
+  id="PageHero-{{ section.id }}"
   style="
-    --ah-bg: {{ background_color }};
-    --ah-heading: {{ heading_color }};
-    --ah-marquee: {{ marquee_color }};
+    --ph-bg: {{ background_color }};
+    --ph-heading: {{ heading_color }};
+    --ph-marquee: {{ marquee_color }};
   "
 >
   {%- if marquee_text != blank -%}
-    <div class="about-hero__marquee" aria-hidden="true">
-      <div class="about-hero__marquee-track">
-        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
-        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
-        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
-        <p class="about-hero__marquee-text">{{ marquee_text }}</p>
+    <div class="page-hero__marquee" aria-hidden="true">
+      <div class="page-hero__marquee-track">
+        <p class="page-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="page-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="page-hero__marquee-text">{{ marquee_text }}</p>
+        <p class="page-hero__marquee-text">{{ marquee_text }}</p>
       </div>
     </div>
   {%- endif -%}
 
   {%- if heading != blank -%}
-    <h1 class="about-hero__heading">{{ heading }}</h1>
+    <{{ heading_tag }} class="page-hero__heading">{{ heading }}</{{ heading_tag }}>
   {%- endif -%}
 </div>
 
 {% stylesheet %}
-  /* Keep the announcement bar above the hero; only the nav overlays cream, as in Figma. */
-  body:has(.header[transparent]) .content-for-layout > .shopify-section.about-hero-section:first-child {
+  /*
+    Sit cream under the nav (not the announcement bar) whenever this section
+    is first on the page. Header stays in flow with default dark logo/text.
+  */
+  body:has(.content-for-layout > .shopify-section.page-hero-section:first-child)
+    .content-for-layout
+    > .shopify-section.page-hero-section:first-child {
     margin-top: calc(var(--header-height) * -1);
   }
 
-  .about-hero {
+  body:has(.content-for-layout > .shopify-section.page-hero-section:first-child) #header-group > .header-section {
+    position: relative;
+    z-index: var(--layer-menu-drawer);
+  }
+
+  body:has(.content-for-layout > .shopify-section.page-hero-section:first-child)
+    .header:not([data-sticky-state='active']) {
+    --closed-underlay-height: 0px;
+  }
+
+  .page-hero {
     position: relative;
     display: flex;
     align-items: center;
@@ -63,10 +83,10 @@
     min-height: 20.1875rem;
     padding: 1.5625rem;
     overflow: clip;
-    background-color: var(--ah-bg, #fbeeca);
+    background-color: var(--ph-bg, #fbeeca);
   }
 
-  .about-hero__marquee {
+  .page-hero__marquee {
     position: absolute;
     inset-inline: 0;
     bottom: 0;
@@ -76,7 +96,7 @@
     pointer-events: none;
   }
 
-  .about-hero__marquee-track {
+  .page-hero__marquee-track {
     display: flex;
     width: max-content;
     height: 100%;
@@ -84,18 +104,18 @@
     gap: 4rem;
   }
 
-  .about-hero__marquee-text {
+  .page-hero__marquee-text {
     margin: 0;
     flex-shrink: 0;
     font-family: 'Alex Brush', cursive;
     font-size: 10.5rem;
     font-weight: 400;
     line-height: 0.67;
-    color: var(--ah-marquee, #fef9ec);
+    color: var(--ph-marquee, #fef9ec);
     white-space: nowrap;
   }
 
-  .about-hero__heading {
+  .page-hero__heading {
     position: relative;
     z-index: 1;
     margin: 0;
@@ -106,16 +126,16 @@
     line-height: 2.75rem;
     letter-spacing: -0.0036px;
     text-align: center;
-    color: var(--ah-heading, #733014);
+    color: var(--ph-heading, #733014);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .about-hero__marquee-track {
-      animation: about-hero-marquee 60s linear infinite;
+    .page-hero__marquee-track {
+      animation: page-hero-marquee 60s linear infinite;
     }
   }
 
-  @keyframes about-hero-marquee {
+  @keyframes page-hero-marquee {
     from {
       transform: translate3d(0, 0, 0);
     }
@@ -125,21 +145,21 @@
   }
 
   @media screen and (min-width: 750px) {
-    .about-hero {
+    .page-hero {
       min-height: 27.375rem;
       padding: 0 7.5rem;
     }
 
-    .about-hero__marquee {
+    .page-hero__marquee {
       height: 14.3125rem;
     }
 
-    .about-hero__marquee-text {
+    .page-hero__marquee-text {
       font-size: 21.5625rem;
       line-height: 1;
     }
 
-    .about-hero__heading {
+    .page-hero__heading {
       max-width: 44.875rem;
       font-size: 3rem;
       line-height: 4.1875rem;
@@ -150,9 +170,9 @@
 
 {% schema %}
 {
-  "name": "About hero",
+  "name": "Page hero",
   "tag": "section",
-  "class": "about-hero-section",
+  "class": "page-hero-section",
   "disabled_on": {
     "groups": ["header", "footer"]
   },
@@ -161,14 +181,29 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "About us"
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        }
+      ],
+      "default": "h1"
     },
     {
       "type": "text",
       "id": "marquee_text",
       "label": "Script watermark text",
-      "default": "About us",
-      "info": "Large scrolling script behind the heading"
+      "info": "Large scrolling script behind the heading. Leave blank to use the heading."
     },
     {
       "type": "header",
@@ -195,7 +230,7 @@
   ],
   "presets": [
     {
-      "name": "About hero",
+      "name": "Page hero",
       "category": "t:categories.storytelling"
     }
   ]
