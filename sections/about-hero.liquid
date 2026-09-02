@@ -49,14 +49,19 @@
 </div>
 
 {% stylesheet %}
+  /* Keep the announcement bar above the hero; only the nav overlays cream, as in Figma. */
+  body:has(.header[transparent]) .content-for-layout > .shopify-section.about-hero-section:first-child {
+    margin-top: calc(var(--header-height) * -1);
+  }
+
   .about-hero {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 14.1875rem;
-    padding: 5.5rem 1.4375rem 3.5rem;
+    min-height: 20.1875rem;
+    padding: 1.5625rem;
     overflow: clip;
     background-color: var(--ah-bg, #fbeeca);
   }
@@ -121,8 +126,8 @@
 
   @media screen and (min-width: 750px) {
     .about-hero {
-      min-height: 21.375rem;
-      padding: 7rem 7.5rem 5rem;
+      min-height: 27.375rem;
+      padding: 0 7.5rem;
     }
 
     .about-hero__marquee {
