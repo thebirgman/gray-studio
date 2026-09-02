@@ -260,11 +260,11 @@
         "padding-block-end": 40,
         "padding-inline-start": 0,
         "padding-inline-end": 0,
-        "use_mobile_padding": false,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
-        "padding-inline-start-mobile": 0,
-        "padding-inline-end-mobile": 0
+        "use_mobile_padding": true,
+        "padding-block-start-mobile": 60,
+        "padding-block-end-mobile": 60,
+        "padding-inline-start-mobile": 13,
+        "padding-inline-end-mobile": 13
       }
     },
     "trust_strip_GdBfF3": {
