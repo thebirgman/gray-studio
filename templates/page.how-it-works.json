@@ -297,8 +297,8 @@
             "icon_asset": "",
             "title": "Real help if you get stuck",
             "description": "Have a question partway through? Reach out anytime, a person answers.",
-            "link_text": "",
-            "link_url": ""
+            "link_text": "Reach out anytime",
+            "link_url": "shopify://pages/contact"
           }
         }
       },
