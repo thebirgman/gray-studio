@@ -12,8 +12,10 @@
     "breadcrumbs": {
       "type": "breadcrumbs",
       "settings": {
+        "home_label": "",
         "product_category_source": "auto",
         "separator": "/",
+        "background_color": "",
         "section_width": "page-width",
         "padding-block-start": 24,
         "padding-block-end": 8,
@@ -34,29 +36,47 @@
           "name": "Title",
           "settings": {
             "text": "<h1>{{ closest.page.title }}</h1>",
+            "mobile_text": "",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
+            "height_mode": "auto",
+            "desktop_height": "",
+            "mobile_height": "",
             "type_preset": "h2",
             "font": "var(--font-primary--family)",
+            "enable_custom_font_weight": false,
+            "weight": "400",
             "font_size": "",
             "line_height": "normal",
+            "custom_line_height": 1.5,
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
+            "type_preset_mobile": "rte",
+            "mobile_font_size": "1rem",
+            "mobile_custom_line_height": 1.5,
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "use_mobile_padding": false,
+            "padding-block-start-mobile": 0,
+            "padding-block-end-mobile": 0,
+            "padding-inline-start-mobile": 0,
+            "padding-inline-end-mobile": 0
           },
           "blocks": {}
         },
         "page-content": {
           "type": "page-content",
-          "settings": {},
+          "settings": {
+            "text_color": ""
+          },
           "blocks": {}
         }
       },
@@ -64,16 +84,77 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
+        "background_color": "",
         "padding-block-start": 40,
         "padding-block-end": 80
+      }
+    },
+    "step_by_step_E4ffKH": {
+      "type": "step-by-step",
+      "blocks": {
+        "step_rWUg7C": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-1.svg",
+            "title": "Pick a scene",
+            "description": "Choose from 40+ destinations, browsed by place or by mood."
+          }
+        },
+        "step_QezpMY": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-2.svg",
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
+          }
+        },
+        "step_pAEE4G": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-3.svg",
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        "step_DQECTk": {
+          "type": "step",
+          "settings": {
+            "icon_asset": "step-by-step-icon-4.svg",
+            "title": "Pick a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
+          }
+        }
+      },
+      "block_order": [
+        "step_rWUg7C",
+        "step_QezpMY",
+        "step_pAEE4G",
+        "step_DQECTk"
+      ],
+      "name": "t:names.steps",
+      "settings": {
+        "image_asset": "step-by-step-portrait.jpg",
+        "image_alt": "Custom pup portrait",
+        "image_shape": "rectangle",
+        "heading": "",
+        "show_numbers": true,
+        "background_color": "#fffdf8",
+        "wave_color": "#e8dff1",
+        "card_background": "#ffffff",
+        "title_color": "#242027",
+        "text_color": "#605c64",
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     }
   },
   "order": [
     "breadcrumbs",
-    "main"
+    "main",
+    "step_by_step_E4ffKH"
   ]
 }
