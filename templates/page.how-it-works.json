@@ -2403,7 +2403,7 @@
                         "text": "<p>Nothing goes to print until you say so.<br/>Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
                         "mobile_text": "<p>Nothing goes to print until you say so. Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
                         "width": "fit-content",
-                        "max_width": "normal",
+                        "max_width": "none",
                         "alignment": "left",
                         "height_mode": "auto",
                         "desktop_height": "",
