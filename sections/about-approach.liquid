@@ -5,9 +5,12 @@
   assign overlay_color = section.settings.overlay_color | default: '#242027'
   assign overlay_opacity = section.settings.overlay_opacity | default: 55
   assign rule_color = section.settings.rule_color | default: '#FFFDF8'
-  assign image = section.settings.image
-  assign image_asset = section.settings.image_asset | default: 'about-approach.jpg'
+  assign desktop_image = section.settings.image
+  assign mobile_image = section.settings.mobile_image
+  assign desktop_asset = section.settings.image_asset | default: 'about-approach.jpg'
+  assign mobile_asset = section.settings.mobile_image_asset | default: 'about-approach-mobile.jpg'
   assign image_alt = section.settings.image_alt | default: ''
+  assign overlay_opacity = overlay_opacity | times: 0.01
 
   if section.settings.overlay_color != blank
     assign overlay_rgb = section.settings.overlay_color.rgb
@@ -24,33 +27,52 @@
     --aa-rule: {{ rule_color }};
     --aa-overlay: {{ overlay_color }};
     --aa-overlay-rgb: {{ overlay_rgb }};
-    --aa-overlay-opacity: {{ overlay_opacity | times: 0.01 }};
+    --aa-overlay-opacity: {{ overlay_opacity }};
     --color: {{ text_color }};
     --color-foreground: {{ text_color }};
   "
 >
   <div class="about-approach__media" aria-hidden="true">
-    {%- if image != blank -%}
-      {{
-        image
-        | image_url: width: 2880
-        | image_tag:
-          class: 'about-approach__img',
-          widths: '750, 1100, 1600, 2000, 2400, 2880',
-          sizes: '100vw',
-          loading: 'lazy',
-          alt: image_alt
-      }}
-    {%- else -%}
-      <img
-        class="about-approach__img"
-        src="{{ image_asset | asset_url }}"
-        alt="{{ image_alt | escape }}"
-        width="2880"
-        height="1200"
-        loading="lazy"
-      >
-    {%- endif -%}
+    <picture>
+      {%- if mobile_image != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ mobile_image | image_url: width: 750 }} 750w,
+            {{ mobile_image | image_url: width: 1100 }} 1100w,
+            {{ mobile_image | image_url: width: 1500 }} 1500w
+          "
+          sizes="100vw"
+        >
+      {%- elsif mobile_asset != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mobile_asset | asset_url }}"
+        >
+      {%- endif -%}
+
+      {%- if desktop_image != blank -%}
+        {{
+          desktop_image
+          | image_url: width: 2880
+          | image_tag:
+            class: 'about-approach__img',
+            widths: '750, 1100, 1600, 2000, 2400, 2880',
+            sizes: '100vw',
+            loading: 'lazy',
+            alt: image_alt
+        }}
+      {%- else -%}
+        <img
+          class="about-approach__img"
+          src="{{ desktop_asset | asset_url }}"
+          alt="{{ image_alt | escape }}"
+          width="2880"
+          height="1200"
+          loading="lazy"
+        >
+      {%- endif -%}
+    </picture>
     <div class="about-approach__overlay" aria-hidden="true"></div>
   </div>
 
@@ -106,10 +128,14 @@
     z-index: 0;
   }
 
+  .about-approach__media picture,
   .about-approach__img {
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  .about-approach__img {
     object-fit: cover;
     object-position: center center;
   }
@@ -253,14 +279,26 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background image"
+      "label": "Desktop background"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile background"
     },
     {
       "type": "text",
       "id": "image_asset",
-      "label": "Image asset filename",
+      "label": "Desktop image asset filename",
       "default": "about-approach.jpg",
-      "info": "Used when no image is selected"
+      "info": "Used when no desktop image is selected"
+    },
+    {
+      "type": "text",
+      "id": "mobile_image_asset",
+      "label": "Mobile image asset filename",
+      "default": "about-approach-mobile.jpg",
+      "info": "Used when no mobile image is selected"
     },
     {
       "type": "text",

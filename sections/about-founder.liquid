@@ -6,11 +6,19 @@
   assign panel_color = section.settings.panel_color | default: '#321C41'
   assign text_color = section.settings.text_color | default: '#F8F5FB'
   assign page_color = section.settings.page_color | default: '#FFFDF8'
-  assign desktop_image = section.settings.image
+  assign desktop_image = section.settings.desktop_image | default: section.settings.image
   assign mobile_image = section.settings.mobile_image
-  assign desktop_asset = section.settings.image_asset | default: 'about-founder.jpg'
+  assign desktop_asset = section.settings.desktop_image_asset | default: section.settings.image_asset | default: 'about-founder.jpg'
   assign mobile_asset = section.settings.mobile_image_asset | default: 'about-founder-mobile.jpg'
   assign image_alt = section.settings.image_alt | default: 'Kathryn Gray'
+  assign has_mobile_media = false
+  if mobile_image != blank or mobile_asset != blank
+    assign has_mobile_media = true
+  endif
+  assign desktop_image_class = 'about-founder__img'
+  if has_mobile_media
+    assign desktop_image_class = 'about-founder__img about-founder__img--desktop'
+  endif
 -%}
 
 {% render 'contrast-override',
@@ -30,45 +38,51 @@
 >
   <div class="about-founder__inner">
     <div class="about-founder__media">
-      <picture>
-        {%- if mobile_image != blank -%}
-          <source
-            media="(max-width: 749px)"
-            srcset="
-              {{ mobile_image | image_url: width: 736 }} 736w,
-              {{ mobile_image | image_url: width: 1104 }} 1104w
-            "
-            sizes="(max-width: 749px) calc(100vw - 22px), 600px"
-          >
-        {%- else -%}
-          <source
-            media="(max-width: 749px)"
-            srcset="{{ mobile_asset | asset_url }}"
-          >
-        {%- endif -%}
+      {%- if desktop_image != blank -%}
+        {{
+          desktop_image
+          | image_url: width: 1600
+          | image_tag:
+            class: desktop_image_class,
+            widths: '600, 800, 1200, 1600',
+            sizes: '(min-width: 750px) min(600px, 50vw), calc(100vw - 22px)',
+            loading: 'lazy',
+            alt: image_alt
+        }}
+      {%- else -%}
+        <img
+          class="{{ desktop_image_class }}"
+          src="{{ desktop_asset | asset_url }}"
+          alt="{{ image_alt | escape }}"
+          width="1200"
+          height="1200"
+          loading="lazy"
+        >
+      {%- endif -%}
 
-        {%- if desktop_image != blank -%}
+      {%- if has_mobile_media -%}
+        {%- if mobile_image != blank -%}
           {{
-            desktop_image
-            | image_url: width: 1200
+            mobile_image
+            | image_url: width: 1104
             | image_tag:
-              class: 'about-founder__img',
-              widths: '600, 800, 1200, 1600',
-              sizes: '(min-width: 750px) min(600px, 50vw), calc(100vw - 22px)',
+              class: 'about-founder__img about-founder__img--mobile',
+              widths: '736, 1104',
+              sizes: 'calc(100vw - 22px)',
               loading: 'lazy',
               alt: image_alt
           }}
         {%- else -%}
           <img
-            class="about-founder__img"
-            src="{{ desktop_asset | asset_url }}"
+            class="about-founder__img about-founder__img--mobile"
+            src="{{ mobile_asset | asset_url }}"
             alt="{{ image_alt | escape }}"
-            width="1200"
+            width="736"
             height="1200"
             loading="lazy"
           >
         {%- endif -%}
-      </picture>
+      {%- endif -%}
     </div>
 
     <div class="about-founder__panel color-custom-{{ section.id }}">
@@ -117,16 +131,22 @@
     overflow: hidden;
   }
 
-  .about-founder__media picture,
   .about-founder__img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
-  }
-
-  .about-founder__img {
     object-fit: cover;
     object-position: center;
+  }
+
+  .about-founder__img--desktop {
+    display: none;
+  }
+
+  .about-founder__img--mobile {
+    display: block;
   }
 
   .about-founder__panel {
@@ -225,6 +245,14 @@
       aspect-ratio: 1 / 1;
     }
 
+    .about-founder__img--desktop {
+      display: block;
+    }
+
+    .about-founder__img--mobile {
+      display: none;
+    }
+
     .about-founder__panel {
       order: 1;
       aspect-ratio: 1 / 1;
@@ -274,17 +302,18 @@
     },
     {
       "type": "image_picker",
-      "id": "image",
+      "id": "desktop_image",
       "label": "Desktop image"
     },
     {
       "type": "image_picker",
       "id": "mobile_image",
-      "label": "Mobile image"
+      "label": "Mobile image",
+      "info": "Shown below 750px. Uses the desktop image if none is selected."
     },
     {
       "type": "text",
-      "id": "image_asset",
+      "id": "desktop_image_asset",
       "label": "Desktop image asset filename",
       "default": "about-founder.jpg",
       "info": "Used when no desktop image is selected"
