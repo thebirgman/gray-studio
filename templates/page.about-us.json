@@ -15,9 +15,9 @@
         "heading": "About us",
         "heading_tag": "h1",
         "marquee_text": "About us",
-        "background_color": "#FBEECA",
+        "background_color": "#fbeeca",
         "heading_color": "#733014",
-        "marquee_color": "#FEF9EC"
+        "marquee_color": "#fef9ec"
       }
     },
     "about_founder": {
@@ -27,11 +27,14 @@
         "greeting": "Dear friend,",
         "letter": "<p>I started Pups Around the World because I've spent twenty-five years painting people's favorite places, and somewhere along the way I noticed the thing missing from most portraits wasn't the person. It was their dog.</p><p>I curate every scene in this collection myself, the palette, the light, the mood, long before your pup ever steps into it. Paris isn't Paris because a prompt said so. It's Paris because I know what that light actually looks like in the evening, and I wanted your dog standing in it.</p><p>I still believe the artist should lead and the tools should follow, not the other way around. That's the whole idea behind every portrait here: your dog, painted the way I'd paint anyone I loved, somewhere I'd want to send them.</p>",
         "signature": "~ Kathryn Gray",
+        "desktop_image": "shopify://shop_images/frame_2147228250.webp",
+        "mobile_image": "shopify://shop_images/frame_2147228250_1.webp",
+        "desktop_image_asset": "about-founder.jpg",
         "mobile_image_asset": "about-founder-mobile.jpg",
         "image_alt": "Kathryn Gray",
-        "page_color": "#FFFDF8",
-        "panel_color": "#321C41",
-        "text_color": "#F8F5FB"
+        "page_color": "#fffdf8",
+        "panel_color": "#321c41",
+        "text_color": "#f8f5fb"
       }
     },
     "about_statement": {
@@ -39,8 +42,8 @@
       "settings": {
         "quote": "We create portraits that feel personal,\nconsidered, and worth keeping",
         "squiggle_asset": "about-quote-squiggle.svg",
-        "background_color": "#FFFDF8",
-        "quote_color": "#6FA5DF"
+        "background_color": "#fffdf8",
+        "quote_color": "#6fa5df"
       }
     },
     "about_approach": {
@@ -76,10 +79,13 @@
       "settings": {
         "eyebrow": "OUR APPROACH",
         "heading": "Art first, always",
+        "image": "shopify://shop_images/Rectangle_4003.jpg",
+        "mobile_image": "shopify://shop_images/06_moods.webp",
         "image_asset": "about-approach.jpg",
+        "mobile_image_asset": "about-approach-mobile.jpg",
         "image_alt": "",
-        "text_color": "#F8F5FB",
-        "rule_color": "#FFFDF8",
+        "text_color": "#f8f5fb",
+        "rule_color": "#fffdf8",
         "overlay_color": "#242027",
         "overlay_opacity": 55
       }
