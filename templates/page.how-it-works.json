@@ -2400,8 +2400,8 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Nothing goes to print until you say so.<br/>Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
-                        "mobile_text": "<p>Nothing goes to print until you say so. Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
+                        "text": "<p>Nothing goes to print until you say so. Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
+                        "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "none",
                         "alignment": "left",
