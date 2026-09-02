@@ -98,9 +98,9 @@
 
   .page-hero__marquee-track {
     display: flex;
+    align-items: flex-start;
     width: max-content;
-    height: 100%;
-    align-items: flex-end;
+    margin-top: 2.5rem;
     gap: 4rem;
   }
 
@@ -110,7 +110,7 @@
     font-family: 'Alex Brush', cursive;
     font-size: 10.5rem;
     font-weight: 400;
-    line-height: 0.67;
+    line-height: 1;
     color: var(--ph-marquee, #fef9ec);
     white-space: nowrap;
   }
@@ -154,9 +154,13 @@
       height: 14.3125rem;
     }
 
+    .page-hero__marquee-track {
+      margin-top: -2.1875rem;
+    }
+
     .page-hero__marquee-text {
       font-size: 21.5625rem;
-      line-height: 1;
+      line-height: 26.9375rem;
     }
 
     .page-hero__heading {

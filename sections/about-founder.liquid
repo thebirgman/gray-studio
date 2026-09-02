@@ -16,12 +16,11 @@
 {% render 'contrast-override',
   background_color: panel_color,
   text_color: text_color,
-  section_id: section.id,
-  skip_contrast: true
+  section_id: section.id
 %}
 
 <div
-  class="about-founder color-custom-{{ section.id }}"
+  class="about-founder"
   id="AboutFounder-{{ section.id }}"
   style="
     --af-page: {{ page_color }};
@@ -72,7 +71,7 @@
       </picture>
     </div>
 
-    <div class="about-founder__panel">
+    <div class="about-founder__panel color-custom-{{ section.id }}">
       <div class="about-founder__content">
         {%- if eyebrow != blank or greeting != blank -%}
           <div class="about-founder__intro">
