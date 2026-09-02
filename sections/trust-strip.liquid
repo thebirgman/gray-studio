@@ -1,9 +1,30 @@
 {%- liquid
   assign background_color = section.settings.background_color | default: '#C8AFDE'
   assign text_color = section.settings.text_color | default: '#321C41'
+
+  assign is_boxed = false
+  if section.settings.section_width == 'boxed'
+    assign is_boxed = true
+  endif
+
+  assign mobile_full_width = section.settings.mobile_full_width
+
+  assign corner_radius = 0
+  if is_boxed
+    assign corner_radius = section.settings.border_radius
+  endif
+  assign corner_radius_rem = corner_radius | divided_by: 16.0
+
+  assign dots_offset_bottom_rem = section.settings.dots_offset_bottom_mobile | divided_by: 16.0
+
   assign show_dots = false
   if section.blocks.size > 1
     assign show_dots = true
+  endif
+
+  assign pin_dots = false
+  if show_dots and section.settings.dots_pin_bottom
+    assign pin_dots = true
   endif
 -%}
 
@@ -20,106 +41,126 @@
   skip_contrast: true
 %}
 
-<div
-  class="section-background color-custom-{{ section.id }}"
-  style="background-color: {{ background_color }};"
-></div>
+{%- unless is_boxed -%}
+  <div
+    class="section-background color-custom-{{ section.id }}"
+    style="background-color: {{ background_color }};"
+  ></div>
+{%- endunless -%}
 
 <trust-strip-component
   class="
     section
-    section--full-width
     trust-strip
     color-custom-{{ section.id }}
-    spacing-style
+    {% if is_boxed %}
+      section--page-width
+      trust-strip--boxed
+      {% if mobile_full_width %}section--mobile-full-width trust-strip--mobile-full{% endif %}
+    {% else %}
+      section--full-width
+    {% endif %}
+    {% if pin_dots %}trust-strip--dots-pinned{% endif %}
   "
   style="
-    {% render 'spacing-style', settings: section.settings %}
     --trust-strip-bg: {{ background_color }};
     --trust-strip-text: {{ text_color }};
-    background-color: {{ background_color }};
+    --trust-strip-radius: {{ corner_radius_rem }}rem;
+    --trust-strip-dots-offset-bottom: {{ dots_offset_bottom_rem }}rem;
+    {%- if section.settings.dot_active_color != blank %}
+      --trust-strip-dot-active: {{ section.settings.dot_active_color }};
+    {%- endif %}
+    {%- if section.settings.dot_inactive_color != blank %}
+      --trust-strip-dot-inactive: {{ section.settings.dot_inactive_color }};
+      --trust-strip-dot-inactive-bg: {{ section.settings.dot_inactive_color }};
+    {%- endif %}
   "
 >
-  <ul
-    class="trust-strip__list"
-    role="list"
-    ref="track"
+  <div
+    class="trust-strip__inner spacing-style"
+    style="{% render 'spacing-style', settings: section.settings %}"
   >
-    {%- for block in section.blocks -%}
-      {%- liquid
-        assign icon = block.settings.icon
-        assign icon_asset = block.settings.icon_asset
-        if icon_asset == blank
-          case forloop.index
-            when 1
-              assign icon_asset = 'trust-strip-icon-brush.svg'
-            when 2
-              assign icon_asset = 'trust-strip-icon-heart.svg'
-            when 3
-              assign icon_asset = 'trust-strip-icon-box.svg'
-            else
-              assign icon_asset = 'trust-strip-icon-brush.svg'
-          endcase
-        endif
-      -%}
-      <li
-        class="trust-strip__item"
-        data-trust-item
-        {{ block.shopify_attributes }}
-      >
-        <div class="trust-strip__icon" aria-hidden="true">
-          {%- if icon != blank -%}
-            {{
-              icon
-              | image_url: width: 100
-              | image_tag:
-                class: 'trust-strip__icon-img',
-                widths: '50, 100',
-                sizes: '50px',
-                loading: 'lazy',
-                alt: ''
-            }}
-          {%- else -%}
-            <img
-              class="trust-strip__icon-img"
-              src="{{ icon_asset | asset_url }}"
-              alt=""
-              width="50"
-              height="50"
-              loading="lazy"
-            >
-          {%- endif -%}
-        </div>
-
-        <div class="trust-strip__copy">
-          {%- if block.settings.title != blank -%}
-            <p class="trust-strip__title">{{ block.settings.title }}</p>
-          {%- endif -%}
-          {%- if block.settings.description != blank -%}
-            <p class="trust-strip__description">{{ block.settings.description }}</p>
-          {%- endif -%}
-        </div>
-      </li>
-    {%- endfor -%}
-  </ul>
-
-  {%- if show_dots -%}
-    <div
-      class="trust-strip__dots"
-      ref="dots"
-      role="tablist"
-      aria-label="{{ section.settings.dots_label | default: 'Trust highlights' | escape }}"
+    <ul
+      class="trust-strip__list"
+      role="list"
+      ref="track"
     >
       {%- for block in section.blocks -%}
-        <button
-          type="button"
-          class="trust-strip__dot"
-          aria-label="Go to highlight {{ forloop.index }}"
-          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-        ></button>
+        {%- liquid
+          assign icon = block.settings.icon
+          assign icon_asset = block.settings.icon_asset
+          if icon_asset == blank
+            case forloop.index
+              when 1
+                assign icon_asset = 'trust-strip-icon-brush.svg'
+              when 2
+                assign icon_asset = 'trust-strip-icon-heart.svg'
+              when 3
+                assign icon_asset = 'trust-strip-icon-box.svg'
+              else
+                assign icon_asset = 'trust-strip-icon-brush.svg'
+            endcase
+          endif
+        -%}
+        <li
+          class="trust-strip__item"
+          data-trust-item
+          {{ block.shopify_attributes }}
+        >
+          <div class="trust-strip__icon" aria-hidden="true">
+            {%- if icon != blank -%}
+              {{
+                icon
+                | image_url: width: 100
+                | image_tag:
+                  class: 'trust-strip__icon-img',
+                  widths: '50, 100',
+                  sizes: '50px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              <img
+                class="trust-strip__icon-img"
+                src="{{ icon_asset | asset_url }}"
+                alt=""
+                width="50"
+                height="50"
+                loading="lazy"
+              >
+            {%- endif -%}
+          </div>
+
+          <div class="trust-strip__copy">
+            {%- if block.settings.title != blank -%}
+              <p class="trust-strip__title">{{ block.settings.title }}</p>
+            {%- endif -%}
+            {%- if block.settings.description != blank -%}
+              <p class="trust-strip__description">{{ block.settings.description }}</p>
+            {%- endif -%}
+          </div>
+        </li>
       {%- endfor -%}
-    </div>
-  {%- endif -%}
+    </ul>
+
+    {%- if show_dots -%}
+      <div
+        class="trust-strip__dots"
+        ref="dots"
+        role="tablist"
+        aria-label="{{ section.settings.dots_label | default: 'Trust highlights' | escape }}"
+      >
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            class="trust-strip__dot"
+            aria-label="Go to highlight {{ forloop.index }}"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
 </trust-strip-component>
 
 {% stylesheet %}
@@ -127,6 +168,18 @@
     position: relative;
     overflow: hidden;
     color: var(--trust-strip-text, #321c41);
+  }
+
+  .trust-strip.trust-strip--boxed {
+    --full-page-grid-central-column-width: min(75rem, calc(100% - var(--page-margin) * 2));
+
+    background-color: transparent;
+  }
+
+  .trust-strip__inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--trust-strip-radius, 0);
     background-color: var(--trust-strip-bg, #c8afde);
   }
 
@@ -230,20 +283,34 @@
     height: 0.4375rem;
     margin: 0;
     padding: 0;
-    border: 0.5px solid var(--trust-strip-text, #321c41);
+    border: 0.03125rem solid var(--trust-strip-dot-inactive, var(--trust-strip-text, #321c41));
     border-radius: 50%;
-    background: transparent;
+    background: var(--trust-strip-dot-inactive-bg, transparent);
     cursor: pointer;
   }
 
   .trust-strip__dot[aria-current='true'] {
-    border-color: transparent;
-    background: var(--trust-strip-text, #321c41);
+    border-color: var(--trust-strip-dot-active, transparent);
+    background: var(--trust-strip-dot-active, var(--trust-strip-text, #321c41));
   }
 
   .trust-strip__dot:focus-visible {
-    outline: 2px solid var(--trust-strip-text, #321c41);
-    outline-offset: 2px;
+    outline: 0.125rem solid var(--trust-strip-text, #321c41);
+    outline-offset: 0.125rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .trust-strip--mobile-full .trust-strip__inner {
+      border-radius: 0;
+    }
+
+    .trust-strip--dots-pinned .trust-strip__dots {
+      position: absolute;
+      inset-inline: 0;
+      bottom: var(--trust-strip-dots-offset-bottom, 0rem);
+      width: auto;
+      margin: 0;
+    }
   }
 
   @media screen and (min-width: 750px) {
@@ -282,6 +349,49 @@
   },
   "settings": [
     {
+      "type": "header",
+      "content": "t:content.layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "full-width",
+          "label": "t:options.full"
+        },
+        {
+          "value": "boxed",
+          "label": "Boxed"
+        }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_width",
+      "label": "Full width on mobile",
+      "info": "Keeps the strip edge to edge below 750px. Corners stay square while full width.",
+      "default": true,
+      "visible_if": "{{ section.settings.section_width == 'boxed' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.section_width == 'boxed' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
       "type": "color",
       "id": "background_color",
       "label": "t:settings.background_color",
@@ -294,10 +404,45 @@
       "default": "#321C41"
     },
     {
+      "type": "header",
+      "content": "Carousel dots"
+    },
+    {
       "type": "text",
       "id": "dots_label",
       "label": "Carousel dots label",
       "default": "Trust highlights"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "info": "Leave empty to use the text color.",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "color",
+      "id": "dot_inactive_color",
+      "label": "Inactive dot color",
+      "info": "Leave empty to keep the outlined dots.",
+      "placeholder": "t:settings.default"
+    },
+    {
+      "type": "checkbox",
+      "id": "dots_pin_bottom",
+      "label": "Pin dots to the bottom on mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "dots_offset_bottom_mobile",
+      "label": "Dots offset from bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 20,
+      "visible_if": "{{ section.settings.dots_pin_bottom }}"
     },
     {
       "type": "header",
@@ -430,8 +575,13 @@
       "name": "t:names.trust_strip",
       "category": "t:categories.other_sections",
       "settings": {
+        "section_width": "full-width",
+        "mobile_full_width": true,
+        "border_radius": 0,
         "background_color": "#C8AFDE",
         "text_color": "#321C41",
+        "dots_pin_bottom": false,
+        "dots_offset_bottom_mobile": 20,
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-inline-start": 120,
