@@ -482,9 +482,9 @@
                       "settings": {
                         "text": "<p>The scene stays true to what you see</p>",
                         "mobile_text": "",
-                        "width": "fit-content",
+                        "width": "100%",
                         "max_width": "none",
-                        "alignment": "left",
+                        "alignment": "center",
                         "height_mode": "auto",
                         "desktop_height": "",
                         "mobile_height": "",
