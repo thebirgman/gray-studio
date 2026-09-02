@@ -207,12 +207,33 @@
         "brand_color": "#321c41",
         "border_color": "#d9d6db"
       }
+    },
+    "join_the_pack_8bny6Q": {
+      "type": "join-the-pack",
+      "name": "Join the Pack",
+      "settings": {
+        "heading": "Join the Pack",
+        "description": "Collect a daisy stamp with every commission. The sixth portrait is on us, plus early access to new scenes.",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "background_image": "shopify://shop_images/Frame_2147228212.png",
+        "inset_image": "shopify://shop_images/Rectangle_5.png",
+        "background_image_asset": "join-the-pack-bg.jpg",
+        "inset_image_asset": "join-the-pack-inset.jpg",
+        "inset_image_alt": "Pup sitting on a fountain with a croissant and coffee",
+        "panel_color": "#faf8f0",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "input_border": "#d9d6db",
+        "placeholder_color": "#918d95"
+      }
     }
   },
   "order": [
     "breadcrumbs",
     "main",
     "step_by_step_E4ffKH",
-    "faqs_G8cBzE"
+    "faqs_G8cBzE",
+    "join_the_pack_8bny6Q"
   ]
 }
