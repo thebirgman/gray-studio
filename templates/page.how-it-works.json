@@ -263,11 +263,11 @@
                 "padding-block-end": 95,
                 "padding-inline-start": 80,
                 "padding-inline-end": 80,
-                "use_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
+                "use_mobile_padding": true,
+                "padding-block-start-mobile": 49,
+                "padding-block-end-mobile": 49,
+                "padding-inline-start-mobile": 25,
+                "padding-inline-end-mobile": 25
               },
               "blocks": {
                 "text_8wtLE3": {
@@ -292,9 +292,9 @@
                     "letter_spacing": "normal",
                     "case": "none",
                     "wrap": "pretty",
-                    "type_preset_mobile": "rte",
-                    "mobile_font_size": "1rem",
-                    "mobile_custom_line_height": 1.5,
+                    "type_preset_mobile": "custom",
+                    "mobile_font_size": "1.5rem",
+                    "mobile_custom_line_height": 1.3,
                     "text_color": "",
                     "background": false,
                     "background_color": "#00000026",
