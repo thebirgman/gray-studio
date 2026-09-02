@@ -94,6 +94,17 @@
         "padding-block-end": 80
       }
     },
+    "page_hero_ADwFbC": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "How it works",
+        "heading_tag": "h1",
+        "marquee_text": "How it works",
+        "background_color": "#E3D8A4",
+        "heading_color": "#6B5919",
+        "marquee_color": "#FFFDF8"
+      }
+    },
     "step_by_step_E4ffKH": {
       "type": "step-by-step",
       "blocks": {
@@ -233,6 +244,7 @@
   "order": [
     "breadcrumbs",
     "main",
+    "page_hero_ADwFbC",
     "step_by_step_E4ffKH",
     "faqs_G8cBzE",
     "join_the_pack_8bny6Q"
