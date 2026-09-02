@@ -274,24 +274,25 @@
           "type": "trust_item",
           "settings": {
             "icon_asset": "trust-strip-icon-brush.svg",
-            "title": "No Risk of a Bad Fit",
-            "description": "Free preview first, then up to three free adjustments. Still off? Try a new photo."
+            "title": "No design skill needed",
+            "description": "We handle the scene, the style, and the composition. You just pick a destination and upload a photo."
           }
         },
         "trust_item_htGCnN": {
           "type": "trust_item",
           "settings": {
             "icon_asset": "trust-strip-icon-heart.svg",
-            "title": "Real Humans Who Love Dogs Too",
-            "description": "Questions about a scene, a photo, or an order? Reach us anytime by email or live chat."
+            "title": "See it before you pay, always",
+            "description": "Every scene includes a free preview with up to three tries. Nothing is charged until you approve it."
           }
         },
         "trust_item_H3hQ7h": {
           "type": "trust_item",
           "settings": {
-            "icon_asset": "trust-strip-icon-box.svg",
-            "title": "Worldwide Delivery",
-            "description": "We ship portraits globally with fully tracked shipping methods. Free shipping on all orders over $100!"
+            "icon": "shopify://shop_images/icon-message.svg",
+            "icon_asset": "",
+            "title": "Real help if you get stuck",
+            "description": "Have a question partway through? Reach out anytime, a person answers."
           }
         }
       },
@@ -310,8 +311,8 @@
         "padding-inline-start": 120,
         "padding-inline-end": 120,
         "use_mobile_padding": true,
-        "padding-block-start-mobile": 18,
-        "padding-block-end-mobile": 40,
+        "padding-block-start-mobile": 48,
+        "padding-block-end-mobile": 70,
         "padding-inline-start-mobile": 25,
         "padding-inline-end-mobile": 25
       }
@@ -1700,6 +1701,7 @@
         "group_slider_UNyHLM",
         "group_hiTEPt"
       ],
+      "disabled": true,
       "name": "t:names.custom_section",
       "settings": {
         "content_direction": "column",
