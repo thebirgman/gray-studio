@@ -275,7 +275,9 @@
           "settings": {
             "icon_asset": "trust-strip-icon-brush.svg",
             "title": "No design skill needed",
-            "description": "We handle the scene, the style, and the composition. You just pick a destination and upload a photo."
+            "description": "We handle the scene, the style, and the composition. You just pick a destination and upload a photo.",
+            "link_text": "",
+            "link_url": ""
           }
         },
         "trust_item_htGCnN": {
@@ -283,7 +285,9 @@
           "settings": {
             "icon_asset": "trust-strip-icon-heart.svg",
             "title": "See it before you pay, always",
-            "description": "Every scene includes a free preview with up to three tries. Nothing is charged until you approve it."
+            "description": "Every scene includes a free preview with up to three tries. Nothing is charged until you approve it.",
+            "link_text": "",
+            "link_url": ""
           }
         },
         "trust_item_H3hQ7h": {
@@ -292,7 +296,9 @@
             "icon": "shopify://shop_images/icon-message.svg",
             "icon_asset": "",
             "title": "Real help if you get stuck",
-            "description": "Have a question partway through? Reach out anytime, a person answers."
+            "description": "Have a question partway through? Reach out anytime, a person answers.",
+            "link_text": "",
+            "link_url": ""
           }
         }
       },
@@ -309,14 +315,14 @@
         "background_color": "#c8afde",
         "text_color": "#321c41",
         "dots_label": "Trust highlights",
-        "dot_active_color": "#321C41",
-        "dot_inactive_color": "#F8F5FB",
+        "dot_active_color": "#321c41",
+        "dot_inactive_color": "#f8f5fb",
         "dots_pin_bottom": true,
         "dots_offset_bottom_mobile": 20,
         "padding-block-start": 40,
         "padding-block-end": 40,
-        "padding-inline-start": 120,
-        "padding-inline-end": 120,
+        "padding-inline-start": 40,
+        "padding-inline-end": 40,
         "use_mobile_padding": true,
         "padding-block-start-mobile": 48,
         "padding-block-end-mobile": 70,
