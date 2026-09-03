@@ -1353,107 +1353,11 @@
         "padding-inline-end-mobile": 0
       }
     },
-    "form": {
-      "type": "section",
-      "blocks": {
-        "contact_form_UwiCkQ": {
-          "type": "contact-form",
-          "settings": {
-            "width": "custom",
-            "custom_width": 50,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "background_color": "",
-            "input_style": "default",
-            "input_background_color": "{{ settings.color_palette.background }}",
-            "input_text_color": "{{ settings.color_palette.foreground }}",
-            "input_border_color": "{{ settings.color_palette.foreground }}",
-            "border_width": 1,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "submit-button": {
-              "type": "contact-form-submit-button",
-              "static": true,
-              "settings": {
-                "label": "Submit",
-                "style_class": "button",
-                "custom_button_background": "{{ settings.color_palette.foreground }}",
-                "custom_button_text": "{{ settings.color_palette.background }}",
-                "custom_button_border": "{{ settings.color_palette.background }}",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        }
-      },
-      "block_order": [
-        "contact_form_UwiCkQ"
-      ],
-      "name": "t:names.contact_form",
+    "contact_panel": {
+      "type": "contact-panel",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 32,
-        "use_mobile_gap": false,
-        "mobile_gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "background_media": "none",
-        "background_color": "",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "floating_media_type": "image",
-        "floating_media_text": "",
-        "floating_media_text_preset": "paragraph",
-        "floating_media_text_preset_mobile": "",
-        "floating_media_text_alignment": "center",
-        "floating_media_text_padding_y": 8,
-        "floating_media_text_padding_x": 16,
-        "floating_media_width": 120,
-        "floating_media_anchor": "top-right",
-        "floating_media_offset_x": 0,
-        "floating_media_offset_y": 0,
-        "floating_media_rotation": 0,
-        "floating_media_hide_mobile": false,
-        "use_floating_media_mobile_settings": false,
-        "floating_media_width_mobile": 120,
-        "floating_media_anchor_mobile": "",
-        "floating_media_offset_x_mobile": 0,
-        "floating_media_offset_y_mobile": 0,
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_color": "",
-        "border_radius": 0,
-        "padding-block-start": 32,
-        "padding-block-end": 84,
-        "padding-inline-start": 0,
-        "padding-inline-end": 0,
-        "use_mobile_padding": false,
-        "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
-        "padding-inline-start-mobile": 0,
-        "padding-inline-end-mobile": 0
+        "background_image": "shopify://shop_images/contact-bg.webp",
+        "inset_image": "shopify://shop_images/contact-thumbnail.webp"
       }
     }
   },
@@ -1462,6 +1366,6 @@
     "page_hero_YWQCmG",
     "section_7iYPdn",
     "section_YGDYpc",
-    "form"
+    "contact_panel"
   ]
 }
