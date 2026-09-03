@@ -111,12 +111,12 @@
     "page_hero_YWQCmG": {
       "type": "page-hero",
       "settings": {
-        "heading": "About us",
+        "heading": "Get in touch",
         "heading_tag": "h1",
-        "marquee_text": "About us",
-        "background_color": "#fbeeca",
-        "heading_color": "#733014",
-        "marquee_color": "#fef9ec"
+        "marquee_text": "Get in touch",
+        "background_color": "#E2F09F",
+        "heading_color": "#595A1B",
+        "marquee_color": "#F9FCEA"
       }
     },
     "section_7iYPdn": {
