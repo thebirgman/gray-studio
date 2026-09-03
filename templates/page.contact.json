@@ -342,7 +342,7 @@
                 "custom_button_border": "#321C41",
                 "link_text_color": "",
                 "width": "fit-content",
-                "custom_width": 100,
+                "custom_width": 21,
                 "width_mobile": "fit-content",
                 "custom_width_mobile": 100
               },
@@ -690,7 +690,7 @@
                       "type": "text",
                       "name": "t:names.heading",
                       "settings": {
-                        "text": "<p>The scene stays true to what you see</p>",
+                        "text": "<p>How long does it take?</p>",
                         "mobile_text": "",
                         "width": "100%",
                         "max_width": "none",
@@ -731,7 +731,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Every destination has one fixed background, already painted. Your dog is what gets added, so the scene in the preview is the scene you'll get.</p>",
+                        "text": "<p>Free preview in minutes. Prints ship in 3–7 days.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
@@ -902,7 +902,7 @@
                       "type": "text",
                       "name": "t:names.heading",
                       "settings": {
-                        "text": "<p>You approve it before anything ships</p>",
+                        "text": "<p>What photo should I use?</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "none",
@@ -943,8 +943,8 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Nothing goes to print until you say so.<br/>Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
-                        "mobile_text": "<p>Nothing goes to print until you say so. Free preview, up to three tries per photo, and you're only charged once you've seen the exact piece.</p>",
+                        "text": "<p>One clear, well-lit photo of your pup's face is all it takes.</p>",
+                        "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "none",
                         "alignment": "left",
@@ -1114,7 +1114,7 @@
                       "type": "text",
                       "name": "t:names.heading",
                       "settings": {
-                        "text": "<p>Printed and shipped with care</p>",
+                        "text": "<p>Can I gift a portrait?</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "none",
@@ -1155,7 +1155,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Orders are fulfilled through our print partner and ship worldwide, free on orders over $100.</p>",
+                        "text": "<p>Yes, add a gift note at checkout or send the preview straight to them.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
