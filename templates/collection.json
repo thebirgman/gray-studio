@@ -418,13 +418,6 @@
               },
               "blocks": {}
             },
-            "product_eyebrow": {
-              "type": "product-eyebrow",
-              "settings": {
-                "text": ""
-              },
-              "blocks": {}
-            },
             "product_title_4nY4eT": {
               "type": "product-title",
               "name": "t:names.product_title",
@@ -486,7 +479,6 @@
           },
           "block_order": [
             "card-gallery",
-            "product_eyebrow",
             "product_title_4nY4eT",
             "price_EzJzMm"
           ]
