@@ -9,18 +9,66 @@
   {% render 'button-custom-styles', block_settings: block_settings, block_id: block.id %}
 {% enddoc %}
 
-{% if block_settings.style_class == 'button-unstyled' and block_settings.link_text_color != blank %}
-  {% style %}
-    .button-unstyled--{{ block_id }},
-    .email-signup__button.button-unstyled.button-unstyled--{{ block_id }} {
-      color: rgb({{ block_settings.link_text_color.rgba }});
-    }
+{% if block_settings.style_class == 'button-unstyled' %}
+  {%- liquid
+    assign has_link_overrides = false
+    if block_settings.link_text_color != blank
+      assign has_link_overrides = true
+    endif
+    if block_settings.link_hover_color != blank
+      assign has_link_overrides = true
+    endif
+    if block_settings.link_font_weight != blank
+      assign has_link_overrides = true
+    endif
+    if block_settings.link_font_size != blank
+      assign has_link_overrides = true
+    endif
+    if block_settings.link_font_family != blank
+      assign has_link_overrides = true
+    endif
 
-    .button-unstyled--{{ block_id }}:hover,
-    .email-signup__button.button-unstyled.button-unstyled--{{ block_id }}:hover {
-      color: rgb({{ block_settings.link_text_color.rgb }} / var(--opacity-70));
-    }
-  {% endstyle %}
+    if block_settings.link_hover_color != blank
+      capture link_hover_value
+        echo 'rgb('
+        echo block_settings.link_hover_color.rgba
+        echo ')'
+      endcapture
+    elsif block_settings.link_text_color != blank
+      capture link_hover_value
+        echo 'rgb('
+        echo block_settings.link_text_color.rgb
+        echo ' / var(--opacity-70))'
+      endcapture
+    endif
+  -%}
+
+  {% if has_link_overrides %}
+    {% style %}
+      .button-unstyled.button-unstyled--{{ block_id }},
+      .email-signup__button.button-unstyled.button-unstyled--{{ block_id }} {
+        {% if block_settings.link_text_color != blank %}
+          color: rgb({{ block_settings.link_text_color.rgba }});
+        {% endif %}
+        {% if block_settings.link_font_weight != blank %}
+          font-weight: {{ block_settings.link_font_weight }};
+        {% endif %}
+        {% if block_settings.link_font_size != blank %}
+          font-size: {{ block_settings.link_font_size }};
+        {% endif %}
+        {% if block_settings.link_font_family != blank %}
+          font-family: {{ block_settings.link_font_family }};
+        {% endif %}
+      }
+
+      {% if link_hover_value != blank %}
+        .button-unstyled.button-unstyled--{{ block_id }}:hover,
+        .email-signup__button.button-unstyled.button-unstyled--{{ block_id }}:hover {
+          color: {{ link_hover_value }};
+        }
+      {% endif %}
+    {% endstyle %}
+  {% endif %}
 {% endif %}
 
 {% if block_settings.style_class == 'button-custom' %}
@@ -42,7 +90,10 @@
     {% render 'resolve-custom-hover',
       base_bg: effective_background_color,
       base_text: effective_text_color,
-      base_border: effective_border_color
+      base_border: effective_border_color,
+      hover_bg: block_settings.custom_button_background_hover,
+      hover_text: block_settings.custom_button_text_hover,
+      hover_border: block_settings.custom_button_border_hover
     %}
   {%- endcapture -%}
   {%- assign hover_parts = hover_resolved | strip | split: '||' -%}

@@ -11,6 +11,23 @@
 {% assign block_settings = block.settings %}
 {% render 'button-custom-styles', block_settings: block_settings, block_id: block.id %}
 
+{% liquid
+  assign is_link_style = false
+  if block_settings.style_class == 'button-unstyled'
+    assign is_link_style = true
+  endif
+
+  assign show_link_icon = false
+  if is_link_style and block_settings.link_show_icon
+    assign show_link_icon = true
+  endif
+
+  assign show_link_underline = false
+  if is_link_style and block_settings.link_underline
+    assign show_link_underline = true
+  endif
+%}
+
 <a
   {% if link == blank %}
     role="link"
@@ -22,6 +39,8 @@
     size-style
     {{ block_settings.style_class }}
     {{ block_settings.style_class }}--{{ block.id }}
+    {% if show_link_underline %}button-link--underline{% endif %}
+    {% if show_link_icon %}button-link--with-icon{% endif %}
   "
   style="{% render 'size-style', settings: block_settings %}"
   {%- if block_settings.open_in_new_tab -%}
@@ -30,5 +49,44 @@
   {%- endif -%}
   {{ block.shopify_attributes }}
 >
-  {{ block_settings.label }}
+  {% if show_link_icon %}
+    <span class="button-link__label">{{ block_settings.label }}</span>
+    <span class="button-link__icon">
+      {%- render 'icon-arrow-right-long' -%}
+    </span>
+  {% else %}
+    {{ block_settings.label }}
+  {% endif %}
 </a>
+
+{% stylesheet %}
+  .button-unstyled.button-link--underline {
+    padding-block: 0.25rem;
+    border-bottom: 0.03125rem solid currentColor;
+    line-height: 1;
+    overflow: visible;
+  }
+
+  .button-unstyled.button-link--with-icon {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .button-link__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .button-link__icon svg {
+    display: block;
+    width: 0.84375rem;
+    height: 0.515625rem;
+  }
+{% endstylesheet %}

@@ -344,7 +344,10 @@
                 "width": "fit-content",
                 "custom_width": 21,
                 "width_mobile": "fit-content",
-                "custom_width_mobile": 100
+                "custom_width_mobile": 100,
+                "custom_button_background_hover": "#321C41",
+                "custom_button_text_hover": "#FFFDF8",
+                "custom_button_border_hover": "#321C41"
               },
               "blocks": {}
             }
@@ -610,7 +613,7 @@
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 25,
-                "padding-block-end": 25,
+                "padding-block-end": 43,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "use_mobile_padding": false,
@@ -785,11 +788,17 @@
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
                     "custom_button_border": "{{ settings.color_palette.background }}",
-                    "link_text_color": "",
+                    "link_text_color": "#595A1B",
                     "width": "fit-content",
                     "custom_width": 100,
                     "width_mobile": "fit-content",
-                    "custom_width_mobile": 100
+                    "custom_width_mobile": 100,
+                    "link_underline": true,
+                    "link_font_family": "var(--font-accent--family)",
+                    "link_font_size": "0.9375rem",
+                    "link_font_weight": "700",
+                    "link_show_icon": true,
+                    "link_hover_color": "#8855AA"
                   },
                   "blocks": {}
                 }
@@ -842,7 +851,7 @@
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 25,
-                "padding-block-end": 25,
+                "padding-block-end": 43,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "use_mobile_padding": false,
@@ -1017,11 +1026,17 @@
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
                     "custom_button_border": "{{ settings.color_palette.background }}",
-                    "link_text_color": "",
+                    "link_text_color": "#595A1B",
                     "width": "fit-content",
                     "custom_width": 100,
                     "width_mobile": "fit-content",
-                    "custom_width_mobile": 100
+                    "custom_width_mobile": 100,
+                    "link_underline": true,
+                    "link_font_family": "var(--font-accent--family)",
+                    "link_font_size": "0.9375rem",
+                    "link_font_weight": "700",
+                    "link_show_icon": true,
+                    "link_hover_color": "#8855AA"
                   },
                   "blocks": {}
                 }
@@ -1074,7 +1089,7 @@
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 25,
-                "padding-block-end": 25,
+                "padding-block-end": 43,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "use_mobile_padding": false,
@@ -1249,11 +1264,17 @@
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
                     "custom_button_border": "{{ settings.color_palette.background }}",
-                    "link_text_color": "",
+                    "link_text_color": "#595A1B",
                     "width": "fit-content",
                     "custom_width": 100,
                     "width_mobile": "fit-content",
-                    "custom_width_mobile": 100
+                    "custom_width_mobile": 100,
+                    "link_underline": true,
+                    "link_font_family": "var(--font-accent--family)",
+                    "link_font_size": "0.9375rem",
+                    "link_font_weight": "700",
+                    "link_show_icon": true,
+                    "link_hover_color": "#8855AA"
                   },
                   "blocks": {}
                 }
@@ -1282,11 +1303,17 @@
             "custom_button_background": "{{ settings.color_palette.foreground }}",
             "custom_button_text": "{{ settings.color_palette.background }}",
             "custom_button_border": "{{ settings.color_palette.background }}",
-            "link_text_color": "",
+            "link_text_color": "#321C41",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
-            "custom_width_mobile": 100
+            "custom_width_mobile": 100,
+            "link_underline": true,
+            "link_font_family": "var(--font-accent--family)",
+            "link_font_size": "0.9375rem",
+            "link_font_weight": "700",
+            "link_show_icon": false,
+            "link_hover_color": "#8855AA"
           },
           "blocks": {}
         }
@@ -1343,12 +1370,12 @@
         "border_color": "",
         "border_radius": 0,
         "padding-block-start": 0,
-        "padding-block-end": 40,
+        "padding-block-end": 80,
         "padding-inline-start": 0,
         "padding-inline-end": 0,
-        "use_mobile_padding": false,
+        "use_mobile_padding": true,
         "padding-block-start-mobile": 0,
-        "padding-block-end-mobile": 0,
+        "padding-block-end-mobile": 60,
         "padding-inline-start-mobile": 0,
         "padding-inline-end-mobile": 0
       }
