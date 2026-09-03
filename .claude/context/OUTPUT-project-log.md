@@ -49,3 +49,11 @@ The theme drives a **fluid root font-size**, so all rem values scale. This is wh
 No horizontal overflow at any width. Layout switches at 750px, matching the theme's own breakpoint.
 
 **Note on 768/1024:** body text renders at 8.5px / 11.4px there. That is theme-wide, not specific to this section — the header nav, footer links and every other section scale identically at those widths. Flagged as a pre-existing theme characteristic for tablet widths; not changed here.
+
+### Fix — button arrow was stretched (2026-09-03)
+
+`.contact-panel__submit-icon svg` used `width: 100%; height: auto`, which stretched the tight-cropped 18x11 arrow artwork to fill the 24x24 slot (drawing it at 24x14.7, ~33% oversized).
+
+Figma's icon is the *same glyph* but exported inside a 24x24 frame — every coordinate is the 18x11 version offset by exactly (+3, +6.96094), i.e. centred with 3px horizontal padding. Fixed by giving the svg its true `1.125rem x 0.6875rem` and letting the flex-centred slot supply the 3px.
+
+**Why this was easy to miss:** total button width was unaffected (the 24px slot is the flex item either way), so the 194.9-vs-194 measurement still matched. Only the artwork scale and the *visual* text-to-arrow gap were wrong — 8px instead of Figma's 11px (8px `gap` + 3px slot padding). When checking icon fidelity, measure the `<svg>` box, not just the slot or the parent.
