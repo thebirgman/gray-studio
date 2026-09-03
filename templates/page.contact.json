@@ -773,11 +773,31 @@
                     "text_RgLR4c",
                     "text_9CpdNa"
                   ]
+                },
+                "button_6XK6wY": {
+                  "type": "button",
+                  "name": "t:names.button",
+                  "settings": {
+                    "label": "See turnaround details",
+                    "link": "shopify://collections/all",
+                    "open_in_new_tab": false,
+                    "style_class": "button-unstyled",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}",
+                    "link_text_color": "",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "icon_cLbDPk",
-                "group_g6h8TW"
+                "group_g6h8TW",
+                "button_6XK6wY"
               ]
             },
             "group_UpW93b": {
@@ -985,11 +1005,31 @@
                     "text_UYb8kr",
                     "text_YUMWLf"
                   ]
+                },
+                "button_xKNqPe": {
+                  "type": "button",
+                  "name": "t:names.button",
+                  "settings": {
+                    "label": "See photo tips",
+                    "link": "shopify://collections/all",
+                    "open_in_new_tab": false,
+                    "style_class": "button-unstyled",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}",
+                    "link_text_color": "",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "icon_pmhh44",
-                "group_mq4Jg3"
+                "group_mq4Jg3",
+                "button_xKNqPe"
               ]
             },
             "group_JwknE9": {
@@ -1197,11 +1237,31 @@
                     "text_AkaKUf",
                     "text_hG6rjp"
                   ]
+                },
+                "button_3L4VCM": {
+                  "type": "button",
+                  "name": "t:names.button",
+                  "settings": {
+                    "label": "Take me to the shop",
+                    "link": "shopify://collections/all",
+                    "open_in_new_tab": false,
+                    "style_class": "button-unstyled",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}",
+                    "link_text_color": "",
+                    "width": "fit-content",
+                    "custom_width": 100,
+                    "width_mobile": "fit-content",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "icon_b4QgYD",
-                "group_K4F8Jy"
+                "group_K4F8Jy",
+                "button_3L4VCM"
               ]
             }
           },
@@ -1210,11 +1270,31 @@
             "group_UpW93b",
             "group_JwknE9"
           ]
+        },
+        "button_7nXcCk": {
+          "type": "button",
+          "name": "t:names.button",
+          "settings": {
+            "label": "Take me to the shop",
+            "link": "shopify://collections/all",
+            "open_in_new_tab": false,
+            "style_class": "button-unstyled",
+            "custom_button_background": "{{ settings.color_palette.foreground }}",
+            "custom_button_text": "{{ settings.color_palette.background }}",
+            "custom_button_border": "{{ settings.color_palette.background }}",
+            "link_text_color": "",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "group_3GzzX6",
-        "group_DDe4GP"
+        "group_DDe4GP",
+        "button_7nXcCk"
       ],
       "name": "t:names.custom_section",
       "settings": {
