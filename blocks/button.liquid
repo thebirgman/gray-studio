@@ -78,9 +78,154 @@
     },
     {
       "type": "color",
+      "id": "custom_button_background_hover",
+      "label": "Background on hover",
+      "placeholder": "t:settings.default",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text_hover",
+      "label": "Text on hover",
+      "placeholder": "t:settings.default",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border_hover",
+      "label": "Borders on hover",
+      "placeholder": "t:settings.default",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Link style",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "color",
       "id": "link_text_color",
       "label": "t:settings.link_text_color",
       "placeholder": "t:settings.default",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Text on hover",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "link_underline",
+      "label": "Underline",
+      "default": false,
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "link_show_icon",
+      "label": "Show arrow icon",
+      "default": false,
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "select",
+      "id": "link_font_family",
+      "label": "Font",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "var(--font-body--family)",
+          "label": "Body"
+        },
+        {
+          "value": "var(--font-accent--family)",
+          "label": "Accent"
+        },
+        {
+          "value": "var(--font-subheading--family)",
+          "label": "Subheading"
+        },
+        {
+          "value": "var(--font-heading--family)",
+          "label": "Heading"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "select",
+      "id": "link_font_size",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "0.9375rem",
+          "label": "15px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        }
+      ],
+      "default": "",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
+    },
+    {
+      "type": "select",
+      "id": "link_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "",
       "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
     },
     {
