@@ -257,7 +257,9 @@
               "blocks": {
                 "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA": {
                   "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-widget/019fcb85-cdee-7125-9e57-d241767d6aa5",
-                  "settings": {}
+                  "settings": {
+                    "max_tries": 3
+                  }
                 },
                 "variant_picker_R3rGDr": {
                   "type": "variant-picker",
