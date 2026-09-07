@@ -1,3 +1,5 @@
+import { getScrollEventTarget, scrollContainerMediaQuery } from '@theme/scroll-container';
+
 /**
  * FAQ page: search filter, mobile category chips, desktop nav active state.
  */
@@ -144,22 +146,34 @@ class FaqsPageComponent extends HTMLElement {
       this.#updateNavIndicator();
     };
 
-    window.addEventListener('scroll', this.#onScroll, { passive: true });
+    this.#onBreakpointChange = () => {
+      this.#destroyNavSpy();
+      this.#setupNavSpy();
+    };
+
+    this.#scrollTarget = getScrollEventTarget();
+    this.#scrollTarget.addEventListener('scroll', this.#onScroll, { passive: true });
     window.addEventListener('resize', this.#onResize, { passive: true });
+    scrollContainerMediaQuery.addEventListener('change', this.#onBreakpointChange);
     this.addEventListener('toggle', this.#onScroll, true);
 
     this.#syncNavFromScroll();
   }
 
   #destroyNavSpy() {
-    if (this.#onScroll) {
-      window.removeEventListener('scroll', this.#onScroll);
+    if (this.#onScroll && this.#scrollTarget) {
+      this.#scrollTarget.removeEventListener('scroll', this.#onScroll);
       this.removeEventListener('toggle', this.#onScroll, true);
       this.#onScroll = null;
+      this.#scrollTarget = null;
     }
     if (this.#onResize) {
       window.removeEventListener('resize', this.#onResize);
       this.#onResize = null;
+    }
+    if (this.#onBreakpointChange) {
+      scrollContainerMediaQuery.removeEventListener('change', this.#onBreakpointChange);
+      this.#onBreakpointChange = null;
     }
     if (this.#scrollRaf) {
       cancelAnimationFrame(this.#scrollRaf);
@@ -175,12 +189,10 @@ class FaqsPageComponent extends HTMLElement {
   }
 
   #getSpyOffset() {
-    const header =
-      document.querySelector('#header-group > .header-section') ||
-      document.querySelector('.header-section') ||
-      document.querySelector('.header');
-    const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 80;
-    return headerHeight + 96;
+    const header = document.querySelector('#header-component[data-sticky-state="active"]');
+    const headerHeight =
+      header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+    return headerHeight + 160;
   }
 
   #getVisibleGroups() {
@@ -198,16 +210,11 @@ class FaqsPageComponent extends HTMLElement {
     let activeHandle = groups[0].getAttribute('data-faq-group') || '';
 
     for (const group of groups) {
-      const rect = group.getBoundingClientRect();
-      if (rect.top <= offset) {
+      const marker = group.querySelector('.faqs-page__group-heading') ?? group;
+      const { top } = marker.getBoundingClientRect();
+      if (top <= offset) {
         activeHandle = group.getAttribute('data-faq-group') || activeHandle;
       }
-    }
-
-    const lastGroup = groups[groups.length - 1];
-    const lastRect = lastGroup.getBoundingClientRect();
-    if (lastRect.top <= offset || lastRect.bottom <= window.innerHeight) {
-      activeHandle = lastGroup.getAttribute('data-faq-group') || activeHandle;
     }
 
     this.#setNavActive(activeHandle);
@@ -249,6 +256,12 @@ class FaqsPageComponent extends HTMLElement {
 
   /** @type {HTMLElement | null} */
   #rail = null;
+
+  /** @type {EventTarget | null} */
+  #scrollTarget = null;
+
+  /** @type {(() => void) | null} */
+  #onBreakpointChange = null;
 }
 
 if (!customElements.get('faqs-page-component')) {
