@@ -332,13 +332,14 @@
   .faqs-page__chips {
     position: sticky;
     top: var(--header-height, 4.5rem);
-    z-index: 1;
+    z-index: 3;
     display: flex;
     flex-wrap: wrap;
     gap: 0.625rem;
-    width: 100%;
-    padding-block: 0.25rem 0.5rem;
-    background-color: var(--fp-bg, #fffdf8);
+    width: calc(100% + 3.125rem);
+    margin-inline: -1.5625rem;
+    padding: 0.75rem 1.5625rem;
+    background-color: #fff;
   }
 
   .faqs-page__chip {
@@ -691,12 +692,15 @@
 
     .faqs-page__nav {
       position: sticky;
-      top: calc(var(--header-height, 5rem) + 1.5rem);
+      top: var(--header-height, 5rem);
+      z-index: 2;
       display: flex;
       flex: 0 0 auto;
       align-items: flex-start;
       gap: 1.125rem;
       width: 15.75rem;
+      padding-block: 1rem;
+      background-color: #fff;
     }
 
     .faqs-page__nav-rail {
