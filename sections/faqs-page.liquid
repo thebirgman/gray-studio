@@ -1,0 +1,1103 @@
+{%- liquid
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign brand_color = section.settings.brand_color | default: '#321C41'
+  assign accent_color = section.settings.accent_color | default: '#8855AA'
+  assign border_color = section.settings.border_color | default: '#D9D6DB'
+  assign muted_color = section.settings.muted_color | default: '#918D95'
+  assign icon_color = section.settings.icon_color | default: '#605C64'
+  assign search_bg = section.settings.search_background | default: '#FFFDF8'
+  assign chip_bg = section.settings.chip_background | default: '#FFFDF8'
+  assign cta_bg = section.settings.cta_background | default: '#E2F09F'
+  assign search_placeholder = section.settings.search_placeholder | default: 'Search FAQs...'
+  assign empty_message = section.settings.empty_message | default: 'No matching questions. Try another search.'
+  assign cta_heading = section.settings.cta_heading
+  assign cta_text = section.settings.cta_text
+  assign cta_button_label = section.settings.cta_button_label
+  assign cta_button_link = section.settings.cta_button_link
+  if cta_button_link == blank
+    assign cta_button_link = pages['contact'].url | default: '/pages/contact'
+  endif
+-%}
+
+<script
+  src="{{ 'faqs-page.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<faqs-page-component
+  class="faqs-page color-custom-{{ section.id }}"
+  id="FaqsPage-{{ section.id }}"
+  style="
+    --fp-bg: {{ background_color }};
+    --fp-text: {{ text_color }};
+    --fp-brand: {{ brand_color }};
+    --fp-border: {{ border_color }};
+    --fp-muted: {{ muted_color }};
+    --fp-icon: {{ icon_color }};
+    --fp-accent: {{ accent_color }};
+    --fp-search-bg: {{ search_bg }};
+    --fp-chip-bg: {{ chip_bg }};
+    --fp-cta-bg: {{ cta_bg }};
+  "
+>
+  <div class="faqs-page__inner">
+    <div class="faqs-page__search" role="search">
+      <label class="faqs-page__search-field" for="FaqsPageSearch-{{ section.id }}">
+        <span class="visually-hidden">{{ search_placeholder }}</span>
+        <span class="faqs-page__search-icon" aria-hidden="true">
+          {{ 'faq-page-search.svg' | inline_asset_content }}
+        </span>
+        <input
+          id="FaqsPageSearch-{{ section.id }}"
+          class="faqs-page__search-input"
+          type="search"
+          name="q"
+          autocomplete="off"
+          placeholder="{{ search_placeholder | escape }}"
+          data-faqs-search
+        >
+      </label>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="faqs-page__chips" role="group" aria-label="FAQ categories">
+        <button
+          type="button"
+          class="faqs-page__chip is-active"
+          data-category-filter="all"
+          aria-pressed="true"
+        >
+          <span class="faqs-page__chip-icon" aria-hidden="true">
+            {{ 'faq-page-icon-all.svg' | inline_asset_content }}
+          </span>
+          <span>All FAQs</span>
+        </button>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'category' and block.settings.title != blank -%}
+            {%- liquid
+              assign cat_handle = block.settings.title | handleize
+              assign icon_asset = block.settings.icon_asset | default: 'faq-page-icon-clock.svg'
+            -%}
+            <button
+              type="button"
+              class="faqs-page__chip"
+              data-category-filter="{{ cat_handle }}"
+              aria-pressed="false"
+            >
+              <span class="faqs-page__chip-icon" aria-hidden="true">
+                <img
+                  src="{{ icon_asset | asset_url }}"
+                  alt=""
+                  width="25"
+                  height="23"
+                  loading="lazy"
+                >
+              </span>
+              <span>{{ block.settings.title }}</span>
+            </button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="faqs-page__layout">
+        <nav class="faqs-page__nav" aria-label="FAQ categories">
+          <div class="faqs-page__nav-rail" aria-hidden="true"></div>
+          <ul class="faqs-page__nav-list">
+            {%- assign first_nav = true -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'category' and block.settings.title != blank -%}
+                {%- liquid
+                  assign cat_handle = block.settings.title | handleize
+                  assign icon_asset = block.settings.icon_asset | default: 'faq-page-icon-clock.svg'
+                -%}
+                <li>
+                  <a
+                    class="faqs-page__nav-link{% if first_nav %} is-active{% endif %}"
+                    href="#FaqCategory-{{ section.id }}-{{ cat_handle }}"
+                    data-category-nav="{{ cat_handle }}"
+                    {% if first_nav %}aria-current="true"{% endif %}
+                  >
+                    <span class="faqs-page__nav-icon" aria-hidden="true">
+                      <img
+                        src="{{ icon_asset | asset_url }}"
+                        alt=""
+                        width="26"
+                        height="23"
+                        loading="lazy"
+                      >
+                    </span>
+                    <span>{{ block.settings.title }}</span>
+                  </a>
+                </li>
+                {%- assign first_nav = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </nav>
+
+        <div class="faqs-page__groups">
+          {%- assign open_group = false -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'category' and block.settings.title != blank -%}
+              {%- liquid
+                assign cat_handle = block.settings.title | handleize
+                assign icon_asset = block.settings.icon_asset | default: 'faq-page-icon-clock.svg'
+              -%}
+              {%- if open_group -%}
+                </div>
+                </section>
+              {%- endif -%}
+              <section
+                class="faqs-page__group"
+                id="FaqCategory-{{ section.id }}-{{ cat_handle }}"
+                data-faq-group="{{ cat_handle }}"
+                {{ block.shopify_attributes }}
+              >
+                <div class="faqs-page__group-heading">
+                  <span class="faqs-page__group-icon" aria-hidden="true">
+                    <img
+                      src="{{ icon_asset | asset_url }}"
+                      alt=""
+                      width="41"
+                      height="38"
+                      loading="lazy"
+                    >
+                  </span>
+                  <h2 class="faqs-page__group-title">{{ block.settings.title }}</h2>
+                </div>
+                <div class="faqs-page__list">
+              {%- assign open_group = true -%}
+            {%- elsif block.type == 'faq' and block.settings.question != blank -%}
+              {%- if open_group -%}
+                {%- liquid
+                  assign faq_text = block.settings.question | append: ' ' | append: block.settings.answer
+                -%}
+                <details
+                  class="faqs-page__item"
+                  data-faq-item
+                  data-faq-text="{{ faq_text | escape }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <summary class="faqs-page__question">
+                    <span class="faqs-page__question-text">{{ block.settings.question }}</span>
+                    <span class="faqs-page__icon" aria-hidden="true">
+                      <span class="faqs-page__icon-circle">
+                        {{ 'faq-icon-circle.svg' | inline_asset_content }}
+                      </span>
+                      <span class="faqs-page__icon-arrow">
+                        {{ 'faq-icon-arrow.svg' | inline_asset_content }}
+                      </span>
+                    </span>
+                  </summary>
+                  {%- if block.settings.answer != blank -%}
+                    <div class="faqs-page__answer">
+                      <p class="faqs-page__answer-text">{{ block.settings.answer | newline_to_br }}</p>
+                    </div>
+                  {%- endif -%}
+                </details>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if open_group -%}
+            </div>
+            </section>
+          {%- endif -%}
+
+          <p class="faqs-page__empty" data-faqs-empty hidden>{{ empty_message }}</p>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if cta_heading != blank or cta_text != blank or cta_button_label != blank -%}
+      <div class="faqs-page__cta">
+        <div class="faqs-page__cta-card">
+          <div class="faqs-page__cta-copy">
+            {%- if cta_heading != blank -%}
+              <h2 class="faqs-page__cta-heading">{{ cta_heading }}</h2>
+            {%- endif -%}
+            {%- if cta_text != blank -%}
+              <p class="faqs-page__cta-text">{{ cta_text }}</p>
+            {%- endif -%}
+          </div>
+          {%- if cta_button_label != blank -%}
+            <a
+              class="faqs-page__cta-button"
+              href="{{ cta_button_link }}"
+            >
+              <span>{{ cta_button_label }}</span>
+              <span class="faqs-page__cta-button-icon" aria-hidden="true">
+                {{ 'icon-long-arrow-right.svg' | inline_asset_content }}
+              </span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</faqs-page-component>
+
+{% stylesheet %}
+  .shopify-section.faqs-page-section {
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .faqs-page {
+    display: block;
+    width: 100%;
+    color: var(--fp-text, #242027);
+    background-color: var(--fp-bg, #fffdf8);
+  }
+
+  .faqs-page__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5625rem;
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 0 1.5625rem 3.75rem;
+  }
+
+  .faqs-page__search {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin-top: -1.875rem;
+  }
+
+  .faqs-page__search-field {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    min-height: 3.125rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.625rem;
+    background-color: var(--fp-search-bg, #fffdf8);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.1);
+    cursor: text;
+  }
+
+  .faqs-page__search-icon {
+    display: flex;
+    flex: 0 0 1.375rem;
+    align-items: center;
+    justify-content: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    overflow: clip;
+    color: var(--fp-icon, #605c64);
+  }
+
+  .faqs-page__search-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .faqs-page__search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--fp-text, #242027);
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    outline: none;
+  }
+
+  .faqs-page__search-input::placeholder {
+    color: var(--fp-muted, #918d95);
+  }
+
+  .faqs-page__search-input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .faqs-page__chips {
+    position: sticky;
+    top: var(--header-height, 4.5rem);
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    width: 100%;
+    padding-block: 0.25rem 0.5rem;
+    background-color: var(--fp-bg, #fffdf8);
+  }
+
+  .faqs-page__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 1.75rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--fp-border, #d9d6db);
+    border-radius: 999px;
+    background-color: var(--fp-chip-bg, #fffdf8);
+    color: var(--fp-text, #242027);
+    font-family: var(--font-button--family, var(--font-body--family));
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .faqs-page__chip.is-active,
+  .faqs-page__chip[aria-pressed='true'] {
+    border-color: var(--fp-accent, #8855aa);
+  }
+
+  .faqs-page__chip:focus-visible {
+    outline: 2px solid var(--fp-accent, #8855aa);
+    outline-offset: 2px;
+  }
+
+  .faqs-page__chip-icon {
+    display: flex;
+    flex: 0 0 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 0.9375rem;
+    overflow: clip;
+  }
+
+  .faqs-page__chip-icon img,
+  .faqs-page__chip-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .faqs-page__nav {
+    display: none;
+  }
+
+  .faqs-page__layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .faqs-page__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    width: 100%;
+  }
+
+  .faqs-page__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+    width: 100%;
+    scroll-margin-top: 6rem;
+  }
+
+  .faqs-page__group[hidden] {
+    display: none;
+  }
+
+  .faqs-page__group-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.4375rem;
+    width: 100%;
+  }
+
+  .faqs-page__group-icon {
+    display: flex;
+    flex: 0 0 2.125rem;
+    align-items: center;
+    justify-content: center;
+    width: 2.125rem;
+    height: 1.875rem;
+    overflow: clip;
+  }
+
+  .faqs-page__group-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .faqs-page__group-title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.001em;
+    color: var(--fp-text, #242027);
+  }
+
+  .faqs-page__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .faqs-page__item {
+    padding: 0.5rem 0;
+  }
+
+  .faqs-page__item[hidden] {
+    display: none;
+  }
+
+  .faqs-page__question {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+    border-bottom: 1px solid var(--fp-border, #d9d6db);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .faqs-page__question::-webkit-details-marker,
+  .faqs-page__question::marker {
+    display: none;
+    content: '';
+  }
+
+  .faqs-page__question:focus-visible {
+    outline: 2px solid var(--fp-brand, #321c41);
+    outline-offset: 2px;
+  }
+
+  .faqs-page__question-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    color: var(--fp-text, #242027);
+  }
+
+  .faqs-page__icon {
+    position: relative;
+    flex: 0 0 1.5625rem;
+    width: 1.5625rem;
+    height: 1.5625rem;
+    overflow: clip;
+  }
+
+  .faqs-page__icon-circle,
+  .faqs-page__icon-arrow {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .faqs-page__icon-circle svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .faqs-page__icon-arrow {
+    transition: transform 0.25s ease;
+    transform: rotate(90deg);
+  }
+
+  .faqs-page__icon-arrow svg {
+    display: block;
+    width: 0.7782rem;
+    height: 0.6002rem;
+  }
+
+  .faqs-page__item[open] .faqs-page__icon-arrow {
+    transform: rotate(-90deg);
+  }
+
+  .faqs-page__answer {
+    display: flex;
+    width: 100%;
+    padding: 1rem 1rem 1rem 1.5rem;
+  }
+
+  .faqs-page__answer-text {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.009375rem;
+    text-align: left;
+    color: var(--fp-text, #242027);
+  }
+
+  .faqs-page__empty {
+    margin: 0;
+    padding: 1rem 0;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--fp-muted, #918d95);
+    text-align: center;
+  }
+
+  .faqs-page__cta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 1.25rem;
+  }
+
+  .faqs-page__cta-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 2.5rem 1.5625rem;
+    border-radius: 1.5625rem;
+    background-color: var(--fp-cta-bg, #e2f09f);
+    text-align: center;
+  }
+
+  .faqs-page__cta-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+  }
+
+  .faqs-page__cta-heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.005em;
+    color: var(--fp-text, #242027);
+  }
+
+  .faqs-page__cta-text {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.375;
+    color: var(--fp-text, #242027);
+  }
+
+  .faqs-page__cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.875rem;
+    padding: 0.75rem 1.5rem;
+    border: 0.5px solid var(--fp-brand, #321c41);
+    border-radius: 0.25rem;
+    color: var(--fp-brand, #321c41);
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .faqs-page__cta-button:hover {
+    background-color: var(--fp-brand, #321c41);
+    color: #fffdf8;
+  }
+
+  .faqs-page__cta-button:focus-visible {
+    outline: 2px solid var(--fp-brand, #321c41);
+    outline-offset: 2px;
+  }
+
+  .faqs-page__cta-button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    overflow: clip;
+  }
+
+  .faqs-page__cta-button-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .faqs-page__inner {
+      gap: 2.5rem;
+      padding: 0 7.5rem 5rem;
+    }
+
+    .faqs-page__search {
+      max-width: 49.5rem;
+      margin-top: -1.875rem;
+      margin-inline: auto;
+    }
+
+    .faqs-page__search-field {
+      min-height: 3.6875rem;
+      padding: 1rem;
+    }
+
+    .faqs-page__search-input {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+
+    .faqs-page__chips {
+      display: none;
+    }
+
+    .faqs-page__layout {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 6.875rem;
+      padding-top: 2.5rem;
+    }
+
+    .faqs-page__nav {
+      position: sticky;
+      top: calc(var(--header-height, 5rem) + 1.5rem);
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-start;
+      gap: 1.125rem;
+      width: 15.75rem;
+    }
+
+    .faqs-page__nav-rail {
+      position: relative;
+      flex: 0 0 2px;
+      width: 2px;
+      min-height: 9.5rem;
+      align-self: stretch;
+      background-color: var(--fp-border, #d9d6db);
+    }
+
+    .faqs-page__nav-rail::before {
+      content: '';
+      position: absolute;
+      top: var(--nav-indicator-top, 0);
+      left: 50%;
+      width: 2px;
+      height: 1.5625rem;
+      background-color: var(--fp-accent, #8855aa);
+      transform: translateX(-50%);
+      transition: top 0.25s ease;
+    }
+
+    .faqs-page__nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .faqs-page__nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.9375rem;
+      color: var(--fp-text, #242027);
+      font-family: var(--font-button--family, var(--font-body--family));
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      opacity: 0.55;
+      transition: opacity 0.2s ease;
+    }
+
+    .faqs-page__nav-link.is-active,
+    .faqs-page__nav-link[aria-current='true'] {
+      opacity: 1;
+    }
+
+    .faqs-page__nav-link:hover,
+    .faqs-page__nav-link:focus-visible {
+      opacity: 1;
+    }
+
+    .faqs-page__nav-link:focus-visible {
+      outline: 2px solid var(--fp-brand, #321c41);
+      outline-offset: 2px;
+    }
+
+    .faqs-page__nav-icon {
+      display: flex;
+      flex: 0 0 1.625rem;
+      align-items: center;
+      justify-content: center;
+      width: 1.625rem;
+      height: 1.4375rem;
+      overflow: clip;
+    }
+
+    .faqs-page__nav-icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .faqs-page__groups {
+      flex: 0 1 39.625rem;
+      gap: 6.25rem;
+      max-width: 39.625rem;
+    }
+
+    .faqs-page__group-icon {
+      flex-basis: 2.5625rem;
+      width: 2.5625rem;
+      height: 2.375rem;
+    }
+
+    .faqs-page__group-title {
+      font-size: 2rem;
+    }
+
+    .faqs-page__question {
+      gap: 3rem;
+    }
+
+    .faqs-page__question-text {
+      font-size: 1.125rem;
+      line-height: 1.5;
+    }
+
+    .faqs-page__cta {
+      padding-top: 2.5rem;
+    }
+
+    .faqs-page__cta-card {
+      gap: 1.5625rem;
+      max-width: 62.0625rem;
+      padding: 4.375rem 14.4375rem;
+    }
+
+    .faqs-page__cta-copy {
+      max-width: 33.3125rem;
+    }
+
+    .faqs-page__cta-heading {
+      font-size: 2.5rem;
+    }
+
+    .faqs-page__cta-text {
+      font-size: 1rem;
+      line-height: 1.375;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ page",
+  "tag": "section",
+  "class": "faqs-page-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search FAQs..."
+    },
+    {
+      "type": "text",
+      "id": "empty_message",
+      "label": "No results message",
+      "default": "No matching questions. Try another search."
+    },
+    {
+      "type": "header",
+      "content": "Contact CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Your question is not here?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "Text",
+      "default": "Don't worry, a real person will answer it, usually within 24 hours."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "Button label",
+      "default": "Contact us"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#242027"
+    },
+    {
+      "type": "color",
+      "id": "brand_color",
+      "label": "Brand",
+      "default": "#321C41"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#8855AA"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider",
+      "default": "#D9D6DB"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#918D95"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Search icon",
+      "default": "#605C64"
+    },
+    {
+      "type": "color",
+      "id": "search_background",
+      "label": "Search background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "chip_background",
+      "label": "Chip background",
+      "default": "#FFFDF8"
+    },
+    {
+      "type": "color",
+      "id": "cta_background",
+      "label": "CTA background",
+      "default": "#E2F09F"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Turnaround Time"
+        },
+        {
+          "type": "text",
+          "id": "icon_asset",
+          "label": "Icon asset filename",
+          "default": "faq-page-icon-clock.svg",
+          "info": "Theme asset filename, e.g. faq-page-icon-clock.svg"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How long does my free preview take?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Preview images are immediate! Meaning they take only a minute or two!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ page",
+      "category": "t:categories.storytelling",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Turnaround Time",
+            "icon_asset": "faq-page-icon-clock.svg"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does my free preview take?",
+            "answer": "Preview images are immediate! Meaning they take only a minute or two!"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long until my order ships?",
+            "answer": "Digital downloads are available instantly upon purchase. For physical prints and canvases, your custom artwork will be printed, meticulously packed, and delivered right to your door with free shipping within 7 to 9 business days."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer rush production?",
+            "answer": "Rush production isn't available yet, but digital downloads are ready instantly and prints typically arrive within 7 to 9 business days."
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Satisfaction & Refunds",
+            "icon_asset": "faq-page-icon-heart.svg"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "If the first preview isn't quite right, you can simply try again until you find the perfect masterpiece. If the first few attempts aren't successful, we suggest trying a different photo. You are under no obligation to buy anything unless you are 100% in love with the result."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I get a refund if I don't love the final piece?",
+            "answer": "Every portrait starts with a free preview, so you already know what you're getting before you pay for it. We're still finalizing our exact refund terms for cases after that point."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I exchange for a different size or finish after ordering?",
+            "answer": "We're finalizing the details on exchanges right now."
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Photo Requirements",
+            "icon_asset": "faq-page-icon-camera.svg"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use any photo?",
+            "answer": "An everyday smartphone photo is perfect. There is no need for a professional studio shot. Our system is designed to seamlessly match your pet's or loved one's exact features, personality, and expression directly from the candid photos you already have on your phone."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What makes a good photo?",
+            "answer": "Clear, well-lit, and front-facing photos where their face, eyes and markings are properly visible work best. Avoid blurry shots, dark lighting or anything covering their face. The better the photo, the better the portrait."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if I only have an old or blurry photo?",
+            "answer": "If you only have access to an old or blurry photo, try using an AI photo enhancing app to create a clearer picture."
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Shipping",
+            "icon_asset": "faq-page-icon-shipping.svg"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes, we deliver to over 200 countries and regions worldwide. We use a global network of local print partners in 32 countries to produce items close to the final destination. This local production model reduces shipping distances, costs, and carbon footprints."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Absolutely. Since so many of our portraits are given as heartfelt gifts—whether for a birthday, a special occasion, or in loving memory of a cherished companion—we make direct gifting simple. Just enter your recipient's address during checkout, and we will securely pack and ship their custom artwork directly to their door."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if my order arrives damaged?",
+            "answer": "Contact us within 48 hours and we'll arrange a free replacement — no return shipping required. If you'd prefer a refund we'll process that in full."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

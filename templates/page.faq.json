@@ -1,0 +1,202 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "page_hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Frequently asked questions",
+        "heading_tag": "h1",
+        "marquee_text": "Frequently asked questions",
+        "background_color": "#e8dff1",
+        "heading_color": "#321c41",
+        "marquee_color": "#f8f5fb"
+      }
+    },
+    "faqs_page": {
+      "type": "faqs-page",
+      "blocks": {
+        "cat_turnaround": {
+          "type": "category",
+          "settings": {
+            "title": "Turnaround Time",
+            "icon_asset": "faq-page-icon-clock.svg"
+          }
+        },
+        "faq_preview": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does my free preview take?",
+            "answer": "Preview images are immediate! Meaning they take only a minute or two!"
+          }
+        },
+        "faq_ships": {
+          "type": "faq",
+          "settings": {
+            "question": "How long until my order ships?",
+            "answer": "Digital downloads are available instantly upon purchase. For physical prints and canvases, your custom artwork will be printed, meticulously packed, and delivered right to your door with free shipping within 7 to 9 business days."
+          }
+        },
+        "faq_rush": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer rush production?",
+            "answer": "Rush production isn't available yet, but digital downloads are ready instantly and prints typically arrive within 7 to 9 business days."
+          }
+        },
+        "cat_satisfaction": {
+          "type": "category",
+          "settings": {
+            "title": "Satisfaction & Refunds",
+            "icon_asset": "faq-page-icon-heart.svg"
+          }
+        },
+        "faq_look": {
+          "type": "faq",
+          "settings": {
+            "question": "What if it doesn't look quite right?",
+            "answer": "If the first preview isn't quite right, you can simply try again until you find the perfect masterpiece. If the first few attempts aren't successful, we suggest trying a different photo. You are under no obligation to buy anything unless you are 100% in love with the result."
+          }
+        },
+        "faq_refund": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I get a refund if I don't love the final piece?",
+            "answer": "Every portrait starts with a free preview, so you already know what you're getting before you pay for it. We're still finalizing our exact refund terms for cases after that point."
+          }
+        },
+        "faq_exchange": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I exchange for a different size or finish after ordering?",
+            "answer": "We're finalizing the details on exchanges right now."
+          }
+        },
+        "cat_photo": {
+          "type": "category",
+          "settings": {
+            "title": "Photo Requirements",
+            "icon_asset": "faq-page-icon-camera.svg"
+          }
+        },
+        "faq_any_photo": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use any photo?",
+            "answer": "An everyday smartphone photo is perfect. There is no need for a professional studio shot. Our system is designed to seamlessly match your pet's or loved one's exact features, personality, and expression directly from the candid photos you already have on your phone."
+          }
+        },
+        "faq_good_photo": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes a good photo?",
+            "answer": "Clear, well-lit, and front-facing photos where their face, eyes and markings are properly visible work best. Avoid blurry shots, dark lighting or anything covering their face. The better the photo, the better the portrait."
+          }
+        },
+        "faq_blurry": {
+          "type": "faq",
+          "settings": {
+            "question": "What if I only have an old or blurry photo?",
+            "answer": "If you only have access to an old or blurry photo, try using an AI photo enhancing app to create a clearer picture."
+          }
+        },
+        "cat_shipping": {
+          "type": "category",
+          "settings": {
+            "title": "Shipping",
+            "icon_asset": "faq-page-icon-shipping.svg"
+          }
+        },
+        "faq_worldwide": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship worldwide?",
+            "answer": "Yes, we deliver to over 200 countries and regions worldwide. We use a global network of local print partners in 32 countries to produce items close to the final destination. This local production model reduces shipping distances, costs, and carbon footprints."
+          }
+        },
+        "faq_gift": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I gift a portrait?",
+            "answer": "Absolutely. Since so many of our portraits are given as heartfelt gifts—whether for a birthday, a special occasion, or in loving memory of a cherished companion—we make direct gifting simple. Just enter your recipient's address during checkout, and we will securely pack and ship their custom artwork directly to their door."
+          }
+        },
+        "faq_damaged": {
+          "type": "faq",
+          "settings": {
+            "question": "What if my order arrives damaged?",
+            "answer": "Contact us within 48 hours and we'll arrange a free replacement — no return shipping required. If you'd prefer a refund we'll process that in full."
+          }
+        }
+      },
+      "block_order": [
+        "cat_turnaround",
+        "faq_preview",
+        "faq_ships",
+        "faq_rush",
+        "cat_satisfaction",
+        "faq_look",
+        "faq_refund",
+        "faq_exchange",
+        "cat_photo",
+        "faq_any_photo",
+        "faq_good_photo",
+        "faq_blurry",
+        "cat_shipping",
+        "faq_worldwide",
+        "faq_gift",
+        "faq_damaged"
+      ],
+      "settings": {
+        "search_placeholder": "Search FAQs...",
+        "empty_message": "No matching questions. Try another search.",
+        "cta_heading": "Your question is not here?",
+        "cta_text": "Don't worry, a real person will answer it, usually within 24 hours.",
+        "cta_button_label": "Contact us",
+        "cta_button_link": "shopify://pages/contact",
+        "background_color": "#fffdf8",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "accent_color": "#8855aa",
+        "border_color": "#d9d6db",
+        "muted_color": "#918d95",
+        "icon_color": "#605c64",
+        "search_background": "#fffdf8",
+        "chip_background": "#fffdf8",
+        "cta_background": "#e2f09f"
+      }
+    },
+    "join_the_pack": {
+      "type": "join-the-pack",
+      "name": "Join the Pack",
+      "settings": {
+        "heading": "Join the Pack",
+        "description": "Collect a paw stamp with every commission. The sixth portrait is on us, plus early access to new scenes.",
+        "placeholder": "Email address",
+        "button_label": "Subscribe",
+        "background_image": "shopify://shop_images/Frame_2147228212.png",
+        "inset_image": "shopify://shop_images/Rectangle_5.png",
+        "background_image_asset": "join-the-pack-bg.jpg",
+        "inset_image_asset": "join-the-pack-inset.jpg",
+        "inset_image_alt": "Pup sitting on a fountain with a croissant and coffee",
+        "panel_color": "#faf8f0",
+        "text_color": "#242027",
+        "brand_color": "#321c41",
+        "input_border": "#d9d6db",
+        "placeholder_color": "#918d95"
+      }
+    }
+  },
+  "order": [
+    "page_hero",
+    "faqs_page",
+    "join_the_pack"
+  ]
+}
