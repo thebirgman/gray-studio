@@ -24,7 +24,7 @@
       "type": "main-page-legal",
       "settings": {
         "updated_label": "Last updated",
-        "updated_date": "November 2025",
+        "updated_date": "",
         "background_color": "#fffdf8",
         "text_color": "#242027",
         "border_color": "#d9d6db",
