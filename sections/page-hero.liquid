@@ -1,5 +1,5 @@
 {%- liquid
-  assign heading = section.settings.heading
+  assign heading = section.settings.heading | default: page.title
   assign marquee_text = section.settings.marquee_text | default: heading
   assign heading_tag = section.settings.heading_tag | default: 'h1'
   assign background_color = section.settings.background_color | default: '#FBEECA'
@@ -184,7 +184,7 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Heading"
+      "info": "Leave blank to use the page title."
     },
     {
       "type": "select",

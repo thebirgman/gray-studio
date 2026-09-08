@@ -1,65 +1,131 @@
-{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
-<div class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"></div>
-<div
-  class="section section--{{ section.settings.section_width }} spacing-style legal-page{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
-  style="{% render 'spacing-style', settings: section.settings %}"
-  data-testid="main-page-legal"
->
-  <header class="legal-page__header">
-    <h1 class="legal-page__title h4">{{ page.title }}</h1>
-  </header>
+{%- liquid
+  assign background_color = section.settings.background_color | default: '#FFFDF8'
+  assign text_color = section.settings.text_color | default: '#242027'
+  assign border_color = section.settings.border_color | default: '#D9D6DB'
+  assign callout_background = section.settings.callout_background | default: '#F2F7FC'
+  assign callout_border = section.settings.callout_border | default: '#3B61BA'
+  assign updated_label = section.settings.updated_label | default: 'Last updated'
+  assign updated_date = section.settings.updated_date
+  if updated_date == blank and page.published_at != blank
+    assign updated_date = page.published_at | date: '%B %Y'
+  endif
+-%}
 
-  <div class="legal-page__body rte">
-    {{ page.content }}
+{% render 'contrast-override',
+  background_color: background_color,
+  text_color: text_color,
+  section_id: section.id,
+  skip_contrast: true
+%}
+
+<div
+  class="legal-page color-custom-{{ section.id }}"
+  id="LegalPage-{{ section.id }}"
+  data-testid="main-page-legal"
+  style="
+    --lp-bg: {{ background_color }};
+    --lp-text: {{ text_color }};
+    --lp-border: {{ border_color }};
+    --lp-callout-bg: {{ callout_background }};
+    --lp-callout-border: {{ callout_border }};
+  "
+>
+  <div class="legal-page__inner">
+    {%- if updated_date != blank -%}
+      <p class="legal-page__meta">
+        <span class="legal-page__meta-dot" aria-hidden="true"></span>
+        <span class="legal-page__meta-text">{{ updated_label }}: {{ updated_date }}</span>
+      </p>
+    {%- endif -%}
+
+    <div class="legal-page__body rte">
+      {{ page.content }}
+    </div>
   </div>
 </div>
 
 {% stylesheet %}
   .legal-page {
-    --page-content-width: var(--narrow-page-width);
-    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+    width: 100%;
+    background-color: var(--lp-bg, #fffdf8);
+    color: var(--lp-text, #242027);
   }
 
-  .legal-page__header {
-    text-align: center;
-    margin-block-end: var(--gap-2xl, 48px);
-
-    @media screen and (max-width: 749px) {
-      margin-block-end: var(--gap-xl, 24px);
-    }
+  .legal-page__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.5625rem 3.75rem;
   }
 
-  .legal-page__title {
+  .legal-page__meta {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.625rem;
     margin: 0;
-    text-transform: uppercase;
   }
 
-  @media screen and (max-width: 749px) {
-    .legal-page__title.h4 {
-      font-family: var(--font-h5--family);
-      font-style: var(--font-h5--style);
-      font-weight: var(--font-h5--weight);
-      font-size: var(--font-h5--size);
-      line-height: var(--font-h5--line-height);
-      letter-spacing: var(--font-h5--letter-spacing);
-    }
+  .legal-page__meta-dot {
+    display: block;
+    flex-shrink: 0;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background-color: var(--lp-text, #242027);
+  }
+
+  .legal-page__meta-text {
+    font-family: var(--font-button--family, var(--font-body--family));
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lp-text, #242027);
+  }
+
+  .legal-page__body {
+    width: 100%;
+    font-family: var(--font-body--family);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+    color: var(--lp-text, #242027);
+  }
+
+  .legal-page__body > *:first-child {
+    margin-block-start: 0;
+  }
+
+  .legal-page__body > *:last-child {
+    margin-block-end: 0;
   }
 
   .legal-page__body :is(h1, h2, h3, h4, h5, h6) {
-    font-family: var(--font-h6--family);
-    font-size: var(--font-h6--size);
-    line-height: var(--font-h6--line-height);
-    color: var(--font-h6--color, var(--color-foreground-heading));
-    text-transform: uppercase;
-    margin-block: var(--gap-xl, 32px) var(--gap-sm, 12px);
+    margin-block: 2.5rem 0.625rem;
+    font-family: var(--font-heading--family);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: 0.001em;
+    text-transform: none;
+    color: var(--lp-text, #242027);
   }
 
   .legal-page__body :is(h1, h2, h3, h4, h5, h6):first-child {
     margin-block-start: 0;
   }
 
+  .legal-page__body p {
+    margin-block: 0 0.625rem;
+  }
+
   .legal-page__body a {
-    color: var(--color-link, currentColor);
+    color: #8855aa;
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -69,92 +135,176 @@
     text-decoration-thickness: 2px;
   }
 
-  .legal-page__body p {
-    margin-block: 0 var(--gap-md, 16px);
-  }
-
   .legal-page__body ul,
   .legal-page__body ol {
-    margin-block: 0 var(--gap-md, 16px);
-    padding-inline-start: 1.5rem;
+    margin-block: 0 0.625rem;
+    padding-inline-start: 0;
+    list-style: none;
   }
 
   .legal-page__body li {
-    margin-block: 0.25rem;
+    position: relative;
+    margin: 0;
+    padding-block: 0.6875rem;
+    padding-inline-start: 1.5rem;
+    border-bottom: 0.5px solid var(--lp-border, #d9d6db);
+    line-height: 1.375rem;
+  }
+
+  .legal-page__body li::before {
+    content: '';
+    position: absolute;
+    top: 1.1875rem;
+    left: 0.375rem;
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  .legal-page__body ol {
+    counter-reset: legal-item;
+  }
+
+  .legal-page__body ol > li {
+    counter-increment: legal-item;
+  }
+
+  .legal-page__body ol > li::before {
+    content: counter(legal-item) '.';
+    top: 0.6875rem;
+    left: 0;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    font-size: 1rem;
+    line-height: 1.375rem;
+  }
+
+  .legal-page__body li strong,
+  .legal-page__body li b {
+    font-weight: 700;
+  }
+
+  .legal-page__body blockquote {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3125rem;
+    width: 100%;
+    margin: 1.25rem 0 0;
+    padding: 1.25rem;
+    border: 0;
+    border-left: 3px solid var(--lp-callout-border, #3b61ba);
+    border-radius: 0.625rem;
+    background-color: var(--lp-callout-bg, #f2f7fc);
+  }
+
+  .legal-page__body blockquote :is(h1, h2, h3, h4, h5, h6),
+  .legal-page__body blockquote > p:first-child {
+    margin: 0;
+    font-family: var(--font-button--family, var(--font-body--family));
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .legal-page__body blockquote p {
+    margin: 0;
+  }
+
+  .legal-page__body blockquote ul,
+  .legal-page__body blockquote ol {
+    margin: 0;
+  }
+
+  .legal-page__body blockquote li:last-child {
+    border-bottom: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .legal-page__inner {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 6.875rem;
+      padding: 2.5rem 7.5rem 5rem;
+    }
+
+    .legal-page__meta {
+      position: sticky;
+      top: calc(var(--header-height, 5.5rem) + 2.5rem);
+      width: 14.125rem;
+    }
+
+    .legal-page__body {
+      flex: 0 1 39.625rem;
+      max-width: 39.625rem;
+    }
+
+    .legal-page__body :is(h1, h2, h3, h4, h5, h6) {
+      font-size: 2rem;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
   "name": "Legal page content",
+  "tag": "section",
+  "class": "legal-page-section",
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        { "value": "page-width", "label": "t:options.page" },
-        { "value": "full-width", "label": "t:options.full" }
-      ],
-      "default": "page-width"
+      "type": "text",
+      "id": "updated_label",
+      "label": "Updated label",
+      "default": "Last updated"
+    },
+    {
+      "type": "text",
+      "id": "updated_date",
+      "label": "Updated date",
+      "info": "Leave blank to use the page published date."
+    },
+    {
+      "type": "paragraph",
+      "content": "Page content comes from the Shopify page editor. Use headings for numbered sections, lists for bordered rows, and a quote block for callouts such as “We do not:”."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "t:settings.background_color",
-      "placeholder": "t:settings.default"
+      "label": "Background",
+      "default": "#FFFDF8"
     },
     {
-      "type": "header",
-      "content": "t:content.padding"
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#242027"
     },
     {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 32
+      "type": "color",
+      "id": "border_color",
+      "label": "List divider",
+      "default": "#D9D6DB"
     },
     {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 64
+      "type": "color",
+      "id": "callout_background",
+      "label": "Callout background",
+      "default": "#F2F7FC"
     },
     {
-      "type": "checkbox",
-      "id": "use_mobile_padding",
-      "label": "Use mobile padding",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start-mobile",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 32,
-      "visible_if": "{{ section.settings.use_mobile_padding }}"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end-mobile",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 64,
-      "visible_if": "{{ section.settings.use_mobile_padding }}"
+      "type": "color",
+      "id": "callout_border",
+      "label": "Callout border",
+      "default": "#3B61BA"
     }
   ],
   "presets": [
