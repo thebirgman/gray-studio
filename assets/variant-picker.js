@@ -1469,9 +1469,8 @@ export default class VariantPicker extends Component {
   }
 
   /**
-   * Format cards always show the lowest price for that format, not the
-   * currently selected size/variant. Shopify's option_value.variant is the
-   * current combo, so every card can land on the same price without this.
+   * Physical format cards do not show a from-price; size cards own pricing.
+   * Digital Download has no size step, so that card keeps its actual price.
    */
   #updateDescribedFormatPrices() {
     const variants = this.#readAllVariants();
@@ -1488,6 +1487,17 @@ export default class VariantPicker extends Component {
 
     formatFieldset.querySelectorAll('input').forEach((input) => {
       if (!(input instanceof HTMLInputElement)) return;
+
+      const label = input.closest('label');
+      const row = label?.querySelector('.variant-option__card-row');
+      if (!row) return;
+
+      let priceEl = row.querySelector('.variant-option__card-price');
+
+      if (!this.#isDigitalOption(input)) {
+        priceEl?.remove();
+        return;
+      }
 
       const inputValue = input.value;
       const inputHandle = input.dataset.optionHandle || '';
@@ -1506,11 +1516,6 @@ export default class VariantPicker extends Component {
       );
       if (!chosen?.price_label) return;
 
-      const label = input.closest('label');
-      const row = label?.querySelector('.variant-option__card-row');
-      if (!row) return;
-
-      let priceEl = row.querySelector('.variant-option__card-price');
       if (!priceEl) {
         priceEl = document.createElement('span');
         priceEl.className = 'variant-option__card-price';

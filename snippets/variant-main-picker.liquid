@@ -1,9 +1,10 @@
 {%- doc -%}
   Renders a default variant picker, used to display the variant picker in the variants block.
 
-  Format/Size card copy (description, badge, optional image) comes from global
-  `option_card` metaobjects: `metaobjects.option_card.values`, matched by
-  option_value, handle, or aliases. Prices and Size "Save" stay on the variant.
+  Format/Size card copy (description, badge, optional image) comes from nested
+  `_option-description` blocks on the variant picker, then `option_card`
+  metaobjects, then hardcoded fallbacks. Size-card prices stay on the variant.
+  Physical format cards do not show a from-price.
 
   @param {object} product_resource - The product object.
   @param {object} [block] - The variant picker block object.
@@ -352,6 +353,13 @@
                     assign option_save = option_compare | minus: option_price
                   endif
                 endif
+                if described_layout == 'format' or described_layout == 'cards'
+                  unless format_kind == 'digital'
+                    assign option_price = blank
+                    assign option_compare = blank
+                    assign option_save = 0
+                  endunless
+                endif
                 if described_layout != blank
                   assign option_card_matched = false
                   assign value_match = product_option_value.name | strip | downcase
@@ -387,19 +395,18 @@
                   unless option_card_matched
                     if described_layout == 'format' or described_layout == 'cards'
                       if value_handle == 'digital-download' or value_handle contains 'digital-download'
-                        assign option_description = 'High-res file, delivered in minutes'
+                        assign option_description = 'High resolution file, delivered in minutes, crisp at any print size, print online or locally'
                       elsif value_handle contains 'archival' or value_handle contains 'poster' or value_handle contains 'watercolour' or value_handle contains 'watercolor'
-                        assign option_description = 'Fine art matte paper, ships in 3–7 days'
+                        assign option_description = 'Museum quality fine art print, luxurious matte finish, fade resistant inks, digital file included free, shipping is free, ships in 3–7 days'
                       elsif value_handle == 'giclee-canvas' or value_handle contains 'giclee'
-                        assign option_description = 'Gallery-wrapped, ships in 3–7 days'
-                        assign option_badge = 'Most loved'
+                        assign option_description = 'High resolution print with fade resistant inks on canvas fabric, wrapped over wood stretcher bars, digital file included free, shipping is free, ships in 3–7 days'
                       endif
                     elsif described_layout == 'size'
                       if value_handle contains 'digital'
-                        assign option_description = 'High-res file, delivered in minutes'
-                      elsif value_handle contains 'medium' and value_handle contains '24'
+                        assign option_description = 'High resolution file, delivered in minutes, crisp at any print size, print online or locally'
+                      elsif value_handle contains 'medium'
                         assign option_badge = 'Most loved'
-                      elsif value_handle contains 'large' and value_handle contains '32'
+                      elsif value_handle contains 'large'
                         assign option_badge = 'Best value'
                       endif
                     endif
@@ -422,9 +429,7 @@
                           if desc_block.settings.description != blank
                             assign option_description = desc_block.settings.description
                           endif
-                          if desc_block.settings.badge != blank
-                            assign option_badge = desc_block.settings.badge
-                          endif
+                          assign option_badge = desc_block.settings.badge
                           if desc_block.settings.image != blank
                             assign option_thumb = desc_block.settings.image
                           endif
@@ -533,11 +538,9 @@
                         >
                           {{- product_option_value | escape -}}
                         </span>
-                        {%- if described_layout != 'finish' and option_price != blank or described_layout == 'format' or described_layout == 'cards' -%}
+                        {%- if described_layout != 'finish' and option_price != blank -%}
                           <span class="variant-option__card-price">
-                            {%- if option_price != blank -%}
-                              {{- option_price | money_without_trailing_zeros -}}
-                            {%- endif -%}
+                            {{- option_price | money_without_trailing_zeros -}}
                           </span>
                         {%- endif -%}
                       </span>

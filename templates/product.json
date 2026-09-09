@@ -268,7 +268,7 @@
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Digital Download",
-                    "description": "High-res file, delivered in minutes",
+                    "description": "High resolution file, delivered in minutes, crisp at any print size, print online or locally",
                     "badge": ""
                   },
                   "blocks": {}
@@ -277,7 +277,7 @@
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Archival Quality Print",
-                    "description": "Fine art matte paper, ships in 3–7 days",
+                    "description": "Museum quality fine art print, luxurious matte finish, fade resistant inks, digital file included free, shipping is free, ships in 3–7 days",
                     "badge": ""
                   },
                   "blocks": {}
@@ -286,15 +286,15 @@
                   "type": "_option-description",
                   "settings": {
                     "option_value": "Giclée Canvas",
-                    "description": "Gallery-wrapped, ships in 3–7 days",
-                    "badge": "Most loved"
+                    "description": "High resolution print with fade resistant inks on canvas fabric, wrapped over wood stretcher bars, digital file included free, shipping is free, ships in 3–7 days",
+                    "badge": ""
                   },
                   "blocks": {}
                 },
                 "desc_small": {
                   "type": "_option-description",
                   "settings": {
-                    "option_value": "Small - 12x18\"",
+                    "option_value": "Small - 12x16\"",
                     "description": "",
                     "badge": ""
                   },
@@ -303,7 +303,7 @@
                 "desc_medium": {
                   "type": "_option-description",
                   "settings": {
-                    "option_value": "Medium - 24x36\"",
+                    "option_value": "Medium - 18x24\"",
                     "description": "",
                     "badge": "Most loved"
                   },
@@ -312,7 +312,7 @@
                 "desc_large": {
                   "type": "_option-description",
                   "settings": {
-                    "option_value": "Large - 32x48\"",
+                    "option_value": "Large - 24x32\"",
                     "description": "",
                     "badge": "Best value"
                   },
