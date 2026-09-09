@@ -2612,7 +2612,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Orders are fulfilled through our print partner and ship worldwide, free on orders over $100.</p>",
+                        "text": "<p>Orders are fulfilled through our print partner and ship worldwide, with free shipping on all orders.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
