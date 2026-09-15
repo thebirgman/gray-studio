@@ -9,7 +9,7 @@
   @param {string} [logo] - Captured HTML for the logo element
   @param {string} [menu] - Captured HTML for the menu navigation
   @param {string} [actions] - Captured HTML for header actions (cart, account buttons, etc.)
-  @param {string} [cta] - Captured HTML for the header CTA button
+  @param {string} [cta] - Captured HTML for the header call-to-action button
   @param {string} [localization] - Captured HTML for language/country selector
   @param {string} [search] - Captured HTML for search input
   @param {string} [drawer_search] - Captured HTML for drawer-based search
@@ -32,11 +32,8 @@
     assign item_column = settings[column_key] | default: 'left'
 
     case item
-      when 'actions'
+      when 'actions', 'cta'
         assign item_column = 'right'
-      when 'cta'
-        assign item_column = 'right'
-        assign item_row = 'top'
     endcase
 
     if item_row == row

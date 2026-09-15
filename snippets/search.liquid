@@ -23,8 +23,14 @@
         {{ 'content.search' | t }}
       </span>
 
-      <span class="svg-wrapper {% if display_style != 'icon' %}desktop:hidden{% endif %}">
-        {{ 'icon-search.svg' | inline_asset_content }}
+      <span class="svg-wrapper header-actions__icon header-actions__icon--search {% if display_style != 'icon' %}desktop:hidden{% endif %}">
+        <img
+          class="header-actions__icon-img"
+          src="{{ 'header-icon-search.svg' | asset_url }}"
+          alt=""
+          width="24"
+          height="24"
+        >
       </span>
     </button>
   </search-button>
@@ -62,7 +68,7 @@
 
   .header__column--right .search-action {
     @media screen and (min-width: 750px) {
-      margin-inline: calc(var(--gap-md) * -1) calc(var(--gap-xs) * -1);
+      margin-inline: 0;
     }
   }
 

@@ -1,0 +1,73 @@
+{%- doc -%}
+  Renders a small product eyebrow (city / type) above the product title on cards.
+{%- enddoc -%}
+
+{%- liquid
+  assign product = closest.product
+  assign eyebrow = blank
+
+  if product != blank
+    if product.metafields.custom.city.value != blank
+      assign eyebrow = product.metafields.custom.city.value
+    elsif product.type != blank
+      assign eyebrow = product.type
+    endif
+  endif
+
+  if block.settings.text != blank
+    assign eyebrow = block.settings.text
+  endif
+-%}
+
+{%- if eyebrow != blank -%}
+  <p
+    class="product-eyebrow"
+    {{ block.shopify_attributes }}
+  >
+    {{ eyebrow | escape }}
+  </p>
+{%- elsif request.design_mode -%}
+  <p class="product-eyebrow product-eyebrow--placeholder" {{ block.shopify_attributes }}>City</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-eyebrow {
+    margin: 0;
+    width: 100%;
+    font-family: var(--font-body--family);
+    font-size: 0.625rem;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #605c64;
+  }
+
+  .product-eyebrow--placeholder {
+    opacity: 0.45;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product eyebrow",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Uses the product city metafield when set, otherwise the product type."
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Override text",
+      "info": "Optional. Replaces the automatic city / type value."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product eyebrow"
+    }
+  ]
+}
+{% endschema %}
