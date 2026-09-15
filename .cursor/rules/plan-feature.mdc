@@ -1,0 +1,215 @@
+---
+description: Phase 2 of feature development — takes the scoped spec and creates a step-by-step implementation plan using the human-first method. Attach after scope-feature is complete and the Extended Brief exists in feature.md.
+globs:
+alwaysApply: false
+---
+
+# Workflow: Plan Feature Implementation
+
+Phase 2. Takes the scoped feature spec and turns it into a concrete, step-by-step implementation plan. **No code gets written during this phase — only the plan.**
+
+## Inputs
+
+Read before starting:
+
+1. `.claude/features/[feature-name]/feature.md` — full spec including Extended Brief
+2. `.claude/features/[feature-name]/reference/` — designs, screenshots, notes
+3. `.claude/context/OUTPUT-initial-theme-analysis.md` — conventions, patterns, existing components
+4. `.claude/context/OUTPUT-project-log.md` — past decisions
+5. Other feature summaries — if dependencies flagged during scoping, read those `OUTPUT-implementation-plan.md` files
+
+## Process
+
+### Step 1 — Human-First Breakdown
+
+Before thinking about files or code, describe the feature in three phases as if walking someone through it in real time:
+
+**ADMIN SETUP (human tasks in Shopify admin)** — What does the human need to do before any code can work? (Pages, collections, metafield definitions, metaobjects, navigation, etc.)
+
+Group by purpose. Each group gets:
+- A headline explaining what's being set up
+- A brief explanation of why
+- A checklist with specific instructions
+
+Be specific: don't say "set up metafields" — say "create a metafield definition on Products called `size_guide` (type: file) under Settings > Custom data > Products."
+
+If no admin tasks are needed, say so explicitly.
+
+**CODE PREPARATION** — What needs to exist in code before any visitor touches the page?
+
+**LIVE BEHAVIOR** — What happens when a user actually interacts? Walk through step by step.
+
+Rules:
+- Each step = one single action
+- Don't skip steps that feel obvious
+- No code — plain language only
+- Number every step within each phase
+
+Present this to the user and confirm it matches their mental model before proceeding.
+
+### Step 2 — Identify Files & Components
+
+Based on the spec and breakdown, determine exactly what needs to be created or modified:
+
+**New files** (follow the standard naming pattern):
+- `sections/section-[feature-name].liquid` — markup, schema, asset loading
+- `assets/section-[feature-name].css` — component styles
+- `assets/[feature-name].js` — web component (only if interactive)
+
+**Existing files that may need changes:**
+- Templates, snippets, schema files, locale files
+
+**Theme components to reuse:**
+- Specific class names, wrappers, components to build on (from theme analysis)
+
+### Step 3 — Define Build Steps
+
+Translate the breakdown into concrete implementation steps. Each step should be:
+
+- **Small enough to verify** — can test/preview after each step
+- **Self-contained** — completing one step shouldn't break anything
+- **In logical order** — foundation first, then layers of complexity
+
+Typical build order:
+1. Section skeleton — basic Liquid file with schema, empty markup, asset loading
+2. Static markup — HTML structure with hardcoded content to verify layout
+3. CSS — styles matching design, using theme conventions
+4. Dynamic data — replace hardcoded content with Liquid variables and schema settings
+5. JavaScript — web component for interactivity (if needed)
+6. Responsive behavior — mobile/tablet adjustments
+7. Edge cases — empty states, error handling, loading states
+8. Schema polish — final settings, presets, translations
+
+Not every feature needs all steps. Use judgment.
+
+For each step, specify:
+- **What to do** — clear description
+- **Which file(s)** — exact paths to create or edit
+- **Key details** — specific classes, Liquid objects, settings, components to reuse
+- **How to verify** — what to check after this step
+
+Reference specific theme conventions by name — don't say "use the theme's grid system," say "use the `page-width` wrapper and `grid--2-col-desktop` classes."
+
+### Step 4 — Generate QA Checklist
+
+After the build steps, generate a separate QA file at `.claude/features/[feature-name]/OUTPUT-qa-debugging.md`.
+
+Include tests for:
+- Core feature behavior
+- Edge cases from the spec
+- Mobile / responsive behavior
+- Accessibility (keyboard, focus, screen readers)
+- JavaScript disabled fallback (if applicable)
+- Platform-specific behavior
+
+Each item should be specific and actionable — not "test the feature" but "select Option X, verify Field Y appears."
+
+### Step 5 — Flag Risks & Open Questions
+
+Call out:
+- Anything that could go wrong or needs extra caution
+- Steps that depend on unverified assumptions
+- Performance considerations
+- Potential conflicts with existing theme functionality
+- Any remaining items from scoping needing client clarification
+
+### Step 6 — Present & Confirm
+
+Present the full plan. Ask: **"Does this build order make sense? Anything you'd like to adjust before we start?"**
+
+Only write the OUTPUT files after the user confirms.
+
+## Output
+
+Write two files:
+
+### 1. Implementation Plan → `.claude/features/[feature-name]/OUTPUT-implementation-plan.md`
+
+```markdown
+# Implementation Plan: [Feature Name]
+
+Generated: [date]
+Feature spec: `.claude/features/[feature-name]/feature.md`
+
+## Summary
+
+[2-3 sentences describing the feature. Kept concise for dependency checks by other features.]
+
+## Human-First Breakdown
+
+### Admin Setup (human tasks in Shopify admin)
+[Or: "No admin setup required — this feature works entirely with theme code and section settings."]
+
+#### [What we're setting up]
+[Why this is needed]
+- [ ] [specific step]
+
+### Code Preparation
+1. [step]
+
+### Live Behavior
+1. [step]
+
+## Files
+
+### New Files
+- `sections/section-[feature-name].liquid` — [purpose]
+
+### Modified Files
+- [file path] — [what changes and why]
+
+### Theme Components Reused
+- [component/class/pattern] — [how it's being used]
+
+## Build Steps
+
+### Step 1: [Title]
+**Do:** [Clear description]
+**Files:** [paths]
+**Details:**
+- [Implementation notes]
+**Verify:** [What to check]
+
+## Risks & Considerations
+- [Anything needing caution]
+
+## Open Questions
+- [Unresolved items — or "None"]
+```
+
+### 2. QA Checklist → `.claude/features/[feature-name]/OUTPUT-qa-debugging.md`
+
+```markdown
+# QA: [Feature Name]
+
+## How to Use This File
+1. Run through the checklist after implementation — check items that pass, add notes on failures
+2. Tell AI to read this file — it will fix issues and reset the checklist
+3. Repeat until everything passes
+
+## Current Round (Round 1)
+
+Status: Testing
+
+### Core behavior
+- [ ] [specific test]
+
+### Edge cases
+- [ ] [specific test]
+
+### Mobile
+- [ ] [specific test]
+
+### Accessibility
+- [ ] [specific test]
+
+## Previous Rounds
+[Empty on first generation]
+```
+
+## Important Notes
+
+- Don't start coding during this phase. The plan is the deliverable.
+- The Human-First Breakdown is not optional — it's the sanity check that proves you understand the feature before planning any code.
+- Each build step should be small enough to execute and verify independently.
+- After the plan is confirmed, the user can say "let's build" and you follow the steps in order.

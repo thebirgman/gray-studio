@@ -1,0 +1,159 @@
+---
+description: Phase 1 of feature development — takes a rough brief through a 3-round conversation (approach analysis, scoping questions, extended brief). Attach when ready to scope a feature that has a filled-in feature.md brief.
+globs:
+alwaysApply: false
+---
+
+# Workflow: Scope Feature
+
+Phase 1. Takes a rough brief and turns it into a detailed, validated spec through a structured 3-round conversation. Output is written back into `feature.md`. The user's original brief is never modified.
+
+## Inputs
+
+Read before starting:
+
+1. `.claude/features/[feature-name]/feature.md` — the user's rough brief
+2. `.claude/features/[feature-name]/reference/` — designs, screenshots, notes; analyze images carefully
+3. `.claude/context/OUTPUT-initial-theme-analysis.md` — what already exists in the theme
+4. `.claude/context/OUTPUT-project-log.md` — past decisions that might affect this feature
+5. Other feature summaries — scan summary sections of `OUTPUT-implementation-plan.md` files for dependencies
+
+## Pre-Flight Check
+
+Check current git branch. If on `main` or `master`: **"You're on `main`. Want me to create a feature branch (e.g. `feature/[name]`) before we start?"**
+
+- Yes → create and switch
+- No → continue (note: fine to work locally, never push to main)
+
+Skip if already on a feature branch.
+
+## Process
+
+Work through 3 rounds. Wait for user responses between rounds.
+
+---
+
+### Round 1 — Should We Build This?
+
+Before diving into details, ask: is custom development the right move?
+
+Consider the full range of approaches:
+- **Existing Shopify app** — does one already solve this?
+- **Existing theme component** — does the theme have something similar to extend or configure?
+- **Simple customizer-only solution** — can this be done with theme settings, metafields, or existing sections?
+- **Custom section/snippet/templates** — lightweight Liquid + CSS, minimal JS
+- **If there's no way around a custom app, say so** — this isn't the environment to build one, but explore and briefly scope the approach
+
+Present **2-4 approaches**, ordered by recommendation. For each:
+- **What it is** — one sentence
+- **Pros**
+- **Cons**
+- **Estimated complexity** — low / medium / high
+
+Ask: **"Which approach do you want to go with?"**
+
+Wait for the answer before continuing.
+
+---
+
+### Round 2 — Decisions & Clarifications
+
+Based on the chosen approach, identify everything unclear or ambiguous. Focus on the most important decisions.
+
+**Write the questions directly into `feature.md`** below the `---` divider, under `## Scoping Questions`. Use this format:
+
+```markdown
+## Scoping Questions
+
+Generated: [date]
+Chosen approach: [the approach picked in Round 1]
+
+### Q1: [Question]
+
+[Your recommendation or context for this question]
+
+- [ ] a) [Option]
+- [ ] b) [Option]
+- [ ] c) [Option]
+
+**Notes:**
+[Space for client clarification or additional context]
+
+### Recommendations
+
+[Proactive recommendations based on theme analysis, edge cases, patterns to reuse, risks to flag]
+```
+
+The user fills in answers by checking boxes, writing `needs client clarification` if unsure, or adding notes.
+
+Tell the user: **"I've written the scoping questions into your feature.md. Fill in your answers, then let me know when you're ready."**
+
+Wait for confirmation before Round 3.
+
+---
+
+### Round 3 — Confirm & Write Extended Brief
+
+Read the user's answers from `## Scoping Questions` in `feature.md`. Present the clean spec back in conversation:
+
+- All decisions baked in
+- Any notes or ideas incorporated
+- Items marked "needs client clarification" flagged clearly
+- No ambiguity left (except flagged items)
+
+Ask: **"Does this match what you have in mind? Anything I'm missing?"**
+
+Only after confirmation, **append** `## Extended Brief` to `feature.md` (below the Scoping Questions — keep those as a decision log).
+
+---
+
+## Output Format
+
+Append to `.claude/features/[feature-name]/feature.md`:
+
+```markdown
+## Extended Brief
+
+Generated: [date]
+
+### Chosen Approach
+[Which approach and why — one sentence]
+
+### Requirements
+[Clear bullet list of everything this feature must do]
+
+### Where It Lives
+[Exact location: which page(s), which section, relationship to existing components]
+
+### Data Sources
+[Where the feature gets its data: metafields, collections, settings, API, hardcoded]
+
+### User Interaction
+[How users interact: triggers, states, transitions]
+
+### Customizer Settings
+[What the store owner can configure — and what should NOT be configurable]
+
+### Decisions Made
+[Everything discussed and decided in Rounds 1-2, with reasoning]
+
+### Edge Cases to Handle
+[Empty states, missing data, too many items, mobile behavior, error states, accessibility]
+
+### Out of Scope
+[What this feature explicitly does NOT include]
+
+### Dependencies
+[Other features, theme components, or third-party tools this depends on]
+
+### Needs Client Clarification
+[Any unresolved items — remove this section if everything is resolved]
+```
+
+## Important Notes
+
+- Don't assume — if something is unclear, ask. Even if you think you know the answer.
+- Use the theme analysis to make informed suggestions, not generic ones. Reference specific components by name.
+- The user is the decision-maker. You inform decisions with technical expertise. Don't just execute — think, recommend, flag risks.
+- If the feature is tiny and the brief is already clear, say so. Not everything needs all 3 rounds.
+- After writing the Extended Brief, suggest attaching `@plan-feature` as the next step.

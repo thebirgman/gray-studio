@@ -1,0 +1,60 @@
+---
+description: Phase 0 of feature development — creates a feature branch and sets up the feature folder from the template. Attach when starting a new feature before scoping.
+globs:
+alwaysApply: false
+---
+
+# Workflow: Start Feature
+
+Phase 0. Handles setup so the user can jump straight into writing their brief. Run this whenever someone says they want to work on a new feature.
+
+## Steps
+
+### Step 1 — Get the Feature Name
+
+Ask: **"What's the name for this feature?"**
+
+Name should be short, descriptive, kebab-case (e.g. `size-guide`, `product-tabs`, `newsletter-popup`). Used for:
+- Feature folder: `.claude/features/feature-[name]/`
+- Git branch: `feature/[name]`
+
+If the user gives spaces or mixed case, normalize to kebab-case and confirm.
+
+Wait for the answer before continuing.
+
+### Step 2 — Create the Feature Branch
+
+Check current git branch. If already on a feature branch, ask if they want to stay or create a new one.
+
+If on `main` (or `master`): **"You're on `main`. I'll create `feature/[name]` to keep main clean. Sound good?"**
+- Yes → create and switch
+- No → continue on current branch (warn about not pushing to main)
+
+If on a different feature branch: **"You're on `[branch-name]`. Create new branch `feature/[name]` from main, or keep working here?"**
+- New branch → switch to main first, pull if remote exists, then create and switch
+- Stay → continue
+
+### Step 3 — Create the Feature Folder
+
+Duplicate `.claude/features/_template/` to `.claude/features/feature-[name]/`.
+
+This copies:
+- `feature.md` — the brief template
+- `OUTPUT-implementation-plan.md` — placeholder
+- `reference/` — empty folder for designs, screenshots
+
+Confirm the folder was created.
+
+### Step 4 — Guide the User
+
+**"Your feature folder is ready at `.claude/features/feature-[name]/`.**
+
+**Next step: Open `feature.md` and fill in the Brief section — describe what you want to build in your own words. If you have reference material (designs, screenshots), drop them in the `reference/` folder.**
+
+**When your brief is ready, attach `@scope-feature` to start the scoping conversation."**
+
+## Important Notes
+
+- Don't skip the branch step — working on main directly is a non-negotiable no-go
+- If a feature folder with the same name already exists, warn the user and ask how to proceed
+- Keep this fast — no analysis, no reading theme files. That happens in scope-feature.

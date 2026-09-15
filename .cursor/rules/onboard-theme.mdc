@@ -1,0 +1,115 @@
+---
+description: Onboard a new Shopify theme — analyzes CSS, JS, Liquid, schema, and assets then writes a structured report to OUTPUT-initial-theme-analysis.md. Attach this rule when starting a new project or when the analysis file is missing.
+globs:
+alwaysApply: false
+---
+
+# Workflow: Onboard Theme
+
+Run this once at the start of every new Shopify theme project. Analyze the theme's codebase and write a structured report to `.claude/context/OUTPUT-initial-theme-analysis.md`. This becomes the single source of truth for how we build on this theme.
+
+## When to Use
+
+- First time working on a new theme
+- When switching to a theme you haven't analyzed yet
+- If the OUTPUT file is missing or outdated
+
+## Steps
+
+### Step 1 — Scan Project Structure
+
+Map the full file tree. Identify:
+
+- All folders: `sections/`, `snippets/`, `assets/`, `templates/`, `config/`, `locales/`, `layout/`, `blocks/`
+- Custom vs. theme default files (naming patterns, comments, anything that stands out)
+- Total counts: sections, snippets, templates, assets
+- Any unusual or non-standard files
+
+### Step 2 — CSS Analysis
+
+Read the main CSS files. Document:
+
+- **Grid system** — flexbox? CSS grid? Custom class system? How are columns handled?
+- **Breakpoints** — what media query values? (e.g. 750px, 990px, 1200px)
+- **Color variables** — CSS custom properties, how colors are defined and used
+- **Naming convention** — BEM? Theme-specific? Real examples from the theme.
+- **Spacing patterns** — utilities? Consistent values?
+- **Page width / containers** — exact class and max-width (e.g. `.page-width { max-width: 1200px }`)
+
+### Step 3 — JavaScript Analysis
+
+Read the main JS files. Document:
+
+- **Base files** — list all core JS files. These should NOT be modified.
+- **Existing web components** — every `customElements.define()` call: tag name, what it does
+- **Event patterns** — custom events, pub/sub, how components communicate
+- **Third-party libraries** — what's already loaded and for what
+- **Script loading** — `defer`? `module`? Inline? Pattern?
+
+### Step 4 — Liquid Patterns
+
+Read at least 5-6 different section files. Document:
+
+- **Section structure** — common markup pattern, how sections are wrapped
+- **Snippet usage** — what exists, naming convention, most reused
+- **Settings organization** — how schema settings are typically ordered
+- **Translation patterns** — `t:` keys or hardcoded text?
+- **Block patterns** — how blocks are structured, common types
+
+### Step 5 — Section Patterns Deep-Dive
+
+Read at least 3-4 existing sections in detail. Check:
+
+- `page-width` wrapper class or different container approach?
+- Section-id padding pattern:
+
+```liquid
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+```
+
+- `padding_top` / `padding_bottom` range settings in schema?
+- `color_scheme` settings?
+- How sections load their own CSS/JS assets?
+- Common schema structure?
+
+### Step 6 — Schema Conventions
+
+Document:
+
+- **Common settings** — appear across most sections
+- **Color scheme handling** — CSS classes? Variables?
+- **Padding / spacing** — standard range, defaults
+- **Preset patterns** — how presets are structured
+- **Common setting types** — `color_scheme`, `image_picker`, `richtext`, etc.
+
+### Step 7 — Asset Loading Patterns
+
+Document:
+
+- How CSS is loaded (`stylesheet_tag`? Inline `<style>`? Both?)
+- How JS is loaded (`script_tag`? `<script defer>`? `<script type="module">`?)
+- Lazy loading patterns?
+- Render-critical vs. deferred?
+
+### Step 8 — Reference Images (if available)
+
+Check `.claude/context/reference/` for screenshots, design mockups, brand guidelines, PDFs.
+
+If images exist, analyze for: layout patterns, typography hierarchy, spacing rhythm, color usage, UI components visible.
+
+If none exist, note this and move on.
+
+### Step 9 — Write the Output
+
+Write to `.claude/context/OUTPUT-initial-theme-analysis.md`. Be specific — use real class names, real variable names, real examples from the theme. The more concrete, the more useful for every future feature.
+
+**Important:** Read actual files. Never guess based on file names alone. If something is unclear or inconsistent, flag it in the Recommendations section.

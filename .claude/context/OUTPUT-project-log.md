@@ -1,5 +1,48 @@
 # Project Log — gray-studio
 
+## 2026-09-15 — Reconnected local git to GitHub main
+
+**What:** Reset local `main` onto `origin/main` (mixed), restored GitHub-only files (`bin/lanternsol.js`, extra Cursor rules, etc.), set upstream to `origin/main`. Committing onboarding analysis + workflow rules. Theme file diffs vs GitHub left uncommitted.
+
+**Why:** `.claude/` and `.cursor/` only persist via git. Shopify CLI cannot save them.
+
+**Decision:** Do not commit the full Shopify-pulled theme delta in this first GitHub save — only project memory and rules. Theme still deploys with Shopify CLI.
+
+## 2026-09-15 — Deploy via Shopify CLI, not GitHub (theme files)
+
+**What:** Orchestrator chose Shopify CLI for theme upload, then asked to connect GitHub so analysis/rules are backed up.
+
+**Constraint:** Do not push to the live/published theme. Use `shopify theme dev` or `shopify theme push --unpublished` (or a named unpublished theme).
+
+**Note:** `shopify theme push` does not upload `.claude/` or `.cursor/`.
+
+## 2026-09-15 — Theme onboarding
+
+**What:** Ran `@onboard-theme`. Wrote `.claude/context/OUTPUT-initial-theme-analysis.md`.
+
+**Why:** Session start files were missing from this working copy. Future features need a written source of truth for this theme’s conventions.
+
+**What this theme actually is:**
+- Shopify Horizon 4.1.0, packaged as **Horizon: LS Mod** (Lantern Sol)
+- Further customized for **Pups Around the World** (Gray Studio / Kathryn Gray)
+- Theme-blocks architecture (`blocks/`), not Dawn
+- Custom marketing sections already exist (hero-banner, trust-strip, featured-prints, about-*, PDP blocks, cart rewards)
+
+**Decisions recorded in the analysis:**
+- New designed sections follow existing Gray Studio pattern: one Liquid file, `{% stylesheet %}` in-file, optional `Component` JS module, BEM, `contrast-override`, `spacing-style`
+- Do **not** follow the Dawn file split in `project.mdc` (`section-[name].css` / `padding_top` halved at 750px) — that pattern is not in this codebase
+- Do not modify `base.css`, `component.js`, `events.js`, or Horizon cart/product JS unless discussed
+
+**Alternatives considered:**
+- Treating this as Dawn and generating `assets/section-*.css` files. Rejected — zero examples in the theme; Horizon compiles `{% stylesheet %}` tags instead.
+
+**Risks / open questions:**
+- No `.claude/context/reference/` design files in this folder
+- Global `color_palette` is still generic black/white; brand hexes live in custom section defaults
+- Some custom sections skip the `.section` grid wrapper
+- Alex Brush is loaded from Google Fonts CDN in three sections
+- `blocks/ai_gen_block_9b1a4f7.liquid` looks like a leftover generated block
+
 ## 2026-09-03 — Removed `product-eyebrow` block from collection template
 
 **What:** Deleted the `product_eyebrow` block (type `product-eyebrow`, empty `text` setting) from the product card group in `templates/collection.json`, and removed it from the corresponding `block_order`.
