@@ -153,8 +153,12 @@
       .variant-option--format input:checked[data-format-kind='physical']
     )
     fieldset.variant-option.variant-option--buttons.variant-option--described.variant-option--finish {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
   }
 
   .variant-picker--described.is-digital-format
@@ -486,16 +490,19 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish {
-    grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
-    column-gap: 0.75rem;
-    row-gap: 0.75rem;
-    align-items: start;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    column-gap: 0.5rem;
+    row-gap: 0.5rem;
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish > legend {
-    grid-column: 1 / -1;
+    flex: 0 0 100%;
+    width: 100%;
     margin: 0;
-    margin-bottom: .8rem;
+    margin-bottom: 0.5rem;
     font-size: 1rem;
     line-height: 1.25;
     align-items: center;
@@ -514,9 +521,10 @@
     grid-column: auto;
     display: flex;
     flex-direction: column;
-    flex: none;
-    width: 100%;
-    min-width: 0;
+    flex: 0 0 auto;
+    width: 3.75rem;
+    min-width: 3.75rem;
+    max-width: 3.75rem;
     height: auto;
     min-height: 0;
     max-height: none;
@@ -527,7 +535,7 @@
     color: var(--vp-text, #242027);
     justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     overflow: visible;
     white-space: normal;
     box-shadow: none;
@@ -546,7 +554,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     width: 100%;
     min-width: 0;
   }
@@ -680,9 +688,9 @@
 
   .variant-option--described.variant-option--finish .variant-option__card-title {
     font-family: var(--font-body--family);
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 400;
-    line-height: 1.23;
+    line-height: 1.2;
     letter-spacing: 0;
     text-align: center;
     text-transform: none;
@@ -691,8 +699,20 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish
-    .variant-option__button-label[hidden] {
-    display: none;
+    .variant-option__button-label[hidden],
+  .variant-picker--described.is-physical-format
+    .variant-option--finish
+    .variant-option__button-label--finish-none,
+  .variant-picker--described.is-physical-format
+    .variant-option--finish
+    .variant-option__button-label:has(input[data-option-handle*='no-frame']),
+  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='physical'])
+    .variant-option--finish
+    .variant-option__button-label--finish-none,
+  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='physical'])
+    .variant-option--finish
+    .variant-option__button-label:has(input[data-option-handle*='no-frame']) {
+    display: none !important;
   }
 
   button.variant-option__size-guide {

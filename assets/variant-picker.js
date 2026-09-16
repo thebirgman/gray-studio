@@ -1207,7 +1207,12 @@ export default class VariantPicker extends Component {
       this.#restoreDescribedSelection();
       this.#pairSizeToFormat();
       const format = this.#getSelectedFormatInput();
-      this.#syncFrameFinishOption(this.#isPhysicalFormat(format), format?.value ?? '');
+      const size = this.#getSizeFieldset()?.querySelector('input:checked');
+      this.#syncFrameFinishOption(
+        this.#isPhysicalFormat(format),
+        format?.value ?? '',
+        size instanceof HTMLInputElement ? size.value : ''
+      );
     };
     requestAnimationFrame(() => rerun('rAF'));
     this.#pairSizeTimer = window.setTimeout(() => {
@@ -1301,11 +1306,14 @@ export default class VariantPicker extends Component {
   /**
    * Show/hide Frame Finish via CSS (.is-physical-format). Keep a valid finish
    * selected so Format×Size×Finish always resolves to a Shopify variant.
-   * Digital Download always uses No Frame (the only finish that variant has).
+   * Digital Download always uses No Frame (hidden with the finish fieldset).
+   * Print/canvas never offer No Frame — only real frame finishes that exist
+   * for the current Format × Size selection.
    * @param {boolean} showFinish
    * @param {string} [formatValue]
+   * @param {string} [sizeValue]
    */
-  #syncFrameFinishOption(showFinish, formatValue = '') {
+  #syncFrameFinishOption(showFinish, formatValue = '', sizeValue = '') {
     const fieldset = this.#getFrameFinishFieldset();
     if (!fieldset) {
       this.#debug('frame finish BAIL: fieldset missing', { showFinish });
@@ -1322,10 +1330,12 @@ export default class VariantPicker extends Component {
       input.disabled = false;
     });
 
+    const isNoFrameInput = (input) => /no\s*frame/i.test(input.value);
+
     // Digital: lock to No Frame. Physical frame picks are not valid for that format.
     if (!showFinish) {
       const noFrame =
-        inputs.find((input) => /no\s*frame/i.test(input.value)) ??
+        inputs.find((input) => isNoFrameInput(input)) ??
         inputs.find((input) => this.#sameOptionValue(input.value, this.#frameFinishValue)) ??
         inputs[0];
       inputs.forEach((input) => {
@@ -1344,32 +1354,33 @@ export default class VariantPicker extends Component {
       return;
     }
 
-    // Unhide all finish labels — No Frame is a real selectable option now.
-    inputs.forEach((input) => {
-      input.closest('label')?.removeAttribute('hidden');
-    });
+    const resolvedSize =
+      sizeValue ||
+      (this.#getSizeFieldset()?.querySelector('input:checked') instanceof HTMLInputElement
+        ? this.#getSizeFieldset().querySelector('input:checked').value
+        : '') ||
+      this.#describedSizeValue ||
+      '';
 
     const finishIndex = this.#shopifyOptionIndex(fieldset);
     const variants = this.#readAllVariants();
-    const usable = inputs.filter((input) => {
-      if (!variants?.length || finishIndex == null) return true;
-      return variants.some((variant) => {
-        if (!variant.available) return false;
-        if (!this.#sameOptionValue(variant.options[finishIndex], input.value)) return false;
-        if (formatValue && !variant.options.some((option) => this.#sameOptionValue(option, formatValue))) {
-          return false;
-        }
-        return true;
-      });
+    const pool = inputs.filter((input) => {
+      // No Frame is digital-only — never show it on print/canvas.
+      if (isNoFrameInput(input)) return false;
+      return this.#finishAvailableForSelection(input, formatValue, resolvedSize, finishIndex);
     });
-    const pool = usable.length ? usable : inputs;
+
+    inputs.forEach((input) => {
+      const label = input.closest('label');
+      if (!label) return;
+      label.toggleAttribute('hidden', !pool.includes(input));
+    });
 
     // Prefer the user's current check when still valid — never fight a click.
     const currentlyChecked = inputs.find((input) => input.checked);
     const preferred =
       (currentlyChecked && pool.includes(currentlyChecked) ? currentlyChecked : null) ??
       pool.find((input) => this.#sameOptionValue(input.value, this.#frameFinishValue)) ??
-      pool.find((input) => /no\s*frame/i.test(input.value)) ??
       pool[0];
 
     if (preferred) {
@@ -1379,9 +1390,38 @@ export default class VariantPicker extends Component {
 
     this.#debug('frame finish sync', {
       showFinish,
+      formatValue,
+      sizeValue: resolvedSize,
       selected: preferred?.value ?? null,
       pool: pool.map((input) => input.value),
       pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
+    });
+  }
+
+  /**
+   * True when an available variant exists for this finish under the current
+   * format (and size, when a physical size is selected).
+   * @param {HTMLInputElement} finishInput
+   * @param {string} formatValue
+   * @param {string} sizeValue
+   * @param {number | null} finishIndex
+   */
+  #finishAvailableForSelection(finishInput, formatValue, sizeValue, finishIndex) {
+    const variants = this.#readAllVariants();
+    if (!variants?.length || finishIndex == null) return true;
+
+    const requireSize = Boolean(sizeValue) && !this.#isDigitalOptionValue(sizeValue);
+
+    return variants.some((variant) => {
+      if (!variant.available) return false;
+      if (!this.#sameOptionValue(variant.options[finishIndex], finishInput.value)) return false;
+      if (formatValue && !variant.options.some((option) => this.#sameOptionValue(option, formatValue))) {
+        return false;
+      }
+      if (requireSize && !variant.options.some((option) => this.#sameOptionValue(option, sizeValue))) {
+        return false;
+      }
+      return true;
     });
   }
 
@@ -1457,7 +1497,12 @@ export default class VariantPicker extends Component {
     });
     this.#syncSizeChoices(formatIsDigital, formatValue);
     this.#ensureSelectedSize(formatIsDigital, formatValue);
-    this.#syncFrameFinishOption(showFinish, formatValue);
+    const sizeChecked = this.#getSizeFieldset()?.querySelector('input:checked');
+    this.#syncFrameFinishOption(
+      showFinish,
+      formatValue,
+      sizeChecked instanceof HTMLInputElement ? sizeChecked.value : ''
+    );
   }
 
   /**
