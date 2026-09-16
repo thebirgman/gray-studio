@@ -32,7 +32,29 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Optional thumbnail"
+      "label": "Optional thumbnail",
+      "info": "For Format cards or Frame swatches. Use Gelato frame photography for finishes."
+    },
+    {
+      "type": "select",
+      "id": "format_scope",
+      "label": "Frame image applies to",
+      "info": "Only used for Frame finishes. Upload separate paper vs canvas (floater) photos when the same finish name needs different imagery.",
+      "options": [
+        {
+          "value": "any",
+          "label": "Any format"
+        },
+        {
+          "value": "print",
+          "label": "Archival Quality Print"
+        },
+        {
+          "value": "canvas",
+          "label": "Giclée Canvas"
+        }
+      ],
+      "default": "any"
     }
   ],
   "presets": [

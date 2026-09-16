@@ -347,6 +347,56 @@
                         "badge": "Best value"
                       },
                       "blocks": {}
+                    },
+                    "desc_frame_none": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "No Frame",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_white": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "White",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_black": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Black",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_natural": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Light Wood",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_dark_wood": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Dark Wood",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
@@ -355,7 +405,12 @@
                     "desc_canvas",
                     "desc_small",
                     "desc_medium",
-                    "desc_large"
+                    "desc_large",
+                    "desc_frame_none",
+                    "desc_frame_white",
+                    "desc_frame_black",
+                    "desc_frame_natural",
+                    "desc_frame_dark_wood"
                   ]
                 },
                 "quantity": {

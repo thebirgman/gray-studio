@@ -429,26 +429,85 @@
                           if desc_block.settings.description != blank
                             assign option_description = desc_block.settings.description
                           endif
-                          assign option_badge = desc_block.settings.badge
-                          if desc_block.settings.image != blank
+                          if desc_block.settings.badge != blank
+                            assign option_badge = desc_block.settings.badge
+                          endif
+                          if described_layout != 'finish' and desc_block.settings.image != blank
                             assign option_thumb = desc_block.settings.image
                           endif
                         endif
                       endif
                     endfor
                   endif
+                  assign finish_image_any = blank
+                  assign finish_image_print = blank
+                  assign finish_image_canvas = blank
+                  assign finish_swatch_color = blank
+                  assign finish_swatch_color_hex = blank
+                  assign finish_is_none = false
                   if described_layout == 'finish'
                     assign option_badge = blank
                     assign option_description = blank
-                    assign option_thumb = blank
                     assign option_price = blank
                     assign option_compare = blank
                     assign option_save = 0
+
+                    if value_handle contains 'no-frame' or value_handle contains 'unframed' or value_handle == 'none' or value_handle == 'n-a'
+                      assign finish_is_none = true
+                    endif
+
+                    if product_option_value.swatch.image != blank
+                      assign finish_image_any = product_option_value.swatch.image
+                    elsif product_option_value.swatch.color != blank
+                      assign finish_swatch_color = product_option_value.swatch.color
+                    endif
+
+                    if option_thumb != blank and finish_image_any == blank
+                      assign finish_image_any = option_thumb
+                    endif
+                    assign option_thumb = blank
+
+                    if block != blank
+                      for desc_block in block.blocks
+                        if desc_block.type == '_option-description' or desc_block.type == 'option_description'
+                          assign desc_handle = desc_block.settings.option_value | strip | handleize
+                          assign desc_match = desc_block.settings.option_value | strip | downcase
+                          assign finish_desc_match = false
+                          if desc_handle == value_handle or desc_match == value_match
+                            assign finish_desc_match = true
+                          elsif desc_handle != blank and value_handle contains desc_handle
+                            assign finish_desc_match = true
+                          endif
+                          if finish_desc_match and desc_block.settings.image != blank
+                            assign finish_scope = desc_block.settings.format_scope | default: 'any'
+                            if finish_scope == 'print'
+                              assign finish_image_print = desc_block.settings.image
+                            elsif finish_scope == 'canvas'
+                              assign finish_image_canvas = desc_block.settings.image
+                            else
+                              assign finish_image_any = desc_block.settings.image
+                            endif
+                          endif
+                        endif
+                      endfor
+                    endif
+
+                    if finish_is_none == false and finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank and finish_swatch_color == blank
+                      if value_handle contains 'white'
+                        assign finish_swatch_color_hex = '#f4f2ef'
+                      elsif value_handle contains 'black'
+                        assign finish_swatch_color_hex = '#1c1a1d'
+                      elsif value_handle contains 'dark'
+                        assign finish_swatch_color_hex = '#4a3428'
+                      elsif value_handle contains 'natural' or value_handle contains 'light' or value_handle contains 'oak' or value_handle contains 'wood'
+                        assign finish_swatch_color_hex = '#d2b48c'
+                      endif
+                    endif
                   endif
                 endif
               -%}
               <label
-                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if described_layout != blank %} variant-option__button-label--described{% endif %}{% if option_badge != blank %} variant-option__button-label--badged{% endif %}"
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if described_layout != blank %} variant-option__button-label--described{% endif %}{% if described_layout == 'finish' %} variant-option__button-label--finish-swatch{% endif %}{% if option_badge != blank %} variant-option__button-label--badged{% endif %}{% if finish_is_none %} variant-option__button-label--finish-none{% endif %}"
                 {% if is_pairing_value %}
                   hidden
                 {% endif %}
@@ -504,11 +563,43 @@
                     mode: 'unscaled'
                   %}
                 {% elsif described_layout == 'finish' %}
-                  <span
-                    class="variant-option__card-title"
-                    data-key="variant-option-text"
-                  >
-                    {{- product_option_value | escape -}}
+                  <span class="variant-option__finish">
+                    <span
+                      class="variant-option__finish-swatch{% if finish_is_none %} variant-option__finish-swatch--none{% elsif finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank %} variant-option__finish-swatch--fallback{% endif %}"
+                      {% if finish_swatch_color != blank %}
+                        style="--finish-swatch-bg: rgb({{ finish_swatch_color.rgb }});"
+                      {% elsif finish_swatch_color_hex != blank %}
+                        style="--finish-swatch-bg: {{ finish_swatch_color_hex }};"
+                      {% endif %}
+                    >
+                      {%- if finish_image_any != blank -%}
+                        <span
+                          class="variant-option__finish-media variant-option__finish-media--any"
+                          style="background-image: url('{{ finish_image_any | image_url: width: 160 }}');"
+                        ></span>
+                      {%- endif -%}
+                      {%- if finish_image_print != blank -%}
+                        <span
+                          class="variant-option__finish-media variant-option__finish-media--print"
+                          style="background-image: url('{{ finish_image_print | image_url: width: 160 }}');"
+                        ></span>
+                      {%- endif -%}
+                      {%- if finish_image_canvas != blank -%}
+                        <span
+                          class="variant-option__finish-media variant-option__finish-media--canvas"
+                          style="background-image: url('{{ finish_image_canvas | image_url: width: 160 }}');"
+                        ></span>
+                      {%- endif -%}
+                      {%- if finish_is_none -%}
+                        <span class="variant-option__finish-none" aria-hidden="true"></span>
+                      {%- endif -%}
+                    </span>
+                    <span
+                      class="variant-option__card-title"
+                      data-key="variant-option-text"
+                    >
+                      {{- product_option_value | escape -}}
+                    </span>
                   </span>
                 {% elsif described_layout != blank %}
                   {%- if option_badge != blank -%}

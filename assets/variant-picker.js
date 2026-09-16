@@ -772,12 +772,28 @@ export default class VariantPicker extends Component {
     }
 
     const changedValue = String(changedInput.value || '').trim().toLowerCase();
+    const changedIsPhysicalFrame =
+      changedFieldset instanceof HTMLFieldSetElement &&
+      (changedFieldset.classList.contains('variant-option--finish') ||
+        changedFieldset.dataset.axis === 'finish') &&
+      !/no\s*frame/i.test(String(changedInput.value || ''));
+
     const candidates = variants.filter((variant) => {
       if (!variant.available) return false;
       if (changedShopifyIndex != null) {
-        return this.#sameOptionValue(variant.options[changedShopifyIndex], changedInput.value);
+        if (!this.#sameOptionValue(variant.options[changedShopifyIndex], changedInput.value)) return false;
+      } else if (!variant.options.some((option) => String(option || '').trim().toLowerCase() === changedValue)) {
+        return false;
       }
-      return variant.options.some((option) => String(option || '').trim().toLowerCase() === changedValue);
+      // Picking White/Wood/Black must land on a print/canvas format, never Digital.
+      if (
+        changedIsPhysicalFrame &&
+        formatShopifyIndex != null &&
+        /digital/i.test(String(variant.options[formatShopifyIndex] || ''))
+      ) {
+        return false;
+      }
+      return true;
     });
     if (candidates.length === 0) return;
 
@@ -787,6 +803,18 @@ export default class VariantPicker extends Component {
         if (index === changedShopifyIndex) return;
         if (this.#sameOptionValue(option, selectedByShopifyIndex[index])) total += 10;
       });
+      if (formatShopifyIndex != null && changedShopifyIndex !== formatShopifyIndex) {
+        const formatValue = variant.options[formatShopifyIndex] || '';
+        // Keep the current format whenever possible (e.g. picking a frame
+        // should not bounce Archival → Digital).
+        if (this.#sameOptionValue(formatValue, selectedByShopifyIndex[formatShopifyIndex])) {
+          total += 50;
+        }
+        // A real frame finish never belongs on Digital Download.
+        if (changedIsPhysicalFrame && /digital/i.test(formatValue)) {
+          total -= 100;
+        }
+      }
       if (sizeShopifyIndex != null && changedShopifyIndex !== sizeShopifyIndex) {
         const sizeValue = variant.options[sizeShopifyIndex] || '';
         if (/digital/i.test(sizeValue)) total -= 20;
@@ -1273,6 +1301,7 @@ export default class VariantPicker extends Component {
   /**
    * Show/hide Frame Finish via CSS (.is-physical-format). Keep a valid finish
    * selected so Format×Size×Finish always resolves to a Shopify variant.
+   * Digital Download always uses No Frame (the only finish that variant has).
    * @param {boolean} showFinish
    * @param {string} [formatValue]
    */
@@ -1289,10 +1318,35 @@ export default class VariantPicker extends Component {
     );
     if (!inputs.length) return;
 
+    inputs.forEach((input) => {
+      input.disabled = false;
+    });
+
+    // Digital: lock to No Frame. Physical frame picks are not valid for that format.
+    if (!showFinish) {
+      const noFrame =
+        inputs.find((input) => /no\s*frame/i.test(input.value)) ??
+        inputs.find((input) => this.#sameOptionValue(input.value, this.#frameFinishValue)) ??
+        inputs[0];
+      inputs.forEach((input) => {
+        input.closest('label')?.removeAttribute('hidden');
+      });
+      if (noFrame) {
+        this.#selectRadio(noFrame);
+        this.#frameFinishValue = noFrame.value;
+      }
+      this.#debug('frame finish sync', {
+        showFinish,
+        selected: noFrame?.value ?? null,
+        pool: ['No Frame (digital lock)'],
+        pickerHasPhysicalClass: this.classList.contains('is-physical-format'),
+      });
+      return;
+    }
+
     // Unhide all finish labels — No Frame is a real selectable option now.
     inputs.forEach((input) => {
       input.closest('label')?.removeAttribute('hidden');
-      input.disabled = false;
     });
 
     const finishIndex = this.#shopifyOptionIndex(fieldset);
