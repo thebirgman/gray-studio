@@ -537,32 +537,45 @@
         "benefit_materials": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884199_1.webp",
             "icon_asset": "step-by-step-pdp-icon-1.svg",
-            "title": "Archival-quality materials",
-            "description": "Matte archival paper on Archival Quality Prints, gallery-wrapped canvas on Giclée. Made to hold its color for years, not fade in a sunny room."
+            "title": "Select a scene",
+            "description": "Choose from 40+ destinations, browsed by place or by mood."
           }
         },
         "benefit_frame": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884196.webp",
             "icon_asset": "step-by-step-pdp-icon-2.svg",
-            "title": "Frame it your way",
-            "description": "Prints can ship with no frame, a black frame, or a white frame — whichever actually matches the room it's going in."
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
           }
         },
         "benefit_format": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884196_1.webp",
             "icon_asset": "step-by-step-pdp-icon-3.svg",
-            "title": "Rectangular by design",
-            "description": "Every scene is painted in a rectangular format, giving more size and framing options and a more natural fit on the wall."
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        "step_bmbtrF": {
+          "type": "step",
+          "settings": {
+            "icon": "shopify://shop_images/group_1597884199.webp",
+            "icon_asset": "step-by-step-pdp-icon-3.svg",
+            "title": "Select a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
           }
         }
       },
       "block_order": [
         "benefit_materials",
         "benefit_frame",
-        "benefit_format"
+        "benefit_format",
+        "step_bmbtrF"
       ],
       "name": "Why you'll love it",
       "settings": {
