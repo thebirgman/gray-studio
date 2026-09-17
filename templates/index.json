@@ -14,7 +14,7 @@
       "name": "Hero banner",
       "settings": {
         "heading": "Here begins the portrait of your",
-        "heading_accent": "Best Friend",
+        "heading_accent": "Best Friend and their worldly adventure!",
         "description": "Upload one photo of your pup. Choose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.",
         "button_primary_label": "Start free preview",
         "button_primary_link": "shopify://collections/all",
@@ -258,7 +258,9 @@
           "settings": {
             "icon_asset": "trust-strip-icon-brush.svg",
             "title": "No Risk of a Bad Fit",
-            "description": "Free preview first, then up to three free adjustments. Still off? Try a new photo."
+            "description": "Free preview first, then up to three free adjustments. Still off? Try a new photo.",
+            "link_text": "",
+            "link_url": ""
           }
         },
         "trust_item_2": {
@@ -266,7 +268,9 @@
           "settings": {
             "icon_asset": "trust-strip-icon-heart.svg",
             "title": "Real Humans Who Love Dogs Too",
-            "description": "Questions about a scene, a photo, or an order? Reach us anytime by email or live chat."
+            "description": "Questions about a scene, a photo, or an order? Reach us anytime by email or live chat.",
+            "link_text": "",
+            "link_url": ""
           }
         },
         "trust_item_3": {
@@ -274,7 +278,9 @@
           "settings": {
             "icon_asset": "trust-strip-icon-box.svg",
             "title": "Worldwide Delivery",
-            "description": "We ship portraits globally with fully tracked shipping methods. Free shipping on all orders over $100!"
+            "description": "We ship portraits globally with fully tracked shipping methods. Free shipping on all orders over $100!",
+            "link_text": "",
+            "link_url": ""
           }
         }
       },
@@ -285,9 +291,16 @@
       ],
       "name": "t:names.trust_strip",
       "settings": {
+        "section_width": "full-width",
+        "mobile_full_width": true,
+        "border_radius": 0,
         "background_color": "#c8afde",
         "text_color": "#321c41",
         "dots_label": "Trust highlights",
+        "dot_active_color": "",
+        "dot_inactive_color": "",
+        "dots_pin_bottom": false,
+        "dots_offset_bottom_mobile": 20,
         "padding-block-start": 40,
         "padding-block-end": 40,
         "padding-inline-start": 120,
