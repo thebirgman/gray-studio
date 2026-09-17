@@ -491,7 +491,8 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Shipping",
-                    "answer": "Prints ship worldwide with tracked delivery; orders over $100 ship free. Digital downloads deliver by email in minutes."
+                    "answer": "",
+                    "image": "shopify://shop_images/size_guide_pups.jpg"
                   },
                   "blocks": {}
                 }
