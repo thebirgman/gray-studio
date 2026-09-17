@@ -1779,7 +1779,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-1.svg",
-            "title": "Pick a scene",
+            "title": "Select a scene",
             "description": "Choose from 40+ destinations, browsed by place or by mood."
           }
         },
@@ -1803,7 +1803,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-4.svg",
-            "title": "Pick a size & buy",
+            "title": "Select a size & buy",
             "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
           }
         }
@@ -2612,7 +2612,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Orders are fulfilled through our print partner and ship worldwide, free on orders over $100.</p>",
+                        "text": "<p>Orders are fulfilled through our print partner and ship worldwide, free on all orders!</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
