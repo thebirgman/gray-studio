@@ -183,10 +183,10 @@
       "other": "({{ count }} items)"
     },
     "cart_empty_heading": "Your Bag Is Empty",
-    "cart_empty_body": "Looks like you haven’t added anything yet. Spend {{ amount }}+ and get Free Shipping",
+    "cart_empty_body": "Looks like you haven’t added anything yet. Get free shipping on all orders!",
     "cart_bestsellers_heading": "Discover Our Best Sellers",
     "proceed_to_checkout": "Proceed to checkout",
-    "cart_trust_note": "Free shipping on orders over {{ amount }} · Secure checkout",
+    "cart_trust_note": "Free shipping on all orders · Secure checkout",
     "calculated_at_checkout": "Calculated at checkout",
     "shipping": "Shipping",
     "special_offer": "Special offer",
