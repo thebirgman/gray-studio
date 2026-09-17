@@ -460,7 +460,7 @@
               "type": "pdp-trust",
               "settings": {
                 "item_1_icon": "shopify://shop_images/Union.svg",
-                "item_1_label": "Free shipping over $100",
+                "item_1_label": "Free shipping",
                 "item_2_icon": "shopify://shop_images/Frame_2.svg",
                 "item_2_label": "Worldwide Delivery",
                 "item_3_label": "40+ scene collection"
