@@ -269,7 +269,8 @@
                   "settings": {
                     "option_value": "Digital Download",
                     "description": "High resolution file, delivered in minutes, crisp at any print size, print online or locally",
-                    "badge": ""
+                    "badge": "",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -278,7 +279,8 @@
                   "settings": {
                     "option_value": "Archival Quality Print",
                     "description": "Museum quality fine art print, luxurious matte finish, fade resistant inks, digital file included free, shipping is free, ships in 3–7 days",
-                    "badge": ""
+                    "badge": "",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -287,7 +289,8 @@
                   "settings": {
                     "option_value": "Giclée Canvas",
                     "description": "High resolution print with fade resistant inks on canvas fabric, wrapped over wood stretcher bars, digital file included free, shipping is free, ships in 3–7 days",
-                    "badge": ""
+                    "badge": "",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -296,7 +299,8 @@
                   "settings": {
                     "option_value": "Small - 12x16\"",
                     "description": "",
-                    "badge": ""
+                    "badge": "",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -305,7 +309,8 @@
                   "settings": {
                     "option_value": "Medium - 18x24\"",
                     "description": "",
-                    "badge": "Most loved"
+                    "badge": "Most loved",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -314,7 +319,8 @@
                   "settings": {
                     "option_value": "Large - 24x32\"",
                     "description": "",
-                    "badge": "Best value"
+                    "badge": "Best value",
+                    "format_scope": "any"
                   },
                   "blocks": {}
                 },
@@ -464,7 +470,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Materials & formats",
-                    "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Archival Quality Print: archival matte paper. Giclée Canvas: gallery-wrapped canvas print. Both prints can be ordered with no frame, a black frame, or a white frame."
+                    "answer": "Prints are made with museum-quality archival paper with fade-resistant inks. The kind of quality that holds color and detail for decades.\n\nCanvas is artist grade 2cm cotton- poly blend."
                   },
                   "blocks": {}
                 },
@@ -481,7 +487,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Shipping",
-                    "answer": "Prints ship worldwide with tracked delivery; orders over $100 ship free. Digital downloads deliver by email in minutes."
+                    "answer": "Prints ship worldwide with tracked delivery. Always free! Digital downloads deliver by email in seconds."
                   },
                   "blocks": {}
                 }
