@@ -1400,6 +1400,9 @@
     },
     "contact_panel": {
       "type": "contact-panel",
+      "custom_css": [
+        "svg.icon-paw{display: none;}"
+      ],
       "settings": {
         "heading": "WE WOULD LOVE TO HEAR FROM YOU",
         "intro": "Tell us about an order, a scene, a gift, or just to say hello.",
