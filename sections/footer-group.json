@@ -17,19 +17,22 @@
         "menu_shop": {
           "type": "menu_column",
           "settings": {
-            "heading": "Shop"
+            "heading": "Shop",
+            "menu": ""
           }
         },
         "menu_about": {
           "type": "menu_column",
           "settings": {
-            "heading": "About"
+            "heading": "About",
+            "menu": ""
           }
         },
         "menu_help": {
           "type": "menu_column",
           "settings": {
-            "heading": "Help"
+            "heading": "Help",
+            "menu": ""
           }
         }
       },
@@ -41,19 +44,26 @@
       "name": "t:names.footer",
       "settings": {
         "contact_label": "Contact us",
-        "contact_email": "info@pupsaroundtheworld.com",
-        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world.",
-        "instagram_handle": "@pupsaroundtheworld",
+        "contact_email": "kathryn@pupsaroundtheworldart@gmail.com",
+        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful locations all around the world.",
+        "instagram_url": "",
+        "instagram_handle": "@pupsaroundtheworldart",
+        "pinterest_url": "",
         "pinterest_handle": "@pupsaroundtheworld",
+        "tiktok_url": "",
         "tiktok_handle": "@pupsaroundtheworld",
         "privacy_label": "Privacy",
+        "privacy_url": "",
         "terms_label": "Terms",
+        "terms_url": "",
         "shipping_label": "Shipping & Returns",
+        "shipping_url": "",
         "designer_name": "Lantern Sol",
+        "designer_url": "",
         "marquee_speed": 2,
-        "background_color": "#F5CD72",
+        "background_color": "#f5cd72",
         "text_color": "#733014",
-        "accent_color": "#CE6911"
+        "accent_color": "#ce6911"
       }
     }
   },
