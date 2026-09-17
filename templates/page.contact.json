@@ -981,7 +981,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>One clear, well-lit photo of your pup's face is all it takes.</p>",
+                        "text": "<p>One clear, well-lit photo of your pup's face and body is all it takes.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "none",
