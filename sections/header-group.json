@@ -42,7 +42,7 @@
       "settings": {
         "speed": 3,
         "section_width": "page-width",
-        "background_color": "#C9DEF4",
+        "background_color": "#c9def4",
         "divider_width": 0,
         "divider_color": "{{ settings.color_palette.color3 }}",
         "padding-block-start": 15,
@@ -101,7 +101,7 @@
         "search_row": "top",
         "show_cta": true,
         "cta_label": "Create your portrait",
-        "cta_link": "",
+        "cta_link": "shopify://products/create-your-portrait",
         "show_country": true,
         "country_selector_style": false,
         "show_language": false,
