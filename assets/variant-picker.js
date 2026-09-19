@@ -1307,8 +1307,8 @@ export default class VariantPicker extends Component {
    * Show/hide Frame Finish via CSS (.is-physical-format). Keep a valid finish
    * selected so Format×Size×Finish always resolves to a Shopify variant.
    * Digital Download always uses No Frame (hidden with the finish fieldset).
-   * Print/canvas never offer No Frame — only real frame finishes that exist
-   * for the current Format × Size selection.
+   * Print/canvas offer No Frame plus any frame finishes available for the
+   * current Format × Size selection.
    * @param {boolean} showFinish
    * @param {string} [formatValue]
    * @param {string} [sizeValue]
@@ -1363,12 +1363,9 @@ export default class VariantPicker extends Component {
       '';
 
     const finishIndex = this.#shopifyOptionIndex(fieldset);
-    const variants = this.#readAllVariants();
-    const pool = inputs.filter((input) => {
-      // No Frame is digital-only — never show it on print/canvas.
-      if (isNoFrameInput(input)) return false;
-      return this.#finishAvailableForSelection(input, formatValue, resolvedSize, finishIndex);
-    });
+    const pool = inputs.filter((input) =>
+      this.#finishAvailableForSelection(input, formatValue, resolvedSize, finishIndex)
+    );
 
     inputs.forEach((input) => {
       const label = input.closest('label');

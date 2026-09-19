@@ -591,7 +591,21 @@
                         ></span>
                       {%- endif -%}
                       {%- if finish_is_none -%}
-                        <span class="variant-option__finish-none" aria-hidden="true"></span>
+                        {%- if finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank -%}
+                          <span class="variant-option__finish-none" aria-hidden="true">
+                            <svg
+                              class="variant-option__finish-none-icon"
+                              viewBox="0 0 24 24"
+                              width="22"
+                              height="22"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75" />
+                              <path d="M6.4 6.4L17.6 17.6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+                            </svg>
+                          </span>
+                        {%- endif -%}
                       {%- endif -%}
                     </span>
                     <span

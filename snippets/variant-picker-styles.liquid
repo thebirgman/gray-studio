@@ -659,14 +659,17 @@
   .variant-option--described.variant-option--finish .variant-option__finish-none {
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(
-        to top right,
-        transparent calc(50% - 0.6px),
-        #c8c4cc 0,
-        #c8c4cc calc(50% + 0.6px),
-        transparent 0
-      );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    color: #1c1a1d;
+  }
+
+  .variant-option--described.variant-option--finish .variant-option__finish-none-icon {
+    display: block;
+    width: 1.375rem;
+    height: 1.375rem;
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish
@@ -699,19 +702,7 @@
   }
 
   .variant-option.variant-option--buttons.variant-option--described.variant-option--finish
-    .variant-option__button-label[hidden],
-  .variant-picker--described.is-physical-format
-    .variant-option--finish
-    .variant-option__button-label--finish-none,
-  .variant-picker--described.is-physical-format
-    .variant-option--finish
-    .variant-option__button-label:has(input[data-option-handle*='no-frame']),
-  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='physical'])
-    .variant-option--finish
-    .variant-option__button-label--finish-none,
-  .variant-picker--described:has(.variant-option--format input:checked[data-format-kind='physical'])
-    .variant-option--finish
-    .variant-option__button-label:has(input[data-option-handle*='no-frame']) {
+    .variant-option__button-label[hidden] {
     display: none !important;
   }
 
