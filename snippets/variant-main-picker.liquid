@@ -480,7 +480,7 @@
                           elsif desc_handle != blank and value_handle contains desc_handle
                             assign finish_desc_match = true
                           endif
-                          if finish_desc_match and desc_block.settings.image != blank
+                          if finish_desc_match and desc_block.settings.image != blank and finish_is_none == false
                             assign finish_scope = desc_block.settings.format_scope | default: 'any'
                             if finish_scope == 'print'
                               assign finish_image_print = desc_block.settings.image
@@ -592,7 +592,7 @@
                           style="background-image: url('{{ finish_image_canvas | image_url: width: 160 }}');"
                         ></span>
                       {%- endif -%}
-                      {%- if finish_is_none and finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank -%}
+                      {%- if finish_is_none -%}
                         <span class="variant-option__finish-none" aria-hidden="true">
                           <svg
                             class="variant-option__finish-none-icon"
