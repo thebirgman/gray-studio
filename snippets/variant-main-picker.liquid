@@ -456,15 +456,17 @@
                       assign finish_is_none = true
                     endif
 
-                    if product_option_value.swatch.image != blank
-                      assign finish_image_any = product_option_value.swatch.image
-                    elsif product_option_value.swatch.color != blank
-                      assign finish_swatch_color = product_option_value.swatch.color
-                    endif
+                    unless finish_is_none
+                      if product_option_value.swatch.image != blank
+                        assign finish_image_any = product_option_value.swatch.image
+                      elsif product_option_value.swatch.color != blank
+                        assign finish_swatch_color = product_option_value.swatch.color
+                      endif
 
-                    if option_thumb != blank and finish_image_any == blank
-                      assign finish_image_any = option_thumb
-                    endif
+                      if option_thumb != blank and finish_image_any == blank
+                        assign finish_image_any = option_thumb
+                      endif
+                    endunless
                     assign option_thumb = blank
 
                     if block != blank
@@ -590,22 +592,20 @@
                           style="background-image: url('{{ finish_image_canvas | image_url: width: 160 }}');"
                         ></span>
                       {%- endif -%}
-                      {%- if finish_is_none -%}
-                        {%- if finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank -%}
-                          <span class="variant-option__finish-none" aria-hidden="true">
-                            <svg
-                              class="variant-option__finish-none-icon"
-                              viewBox="0 0 24 24"
-                              width="22"
-                              height="22"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75" />
-                              <path d="M6.4 6.4L17.6 17.6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
-                            </svg>
-                          </span>
-                        {%- endif -%}
+                      {%- if finish_is_none and finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank -%}
+                        <span class="variant-option__finish-none" aria-hidden="true">
+                          <svg
+                            class="variant-option__finish-none-icon"
+                            viewBox="0 0 24 24"
+                            width="22"
+                            height="22"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75" />
+                            <path d="M6.4 6.4L17.6 17.6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+                          </svg>
+                        </span>
                       {%- endif -%}
                     </span>
                     <span
