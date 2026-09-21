@@ -5435,3 +5435,7 @@ p.pp-prompt-help {
   display: block;
   margin-bottom: 10px!important;
 }
+
+.media-gallery--carousel{
+  top: 0;
+}
