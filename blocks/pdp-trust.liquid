@@ -1,5 +1,5 @@
 {%- liquid
-  assign item_1_label = block.settings.item_1_label | default: 'Free shipping over $100'
+  assign item_1_label = block.settings.item_1_label | default: 'Free shipping'
   assign item_2_label = block.settings.item_2_label | default: 'Worldwide Delivery'
   assign item_3_label = block.settings.item_3_label | default: 'Lifetime warranty'
   assign item_1_icon = block.settings.item_1_icon
@@ -161,7 +161,7 @@ ul.pdp-trust li:not(:first-child) {
       "type": "text",
       "id": "item_1_label",
       "label": "Label",
-      "default": "Free shipping over $100"
+      "default": "Free shipping"
     },
     {
       "type": "header",
