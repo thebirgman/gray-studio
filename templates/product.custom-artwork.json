@@ -258,7 +258,8 @@
                 "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA": {
                   "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-widget/019fcb85-cdee-7125-9e57-d241767d6aa5",
                   "settings": {
-                    "max_tries": 3
+                    "max_tries": 3,
+                    "loading_video": "https://cdn.shopify.com/videos/c/o/v/21de526f86bf40c9b10ad094610d64a6.webm"
                   }
                 },
                 "variant_picker_R3rGDr": {
@@ -475,7 +476,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Materials & formats",
-                    "answer": "Digital Download: high-resolution file, 300 DPI, ready to print at home or order elsewhere. Archival Quality Print: archival matte paper. Giclée Canvas: gallery-wrapped canvas print. Both prints can be ordered with no frame, a black frame, or a white frame."
+                    "answer": "Prints ship worldwide with tracked delivery. Always free! Digital downloads deliver by email in seconds.Prints are made with museum-quality archival paper with fade-resistant inks. The kind of quality that holds color and detail for decades.\n\nCanvas is artist grade 2cm cotton- poly blend."
                   },
                   "blocks": {}
                 },
@@ -483,7 +484,8 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Sizing guide",
-                    "answer": "Artwork is square-format. Exact size options and dimensions are being finalized with our print partner and will be listed here before launch."
+                    "answer": "",
+                    "image": "shopify://shop_images/size_guide_pups.jpg"
                   },
                   "blocks": {}
                 },
@@ -491,8 +493,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Shipping",
-                    "answer": "",
-                    "image": "shopify://shop_images/size_guide_pups.jpg"
+                    "answer": "Prints ship worldwide with tracked delivery. Always free! Digital downloads deliver by email in seconds."
                   },
                   "blocks": {}
                 }
