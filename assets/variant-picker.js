@@ -173,6 +173,7 @@ export default class VariantPicker extends Component {
     this.addEventListener('click', this.#onVariantClick, true);
     this.#resizeObserver.observe(this);
     try {
+      this.#applyFinishAssets();
       this.recomputeAvailability();
       this.#syncDescribedAxesVisibility();
       this.#pairSizeToFormat();
@@ -186,6 +187,7 @@ export default class VariantPicker extends Component {
 
   updatedCallback() {
     super.updatedCallback();
+    this.#applyFinishAssets();
     this.#refreshRadioCaches();
     this.#schedulePairSizeToFormat();
     this.#debug('updatedCallback');
@@ -674,6 +676,7 @@ export default class VariantPicker extends Component {
     this.recomputeAvailability();
     this.#syncDescribedAxesVisibility();
     this.#schedulePairSizeToFormat();
+    this.#applyFinishAssets();
     this.#debug('after morph');
 
     return newProduct;
@@ -1072,6 +1075,72 @@ export default class VariantPicker extends Component {
     const checked =
       fieldset.querySelector('input:checked') || fieldset.querySelector('[data-current-checked="true"]');
     return checked instanceof HTMLInputElement ? checked : null;
+  }
+
+  /**
+   * Frame photos are printed by nested option-description blocks. Apply them
+   * here so a swatch still updates if Liquid matching misses the option name.
+   */
+  #applyFinishAssets() {
+    const assets = this.querySelectorAll('.pdp-option-asset[data-image]');
+    if (!assets.length) return;
+
+    const inputs = Array.from(
+      this.querySelectorAll('fieldset.variant-option--finish input, fieldset[data-axis="finish"] input')
+    ).filter((input) => input instanceof HTMLInputElement);
+
+    assets.forEach((asset) => {
+      if (!(asset instanceof HTMLElement)) return;
+      const src = asset.dataset.image;
+      const optionValue = (asset.dataset.optionValue || '').trim();
+      const handle = this.#handleize(optionValue);
+      if (!src || !handle || /no-frame|unframed/.test(handle)) return;
+
+      const scope = asset.dataset.formatScope || 'any';
+      const mediaClass =
+        scope === 'print'
+          ? 'variant-option__finish-media--print'
+          : scope === 'canvas'
+            ? 'variant-option__finish-media--canvas'
+            : 'variant-option__finish-media--any';
+
+      inputs.forEach((input) => {
+        const inputHandle = input.dataset.optionHandle || '';
+        const inputValue = input.value.trim().toLowerCase();
+        const exact = inputHandle === handle || inputValue === optionValue.toLowerCase();
+        const partial = inputHandle.includes(handle) || (handle.includes(inputHandle) && inputHandle.length > 2);
+        if (!exact && !partial) return;
+
+        const swatch = input.closest('label')?.querySelector('.variant-option__finish-swatch');
+        if (!(swatch instanceof HTMLElement)) return;
+
+        let img = swatch.querySelector(`img.${mediaClass}`);
+        if (!(img instanceof HTMLImageElement)) {
+          img = document.createElement('img');
+          img.className = `variant-option__finish-media ${mediaClass}`;
+          img.alt = '';
+          img.width = 112;
+          img.height = 112;
+          swatch.appendChild(img);
+        }
+        if (img.getAttribute('src') !== src) img.src = src;
+        swatch.classList.remove('variant-option__finish-swatch--fallback');
+        swatch.style.removeProperty('--finish-swatch-bg');
+      });
+    });
+  }
+
+  /**
+   * @param {string} value
+   * @returns {string}
+   */
+  #handleize(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/['"]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   /** @returns {HTMLFieldSetElement | null} */

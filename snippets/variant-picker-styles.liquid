@@ -588,15 +588,25 @@
     background-position: center;
   }
 
+  .pdp-option-assets,
+  .pdp-option-asset {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
   .variant-option--described.variant-option--finish .variant-option__finish-media {
     position: absolute;
     inset: 0;
     display: none;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
-    background-size: cover;
+    background-color: #fff;
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
   }

@@ -88,6 +88,11 @@
       data-shopify-visual-preview
     {% endif %}
   >
+    {%- if option_description_rows != blank -%}
+      <div class="pdp-option-assets">
+        {{ option_description_rows }}
+      </div>
+    {%- endif -%}
     <div
       class="variant-picker__form{% if template.suffix == 'custom-artwork' %} variant-picker__form--from-step-3{% endif %}"
       {% if template.suffix == 'custom-artwork' %}
@@ -427,11 +432,11 @@
                     endif
                   endunless
                   if option_description_rows != blank
-                    assign option_desc_records = option_description_rows | split: '@@'
+                    assign option_desc_records = option_description_rows | split: '[[GS]]'
                     for record in option_desc_records
-                      assign record_stripped = record | strip
-                      if record_stripped != blank
-                        assign desc_fields = record_stripped | split: '||'
+                      assign record_stripped = record | split: '[[/GS]]' | first | strip_html | strip
+                      if record_stripped contains '[[F]]'
+                        assign desc_fields = record_stripped | split: '[[F]]'
                         assign desc_option_value = desc_fields[0] | strip
                         assign desc_handle = desc_option_value | handleize
                         assign desc_text_match = desc_option_value | downcase
@@ -495,11 +500,11 @@
                     assign option_thumb = blank
 
                     if option_description_rows != blank
-                      assign option_desc_records = option_description_rows | split: '@@'
+                      assign option_desc_records = option_description_rows | split: '[[GS]]'
                       for record in option_desc_records
-                        assign record_stripped = record | strip
-                        if record_stripped != blank
-                          assign desc_fields = record_stripped | split: '||'
+                        assign record_stripped = record | split: '[[/GS]]' | first | strip_html | strip
+                        if record_stripped contains '[[F]]'
+                          assign desc_fields = record_stripped | split: '[[F]]'
                           assign desc_option_value = desc_fields[0] | strip
                           assign desc_handle = desc_option_value | handleize
                           assign desc_text_match = desc_option_value | downcase
@@ -649,24 +654,27 @@
                         assign finish_print_src = blank
                         assign finish_canvas_src = blank
                         if finish_image_any != blank
-                          if finish_image_any.src != blank
-                            assign finish_any_src = finish_image_any | image_url: width: 240
+                          assign finish_any_probe = finish_image_any | append: ''
+                          if finish_any_probe contains '://' or finish_any_probe contains '/cdn/' or finish_any_probe contains 'shopify.com'
+                            assign finish_any_src = finish_any_probe | strip
                           else
-                            assign finish_any_src = finish_image_any
+                            assign finish_any_src = finish_image_any | image_url: width: 240
                           endif
                         endif
                         if finish_image_print != blank
-                          if finish_image_print.src != blank
-                            assign finish_print_src = finish_image_print | image_url: width: 240
+                          assign finish_print_probe = finish_image_print | append: ''
+                          if finish_print_probe contains '://' or finish_print_probe contains '/cdn/' or finish_print_probe contains 'shopify.com'
+                            assign finish_print_src = finish_print_probe | strip
                           else
-                            assign finish_print_src = finish_image_print
+                            assign finish_print_src = finish_image_print | image_url: width: 240
                           endif
                         endif
                         if finish_image_canvas != blank
-                          if finish_image_canvas.src != blank
-                            assign finish_canvas_src = finish_image_canvas | image_url: width: 240
+                          assign finish_canvas_probe = finish_image_canvas | append: ''
+                          if finish_canvas_probe contains '://' or finish_canvas_probe contains '/cdn/' or finish_canvas_probe contains 'shopify.com'
+                            assign finish_canvas_src = finish_canvas_probe | strip
                           else
-                            assign finish_canvas_src = finish_image_canvas
+                            assign finish_canvas_src = finish_image_canvas | image_url: width: 240
                           endif
                         endif
                       -%}

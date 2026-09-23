@@ -1,10 +1,35 @@
 {% doc %}
-  Stores a short description (and optional thumbnail) for a product option value.
-  Rendered settings are read by the variant picker; this block has no storefront markup.
+  Stores a short description and optional thumbnail for one product option value.
+
+  Nested block settings are not readable from the variant picker snippet, so this
+  block prints a hidden payload the picker parses into card copy and frame swatches.
 
   @example
   {% content_for 'block', type: '_option-description', id: 'desc-digital' %}
 {% enddoc %}
+
+{%- liquid
+  assign row_value = block.settings.option_value | strip | replace: '[[', ''
+  assign row_description = block.settings.description | strip | strip_newlines | replace: '[[', ''
+  assign row_badge = block.settings.badge | strip | replace: '[[', ''
+  assign row_scope = block.settings.format_scope | default: 'any' | strip
+  assign row_image = ''
+  if block.settings.image != blank
+    assign row_image = block.settings.image | image_url: width: 240
+  endif
+-%}
+<div
+  class="pdp-option-asset"
+  {{ block.shopify_attributes }}
+  aria-hidden="true"
+  data-option-value="{{ row_value | escape }}"
+  data-format-scope="{{ row_scope | escape }}"
+  {% if row_image != blank %}
+    data-image="{{ row_image | escape }}"
+  {% endif %}
+>
+  [[GS]]{{ row_value }}[[F]]{{ row_description }}[[F]]{{ row_badge }}[[F]]{{ row_scope }}[[F]]{{ row_image }}[[/GS]]
+</div>
 
 {% schema %}
 {
