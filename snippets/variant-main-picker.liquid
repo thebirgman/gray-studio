@@ -8,6 +8,7 @@
 
   @param {object} product_resource - The product object.
   @param {object} [block] - The variant picker block object.
+  @param {string} [option_description_rows] - Flat option-description rows from the parent block. Nested block.blocks is empty inside this snippet.
   @param {object} section - The section object.
   @param {object} product - The current product object (used to determine selected variant state).
 {%- enddoc -%}
@@ -425,7 +426,32 @@
                       endif
                     endif
                   endunless
-                  if block != blank
+                  if option_description_rows != blank
+                    assign option_desc_records = option_description_rows | split: '@@'
+                    for record in option_desc_records
+                      assign record_stripped = record | strip
+                      if record_stripped != blank
+                        assign desc_fields = record_stripped | split: '||'
+                        assign desc_option_value = desc_fields[0] | strip
+                        assign desc_handle = desc_option_value | handleize
+                        assign desc_text_match = desc_option_value | downcase
+                        if desc_handle == value_handle or desc_text_match == value_match
+                          assign row_description = desc_fields[1] | strip
+                          assign row_badge = desc_fields[2] | strip
+                          assign row_image = desc_fields[4] | strip
+                          if row_description != blank
+                            assign option_description = row_description
+                          endif
+                          if row_badge != blank
+                            assign option_badge = row_badge
+                          endif
+                          if described_layout != 'finish' and row_image != blank
+                            assign option_thumb = row_image
+                          endif
+                        endif
+                      endif
+                    endfor
+                  elsif block != blank
                     for desc_block in block.blocks
                       if desc_block.type == '_option-description' or desc_block.type == 'option_description'
                         assign desc_handle = desc_block.settings.option_value | strip | handleize
@@ -468,7 +494,40 @@
                     endunless
                     assign option_thumb = blank
 
-                    if block != blank
+                    if option_description_rows != blank
+                      assign option_desc_records = option_description_rows | split: '@@'
+                      for record in option_desc_records
+                        assign record_stripped = record | strip
+                        if record_stripped != blank
+                          assign desc_fields = record_stripped | split: '||'
+                          assign desc_option_value = desc_fields[0] | strip
+                          assign desc_handle = desc_option_value | handleize
+                          assign desc_text_match = desc_option_value | downcase
+                          assign finish_desc_match = false
+                          if desc_handle == value_handle or desc_text_match == value_match
+                            assign finish_desc_match = true
+                          elsif desc_handle != blank and value_handle contains desc_handle
+                            assign finish_desc_match = true
+                          elsif value_handle != blank and desc_handle contains value_handle
+                            assign finish_desc_match = true
+                          endif
+                          assign row_image = desc_fields[4] | strip
+                          if finish_desc_match and row_image != blank and finish_is_none == false
+                            assign finish_scope = desc_fields[3] | strip | default: 'any'
+                            if finish_scope == blank
+                              assign finish_scope = 'any'
+                            endif
+                            if finish_scope == 'print'
+                              assign finish_image_print = row_image
+                            elsif finish_scope == 'canvas'
+                              assign finish_image_canvas = row_image
+                            else
+                              assign finish_image_any = row_image
+                            endif
+                          endif
+                        endif
+                      endfor
+                    elsif block != blank
                       for desc_block in block.blocks
                         if desc_block.type == '_option-description' or desc_block.type == 'option_description'
                           assign desc_handle = desc_block.settings.option_value | strip | handleize
@@ -585,23 +644,61 @@
                         style="--finish-swatch-bg: {{ finish_swatch_color_hex }};"
                       {% endif %}
                     >
-                      {%- if finish_image_any != blank -%}
-                        <span
+                      {%- liquid
+                        assign finish_any_src = blank
+                        assign finish_print_src = blank
+                        assign finish_canvas_src = blank
+                        if finish_image_any != blank
+                          if finish_image_any.src != blank
+                            assign finish_any_src = finish_image_any | image_url: width: 240
+                          else
+                            assign finish_any_src = finish_image_any
+                          endif
+                        endif
+                        if finish_image_print != blank
+                          if finish_image_print.src != blank
+                            assign finish_print_src = finish_image_print | image_url: width: 240
+                          else
+                            assign finish_print_src = finish_image_print
+                          endif
+                        endif
+                        if finish_image_canvas != blank
+                          if finish_image_canvas.src != blank
+                            assign finish_canvas_src = finish_image_canvas | image_url: width: 240
+                          else
+                            assign finish_canvas_src = finish_image_canvas
+                          endif
+                        endif
+                      -%}
+                      {%- if finish_any_src != blank -%}
+                        <img
                           class="variant-option__finish-media variant-option__finish-media--any"
-                          style="background-image: url('{{ finish_image_any | image_url: width: 160 }}');"
-                        ></span>
+                          src="{{ finish_any_src }}"
+                          alt=""
+                          width="112"
+                          height="112"
+                          loading="lazy"
+                        >
                       {%- endif -%}
-                      {%- if finish_image_print != blank -%}
-                        <span
+                      {%- if finish_print_src != blank -%}
+                        <img
                           class="variant-option__finish-media variant-option__finish-media--print"
-                          style="background-image: url('{{ finish_image_print | image_url: width: 160 }}');"
-                        ></span>
+                          src="{{ finish_print_src }}"
+                          alt=""
+                          width="112"
+                          height="112"
+                          loading="lazy"
+                        >
                       {%- endif -%}
-                      {%- if finish_image_canvas != blank -%}
-                        <span
+                      {%- if finish_canvas_src != blank -%}
+                        <img
                           class="variant-option__finish-media variant-option__finish-media--canvas"
-                          style="background-image: url('{{ finish_image_canvas | image_url: width: 160 }}');"
-                        ></span>
+                          src="{{ finish_canvas_src }}"
+                          alt=""
+                          width="112"
+                          height="112"
+                          loading="lazy"
+                        >
                       {%- endif -%}
                       {%- if finish_is_none -%}
                         <span class="variant-option__finish-none" aria-hidden="true">

@@ -5,12 +5,45 @@
   endif
 -%}
 
+{% comment %}
+  Nested Option description blocks are settings-only. Keep them in the tree with
+  content_for so theme editor uploads stay attached to this picker.
+
+  block.blocks is empty once this block is passed into a snippet, so resolve
+  copy and frame images here and hand the snippet a flat row list:
+  option value || description || badge || format scope || image url @@
+{% endcomment %}
+<div class="variant-picker__option-descriptions" hidden>
+  {% content_for 'blocks' %}
+</div>
+
+{%- liquid
+  assign option_description_rows = ''
+  for desc_block in block.blocks
+    if desc_block.type == '_option-description' or desc_block.type == 'option_description'
+      assign row_value = desc_block.settings.option_value | strip | replace: '||', ' ' | replace: '@@', ' '
+      assign row_description = desc_block.settings.description | strip | strip_newlines | replace: '||', ' ' | replace: '@@', ' '
+      assign row_badge = desc_block.settings.badge | strip | replace: '||', ' ' | replace: '@@', ' '
+      assign row_scope = desc_block.settings.format_scope | default: 'any' | strip
+      assign row_image = ''
+      if desc_block.settings.image != blank
+        capture row_image
+          echo desc_block.settings.image | image_url: width: 240
+        endcapture
+        assign row_image = row_image | strip
+      endif
+      assign option_description_rows = option_description_rows | append: row_value | append: '||' | append: row_description | append: '||' | append: row_badge | append: '||' | append: row_scope | append: '||' | append: row_image | append: '@@'
+    endif
+  endfor
+-%}
+
 {% unless product_resource == blank %}
   {% render 'variant-main-picker',
     product_resource: product_resource,
     section: section,
     product: product,
-    block: block
+    block: block,
+    option_description_rows: option_description_rows
   %}
 {% endunless %}
 
@@ -102,9 +135,23 @@
     },
     {
       "type": "image_picker",
+      "id": "frame_guide_image_print",
+      "label": "Frame guide image (Archival Quality Print)",
+      "info": "Shown when Archival Quality Print is selected.",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "frame_guide_image_canvas",
+      "label": "Frame guide image (Giclée Canvas)",
+      "info": "Shown when Giclée Canvas is selected.",
+      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
+    },
+    {
+      "type": "image_picker",
       "id": "frame_guide_image",
-      "label": "Frame guide image",
-      "info": "Opens in a modal when Frame guide is clicked.",
+      "label": "Frame guide image (fallback)",
+      "info": "Used for a format that does not have its own image above.",
       "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.show_option_descriptions }}"
     },
     {
