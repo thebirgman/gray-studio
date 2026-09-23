@@ -228,6 +228,11 @@
               assign guide_label = block_settings.frame_guide_label | default: 'Frame guide'
               assign guide_link = block_settings.frame_guide_link
               assign guide_image = block_settings.frame_guide_image
+              if block_settings.frame_guide_image_print != blank
+                assign guide_image = block_settings.frame_guide_image_print
+              elsif block_settings.frame_guide_image_canvas != blank
+                assign guide_image = block_settings.frame_guide_image_canvas
+              endif
               assign guide_modal_id = 'pdp-frame-guide-' | append: block.id
               if guide_image != blank or guide_link != blank
                 assign show_option_guide = true
@@ -457,13 +462,7 @@
                     endif
 
                     unless finish_is_none
-                      if product_option_value.swatch.image != blank
-                        assign finish_image_any = product_option_value.swatch.image
-                      elsif product_option_value.swatch.color != blank
-                        assign finish_swatch_color = product_option_value.swatch.color
-                      endif
-
-                      if option_thumb != blank and finish_image_any == blank
+                      if option_thumb != blank
                         assign finish_image_any = option_thumb
                       endif
                     endunless
@@ -479,6 +478,8 @@
                             assign finish_desc_match = true
                           elsif desc_handle != blank and value_handle contains desc_handle
                             assign finish_desc_match = true
+                          elsif value_handle != blank and desc_handle contains value_handle
+                            assign finish_desc_match = true
                           endif
                           if finish_desc_match and desc_block.settings.image != blank and finish_is_none == false
                             assign finish_scope = desc_block.settings.format_scope | default: 'any'
@@ -493,6 +494,16 @@
                         endif
                       endfor
                     endif
+
+                    unless finish_is_none
+                      if finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank
+                        if product_option_value.swatch.image != blank
+                          assign finish_image_any = product_option_value.swatch.image
+                        elsif product_option_value.swatch.color != blank
+                          assign finish_swatch_color = product_option_value.swatch.color
+                        endif
+                      endif
+                    endunless
 
                     if finish_is_none == false and finish_image_any == blank and finish_image_print == blank and finish_image_canvas == blank and finish_swatch_color == blank
                       if value_handle contains 'white'
@@ -784,6 +795,8 @@
           id: frame_guide_modal_id,
           heading: frame_guide_modal_heading,
           image: block_settings.frame_guide_image,
+          image_print: block_settings.frame_guide_image_print,
+          image_canvas: block_settings.frame_guide_image_canvas,
           label: block_settings.frame_guide_label
         %}
       {%- endif -%}

@@ -3,14 +3,22 @@
 
   @param {string} id - Unique dialog-component id
   @param {string} heading - Modal title
-  @param {image} image - Guide image to display
+  @param {image} image - Guide image to display. Fallback when a format-specific image is blank.
+  @param {image} [image_print] - Frame guide for Archival Quality Print
+  @param {image} [image_canvas] - Frame guide for Giclée Canvas
   @param {string} [label] - Accessible label fallback
 {%- enddoc -%}
 
-{%- if image != blank -%}
+{%- if image != blank or image_print != blank or image_canvas != blank -%}
   {%- liquid
     assign modal_heading = heading | default: label | default: 'Guide'
     assign modal_alt = modal_heading
+    assign print_guide = image_print | default: image
+    assign canvas_guide = image_canvas | default: image
+    assign use_format_guides = false
+    if image_print != blank or image_canvas != blank
+      assign use_format_guides = true
+    endif
   -%}
   <dialog-component
     id="{{ id }}"
@@ -40,16 +48,43 @@
           </button>
         </header>
         <div class="pdp-guide-modal__body">
-          {{
-            image
-            | image_url: width: 1600
-            | image_tag:
-              class: 'pdp-guide-modal__image',
-              widths: '480, 720, 960, 1200, 1600',
-              sizes: '(min-width: 800px) 800px, 90vw',
-              loading: 'lazy',
-              alt: modal_alt
-          }}
+          {%- if use_format_guides -%}
+            {%- if print_guide != blank -%}
+              {{
+                print_guide
+                | image_url: width: 1600
+                | image_tag:
+                  class: 'pdp-guide-modal__image pdp-guide-modal__image--print',
+                  widths: '480, 720, 960, 1200, 1600',
+                  sizes: '(min-width: 800px) 800px, 90vw',
+                  loading: 'lazy',
+                  alt: modal_alt
+              }}
+            {%- endif -%}
+            {%- if canvas_guide != blank -%}
+              {{
+                canvas_guide
+                | image_url: width: 1600
+                | image_tag:
+                  class: 'pdp-guide-modal__image pdp-guide-modal__image--canvas',
+                  widths: '480, 720, 960, 1200, 1600',
+                  sizes: '(min-width: 800px) 800px, 90vw',
+                  loading: 'lazy',
+                  alt: modal_alt
+              }}
+            {%- endif -%}
+          {%- else -%}
+            {{
+              image
+              | image_url: width: 1600
+              | image_tag:
+                class: 'pdp-guide-modal__image',
+                widths: '480, 720, 960, 1200, 1600',
+                sizes: '(min-width: 800px) 800px, 90vw',
+                loading: 'lazy',
+                alt: modal_alt
+            }}
+          {%- endif -%}
         </div>
       </div>
     </dialog>

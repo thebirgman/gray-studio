@@ -871,4 +871,27 @@
     margin-inline: auto;
     border-radius: 0.5rem;
   }
+
+  .pdp-guide-modal__image--print,
+  .pdp-guide-modal__image--canvas {
+    display: none;
+  }
+
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='archival'])
+    .pdp-guide-modal__image--print,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='poster'])
+    .pdp-guide-modal__image--print,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='watercolor'])
+    .pdp-guide-modal__image--print,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='watercolour'])
+    .pdp-guide-modal__image--print {
+    display: block;
+  }
+
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='giclee'])
+    .pdp-guide-modal__image--canvas,
+  .variant-picker--described:has(.variant-option--format input:checked[data-option-handle*='canvas'])
+    .pdp-guide-modal__image--canvas {
+    display: block;
+  }
 {% endstylesheet %}
