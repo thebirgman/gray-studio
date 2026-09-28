@@ -468,7 +468,7 @@
                 "item_1_label": "Free shipping",
                 "item_2_icon": "shopify://shop_images/Frame_2.svg",
                 "item_2_label": "Worldwide Delivery",
-                "item_3_label": "40+ scene collection"
+                "item_3_label": "20+ scene collection"
               },
               "blocks": {}
             },
@@ -545,7 +545,7 @@
             "icon": "shopify://shop_images/group_1597884199_1.webp",
             "icon_asset": "step-by-step-pdp-icon-1.svg",
             "title": "Select a scene",
-            "description": "Choose from 40+ destinations, browsed by place or by mood."
+            "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
         "benefit_frame": {
