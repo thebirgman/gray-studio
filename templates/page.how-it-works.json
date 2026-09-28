@@ -164,7 +164,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>No design skill needed and nothing to install. Pick a place, upload one photo of your dog, and see the result before you ever pay for it.</p>",
+                "text": "<p>No design skill needed and nothing to install. Select a place, upload one photo of your dog, and see the result before you ever pay for it.</p>",
                 "mobile_text": "",
                 "width": "100%",
                 "max_width": "none",
@@ -275,7 +275,7 @@
           "settings": {
             "icon_asset": "trust-strip-icon-brush.svg",
             "title": "No design skill needed",
-            "description": "We handle the scene, the style, and the composition. You just pick a destination and upload a photo.",
+            "description": "We handle the scene, the style, and the composition. You just select a destination and upload a photo.",
             "link_text": "",
             "link_url": ""
           }
@@ -533,7 +533,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>We handle the scene, the style, and the composition. You just pick a destination and upload a photo.</p>",
+                        "text": "<p>We handle the scene, the style, and the composition. You just select a destination and upload a photo.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
@@ -745,7 +745,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>We handle the scene, the style, and the composition. You just pick a destination and upload a photo.</p>",
+                        "text": "<p>We handle the scene, the style, and the composition. You just select a destination and upload a photo.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
@@ -957,7 +957,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>We handle the scene, the style, and the composition. You just pick a destination and upload a photo.</p>",
+                        "text": "<p>We handle the scene, the style, and the composition. You just select a destination and upload a photo.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
@@ -1229,7 +1229,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>We handle the scene, the style, and the composition. You just pick a destination and upload a photo.</p>",
+                        "text": "<p>We handle the scene, the style, and the composition. You just select a destination and upload a photo.</p>",
                         "mobile_text": "",
                         "width": "fit-content",
                         "max_width": "normal",
@@ -1780,7 +1780,7 @@
           "settings": {
             "icon_asset": "step-by-step-icon-1.svg",
             "title": "Select a scene",
-            "description": "Choose from 40+ destinations, browsed by place or by mood."
+            "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
         "step_QezpMY": {

@@ -182,7 +182,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-1.svg",
-            "title": "Pick a scene",
+            "title": "Select a scene",
             "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
@@ -206,7 +206,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-4.svg",
-            "title": "Pick a size & buy",
+            "title": "Select a size & buy",
             "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
           }
         }

@@ -223,7 +223,7 @@
             "intro_pdp": {
               "type": "pdp-intro",
               "settings": {
-                "text": "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+                "text": "Select a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
               },
               "blocks": {}
             },
