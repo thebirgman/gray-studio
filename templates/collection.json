@@ -298,7 +298,7 @@
             "featured_text_2": {
               "type": "text",
               "settings": {
-                "text": "<p>One photo is all it takes. Upload theirs, pick any scene, and watch them arrive, free to preview before you spend a cent.</p>",
+                "text": "<p>One photo is all it takes. Upload theirs, select any scene, and watch them arrive, free to preview before you spend a cent.</p>",
                 "mobile_text": "",
                 "width": "100%",
                 "max_width": "normal",
@@ -531,7 +531,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-1.svg",
-            "title": "Pick a scene",
+            "title": "select a scene",
             "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
@@ -555,7 +555,7 @@
           "type": "step",
           "settings": {
             "icon_asset": "step-by-step-icon-4.svg",
-            "title": "Pick a size & buy",
+            "title": "select a size & buy",
             "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
           }
         }
