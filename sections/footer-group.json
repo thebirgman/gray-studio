@@ -18,21 +18,21 @@
           "type": "menu_column",
           "settings": {
             "heading": "Shop",
-            "menu": ""
+            "menu": "shop"
           }
         },
         "menu_about": {
           "type": "menu_column",
           "settings": {
             "heading": "About",
-            "menu": ""
+            "menu": "about"
           }
         },
         "menu_help": {
           "type": "menu_column",
           "settings": {
             "heading": "Help",
-            "menu": ""
+            "menu": "help"
           }
         }
       },
