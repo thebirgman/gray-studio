@@ -157,7 +157,7 @@
         "eyebrow": "DISCOVER",
         "heading": "Our collections",
         "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
-        "button_label": "See all 40+ scenes",
+        "button_label": "See all 20+ scenes",
         "button_link": "shopify://collections",
         "filters_label": "Collection filters",
         "background_color": "#fffdf8",
@@ -183,7 +183,7 @@
           "settings": {
             "icon_asset": "step-by-step-icon-1.svg",
             "title": "Pick a scene",
-            "description": "Choose from 40+ destinations, browsed by place or by mood."
+            "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
         "step_2": {
@@ -321,7 +321,7 @@
         "description": "<p>Pups Around the World began with a simple, joyful idea: every dog deserves to be the star of their own adventure. We take a single photo and reimagine your pup in the soft, dreamy style of the great impressionists, somewhere beautiful in the world.</p><p>From Paris and Provence to Venice, London and the Scottish glens, there's a scene for every character, and a few chosen with the golfers in mind. Not quite right? Try another photo or scene, free, until it's unmistakably them.</p>",
         "button_label": "BOOK A PORTRAIT",
         "button_link": "shopify://pages/portrait",
-        "stat_number": "40+",
+        "stat_number": "20+",
         "stat_label": "scenes around the world",
         "primary_image_asset": "our-craft-primary.jpg",
         "secondary_image_asset": "our-craft-secondary.jpg",
