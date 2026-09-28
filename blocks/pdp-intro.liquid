@@ -1,5 +1,5 @@
 {%- liquid
-  assign intro = block.settings.text | default: "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+  assign intro = block.settings.text | default: "Select a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
 -%}
 
 {%- if intro != blank -%}
@@ -26,7 +26,7 @@
       "type": "textarea",
       "id": "text",
       "label": "t:settings.text",
-      "default": "Pick a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
+      "default": "Select a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
     }
   ],
   "presets": [
