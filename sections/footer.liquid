@@ -3,7 +3,7 @@
   assign text_color = section.settings.text_color | default: '#733014'
   assign accent_color = section.settings.accent_color | default: '#CE6911'
   assign contact_label = section.settings.contact_label | default: 'Contact us'
-  assign contact_email = section.settings.contact_email | default: 'info@pupsaroundtheworld.com'
+  assign contact_email = section.settings.contact_email | default: 'support@pupsaroundtheworld.com'
   assign tagline = section.settings.tagline
   assign designer_name = section.settings.designer_name | default: 'Lantern Sol'
   assign designer_url = section.settings.designer_url
@@ -126,18 +126,18 @@
                   <ul class="pups-footer__column-links" role="list">
                     {%- if column_menu != blank -%}
                       {%- for link in column_menu.links -%}
-                        <li>
-                          <a class="pups-footer__link" href="{{ link.url }}">{{ link.title }}</a>
-                        </li>
+                        {%- assign link_title_handle = link.title | handleize -%}
+                        {%- unless link_title_handle == 'custom-portrait' -%}
+                          <li>
+                            <a class="pups-footer__link" href="{{ link.url }}">{{ link.title }}</a>
+                          </li>
+                        {%- endunless -%}
                       {%- endfor -%}
                     {%- else -%}
                       {%- case heading_handle -%}
                         {%- when 'shop' -%}
                           <li>
                             <a class="pups-footer__link" href="{{ routes.collections_url }}">Collections</a>
-                          </li>
-                          <li>
-                            <a class="pups-footer__link" href="{{ pages['custom-portrait'].url | default: '/pages/custom-portrait' }}">Custom portrait</a>
                           </li>
                           <li>
                             <a class="pups-footer__link" href="{{ pages['prints-sizes'].url | default: '/pages/prints-sizes' }}">Prints &amp; sizes</a>
@@ -175,6 +175,11 @@
                             <a class="pups-footer__link" href="{{ shop.privacy_policy.url | default: pages['data-policy'].url | default: '/pages/data-policy' }}">Data policy</a>
                           </li>
                       {%- endcase -%}
+                    {%- endif -%}
+                    {%- if heading_handle == 'help' -%}
+                      <li>
+                        <a class="pups-footer__link" href="mailto:{{ contact_email }}">Contact us</a>
+                      </li>
                     {%- endif -%}
                   </ul>
                 </div>
@@ -839,13 +844,13 @@
       "type": "text",
       "id": "contact_email",
       "label": "Contact email",
-      "default": "info@pupsaroundtheworld.com"
+      "default": "support@pupsaroundtheworld.com"
     },
     {
       "type": "textarea",
       "id": "tagline",
       "label": "Tagline",
-      "default": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world."
+      "default": "Soft, dreamy impressionist portraits of your dog, set in beautiful locations all around the world, and at home!"
     },
     {
       "type": "header",
@@ -994,8 +999,8 @@
       "category": "t:categories.footer",
       "settings": {
         "contact_label": "Contact us",
-        "contact_email": "info@pupsaroundtheworld.com",
-        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful places all around the world.",
+        "contact_email": "support@pupsaroundtheworld.com",
+        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful locations all around the world, and at home!",
         "instagram_handle": "@pupsaroundtheworld",
         "pinterest_handle": "@pupsaroundtheworld",
         "tiktok_handle": "@pupsaroundtheworld",
