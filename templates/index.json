@@ -77,6 +77,7 @@
           "type": "collection",
           "settings": {
             "collection": "paris",
+            "image": "shopify://shop_images/pups_paris_cafe_PM_template_9_20_26.jpg",
             "image_asset": "featured-collection-paris.jpg",
             "title": "Paris",
             "scenes_label": "3 scenes",
@@ -88,6 +89,7 @@
           "type": "collection",
           "settings": {
             "collection": "provence",
+            "image": "shopify://shop_images/pups_south_of_france_riviera_drive_09_2026.jpg",
             "image_asset": "featured-collection-provence.jpg",
             "title": "The South of France",
             "scenes_label": "8 scenes",
@@ -99,6 +101,7 @@
           "type": "collection",
           "settings": {
             "collection": "italy",
+            "image": "shopify://shop_images/pups_lake_como_boat_ride_template_09_2026.png",
             "image_asset": "featured-collection-italy.jpg",
             "title": "Italy",
             "scenes_label": "3 scenes",
@@ -110,6 +113,7 @@
           "type": "collection",
           "settings": {
             "collection": "england",
+            "image": "shopify://shop_images/pups_london_big_ben_outdoor.jpg",
             "image_asset": "featured-collection-england.jpg",
             "title": "England",
             "scenes_label": "1 scene",
@@ -132,6 +136,7 @@
           "type": "collection",
           "settings": {
             "collection": "tokyo",
+            "image": "shopify://shop_images/pups_California_SanFran_bridge_template_09_26.jpg",
             "image_asset": "featured-collection-tokyo.jpg",
             "title": "America",
             "scenes_label": "6 scenes",
@@ -325,6 +330,8 @@
         "button_link": "shopify://products/create-your-portrait",
         "stat_number": "30+",
         "stat_label": "scenes around the world",
+        "primary_image": "shopify://shop_images/pups__palm_beach_pool_template_09_26.png",
+        "secondary_image": "shopify://shop_images/pups_venice_gondola_09_26.png",
         "primary_image_asset": "our-craft-primary.jpg",
         "secondary_image_asset": "our-craft-secondary.jpg",
         "primary_image_alt": "Impressionist portrait of a dog on an ornate sofa",
