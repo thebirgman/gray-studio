@@ -242,6 +242,8 @@
         "description": "Most portraits find their way to someone else first: a birthday, a housewarming, a soft landing after a hard week. Add a note at checkout and we'll make it feel like a gift, not an order.",
         "button_label": "Start yours",
         "button_link": "shopify://products/create-your-portrait",
+        "desktop_image": "shopify://shop_images/background.webp",
+        "mobile_image": "shopify://shop_images/background.webp",
         "desktop_image_asset": "gifts-image-text-desktop.png",
         "mobile_image_asset": "gifts-image-text-mobile.png",
         "image_alt": "Framed pup portrait ready for gifting",
