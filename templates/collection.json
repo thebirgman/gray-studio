@@ -31,7 +31,7 @@
         "destination_coastal": {
           "type": "destination",
           "settings": {
-            "label": "Coastal & lakeside",
+            "label": "Coastal, Lakeside and Pools",
             "collection": "coastal-and-lakeside",
             "link": ""
           }
