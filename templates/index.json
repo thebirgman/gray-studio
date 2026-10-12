@@ -89,7 +89,6 @@
           "type": "collection",
           "settings": {
             "collection": "provence",
-            "image": "shopify://shop_images/southern_france_2x_c9a94a59-8a8f-4437-b3a0-38492919a92a.webp",
             "image_asset": "featured-collection-provence.jpg",
             "title": "The South of France",
             "scenes_label": "8 scenes",
