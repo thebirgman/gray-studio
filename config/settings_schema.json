@@ -2748,6 +2748,17 @@
         "default": true
       },
       {
+        "type": "range",
+        "id": "collection_card_image_zoom",
+        "min": 100,
+        "max": 200,
+        "step": 5,
+        "unit": "%",
+        "label": "t:settings.collection_card_image_zoom",
+        "default": 140,
+        "info": "t:info.collection_card_image_zoom"
+      },
+      {
         "type": "checkbox",
         "id": "product_card_carousel",
         "label": "t:settings.product_card_carousel",

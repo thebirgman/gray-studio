@@ -69,18 +69,23 @@
       assign media_fit = block_settings.constrain_to_viewport
     endif
   endif
+
+  assign has_second_image = false
+  if product != blank and product.images.size > 1
+    assign has_second_image = true
+  endif
 %}
 
 <div
   ref="cardGallery"
-  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %}"
+  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %}{% unless has_second_image %} card-gallery--zoom{% endunless %}"
   style="
     {% render 'border-override', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
     --gallery-aspect-ratio: {{ ratio }};
   "
   data-product-id="{{ product.id }}"
-  {% if settings.show_second_image_on_hover %}
+  {% if has_second_image %}
     on:pointerenter="/previewImage"
     on:pointerleave="/resetImage"
   {% endif %}
@@ -113,7 +118,7 @@
       assign max_visible_slide_count = 1
       if settings.product_card_carousel
         assign max_visible_slide_count = 5
-      elsif settings.show_second_image_on_hover
+      elsif has_second_image or settings.show_second_image_on_hover
         assign max_visible_slide_count = 2
       endif
 

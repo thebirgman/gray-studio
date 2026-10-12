@@ -246,6 +246,7 @@
     "grid_layout_on_mobile": "Grid layout is used for mobile",
     "hide_logo_on_home_page_help": "Logo will remain visible when sticky header is active",
     "hover_effects": "Applies to product and collection cards",
+    "collection_card_image_zoom": "On collection pages, products with one image zoom on hover. Products with a second image show that image instead.",
     "logo_font": "Applies only when a logo is not selected",
     "logo_height": "Only affects header logo",
     "page_text_color_default_info": "Default for theme sections",
@@ -1185,6 +1186,7 @@
     "show_sale_price_first": "Show sale price first",
     "show_search": "Show search",
     "show_second_image_on_hover": "Show second image on hover",
+    "collection_card_image_zoom": "Collection card hover zoom",
     "show_swatch_label": "Text labels for swatches",
     "show_tax_info": "Tax information",
     // Font size or element dimensions setting

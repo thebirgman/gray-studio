@@ -54,6 +54,7 @@
     "page_transition_enabled": false,
     "transition_to_main_product": false,
     "card_hover_effect": "none",
+    "collection_card_image_zoom": 140,
     "gsap_enabled": true,
     "badge_position": "top-right",
     "badge_corner_radius": 100,
