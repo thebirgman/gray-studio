@@ -88,7 +88,7 @@
         "collection_provence": {
           "type": "collection",
           "settings": {
-            "collection": "provence",
+            "collection": "south-of-france",
             "image_asset": "featured-collection-provence.jpg",
             "title": "The South of France",
             "scenes_label": "8 scenes",
