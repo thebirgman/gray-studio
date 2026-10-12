@@ -134,7 +134,7 @@
         "collection_tokyo": {
           "type": "collection",
           "settings": {
-            "collection": "tokyo",
+            "collection": "america",
             "image": "shopify://shop_images/america_2x_1d8a62ce-27ee-4411-916a-343514356ee1.webp",
             "image_asset": "featured-collection-tokyo.jpg",
             "title": "America",
