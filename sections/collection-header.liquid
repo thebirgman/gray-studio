@@ -160,16 +160,20 @@
               if pill_url == blank and pill_collection != blank
                 assign pill_url = pill_collection.url
               endif
+              if pill_url == blank and pill_collection == blank
+                assign pill_url = routes.all_products_collection_url
+              endif
               if pill_label == blank and pill_collection != blank
                 assign pill_label = pill_collection.title
               endif
 
+              assign pill_path = pill_url | split: '?' | first | split: '#' | first
               assign is_active = false
               if pill_collection != blank and pill_collection.handle == collection.handle
                 assign is_active = true
-              elsif pill_url == blank and forloop.first
+              elsif pill_url != blank and pill_path == request.path
                 assign is_active = true
-              elsif pill_url == collection.url
+              elsif pill_url != blank and pill_url == collection.url
                 assign is_active = true
               endif
             -%}
@@ -437,6 +441,11 @@
   .collection-header__pill:focus-visible {
     outline: 2px solid var(--ch-brand);
     outline-offset: 2px;
+  }
+
+  .collection-header[data-loading='true'] .collection-header__pills {
+    pointer-events: none;
+    opacity: 0.6;
   }
 
   .collection-header__filter-btn {
