@@ -4,7 +4,7 @@
   assign full_description = collection.description
   assign learn_more_label = section.settings.learn_more_label | default: 'Learn more'
   assign show_less_label = section.settings.show_less_label | default: 'Show less'
-  assign filter_label = section.settings.filter_label | default: 'Filter by city'
+  assign filter_label = section.settings.filter_label | default: 'Filter by location'
   assign show_filter_button = section.settings.show_filter_button
   assign breadcrumb_home = section.settings.breadcrumb_home | default: 'Home'
   assign breadcrumb_current = section.settings.breadcrumb_current | default: 'Collection'
@@ -654,14 +654,14 @@
     {
       "type": "checkbox",
       "id": "show_filter_button",
-      "label": "Show filter by city button",
+      "label": "Show filter by location button",
       "default": true
     },
     {
       "type": "text",
       "id": "filter_label",
       "label": "Filter button label",
-      "default": "Filter by city"
+      "default": "Filter by location"
     },
     {
       "type": "header",

@@ -125,6 +125,9 @@
           if is_image
             assign inital_visible_values = 6
           endif
+          if in_drawer
+            assign inital_visible_values = filter.values.size
+          endif
           assign max_visible_values = inital_visible_values | plus: 1
           assign render_show_more = false
           assign should_render_for_swatch = is_swatch
