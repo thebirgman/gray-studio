@@ -568,6 +568,7 @@
       ],
       "name": "t:names.steps",
       "settings": {
+        "image": "shopify://shop_images/pups_lake_como_boat_ride_template_09_26_1.png",
         "image_asset": "step-by-step-portrait.jpg",
         "image_alt": "Custom pup portrait",
         "image_shape": "rectangle",
