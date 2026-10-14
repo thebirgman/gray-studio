@@ -568,6 +568,7 @@
       ],
       "name": "Why you'll love it",
       "settings": {
+        "image": "shopify://shop_images/staycation-its-five-o-clock-somewhere_722c19d5-4979-4572-aaa2-26b8daff7416.jpg",
         "image_asset": "step-by-step-pdp-portrait.jpg",
         "image_alt": "Impressionist portrait of a boxer in an ornate parlor",
         "image_shape": "square",
