@@ -142,6 +142,30 @@
             "category": "cosy",
             "link": ""
           }
+        },
+        "collection_UBMMWB": {
+          "type": "collection",
+          "settings": {
+            "collection": "america",
+            "image": "shopify://shop_images/pups_chateau_bathtub_template_09_26_1.jpg",
+            "image_asset": "",
+            "title": "The Chateau",
+            "scenes_label": "7 scenes",
+            "category": "cosy",
+            "link": ""
+          }
+        },
+        "collection_w4kAtj": {
+          "type": "collection",
+          "settings": {
+            "collection": "the-staycation",
+            "image": "shopify://shop_images/pups_chateau_bathtub_template_09_26_1.jpg",
+            "image_asset": "",
+            "title": "The Staycation",
+            "scenes_label": "6 scenes",
+            "category": "cosy",
+            "link": ""
+          }
         }
       },
       "block_order": [
@@ -154,7 +178,9 @@
         "collection_italy",
         "collection_england",
         "collection_riviera",
-        "collection_tokyo"
+        "collection_tokyo",
+        "collection_UBMMWB",
+        "collection_w4kAtj"
       ],
       "name": "Featured collections",
       "settings": {
