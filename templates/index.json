@@ -165,6 +165,18 @@
             "category": "cosy",
             "link": ""
           }
+        },
+        "collection_y7NULk": {
+          "type": "collection",
+          "settings": {
+            "collection": "the-museum",
+            "image": "shopify://shop_images/pups_museum_green_09_26.png",
+            "image_asset": "",
+            "title": "The Museum",
+            "scenes_label": "3 scenes",
+            "category": "Close-ups",
+            "link": ""
+          }
         }
       },
       "block_order": [
@@ -179,7 +191,8 @@
         "collection_riviera",
         "collection_tokyo",
         "collection_UBMMWB",
-        "collection_w4kAtj"
+        "collection_w4kAtj",
+        "collection_y7NULk"
       ],
       "name": "Featured collections",
       "settings": {
