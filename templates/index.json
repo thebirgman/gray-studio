@@ -123,10 +123,10 @@
         "collection_riviera": {
           "type": "collection",
           "settings": {
-            "collection": "the-riviera",
+            "collection": "scotland",
             "image_asset": "featured-collection-riviera.jpg",
             "title": "The Riviera",
-            "scenes_label": "1 scene",
+            "scenes_label": "2 scenes",
             "category": "playful",
             "link": ""
           }
