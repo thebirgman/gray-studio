@@ -1816,6 +1816,7 @@
       ],
       "name": "t:names.steps",
       "settings": {
+        "image": "shopify://shop_images/pups_venice_gondola_09_26_2.png",
         "image_asset": "step-by-step-portrait.jpg",
         "image_alt": "Custom pup portrait",
         "image_shape": "rectangle",
@@ -3965,7 +3966,7 @@
                   "type": "image",
                   "name": "t:names.image",
                   "settings": {
-                    "image": "shopify://shop_images/great-first-photo.webp",
+                    "image": "shopify://shop_images/pups_chateau_fireside_template_09_26_1.jpg",
                     "link": "",
                     "hide_on_mobile": false,
                     "hide_on_desktop": false,
