@@ -3546,8 +3546,18 @@ fly-to-cart.fly-to-cart--sticky {
     --facets-vertical-col-width: 6;
 
     grid-template-columns:
-      1fr repeat(var(--centered-column-number),
-        minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))) 1fr;
+      minmax(var(--page-margin), 1fr)
+      repeat(
+        var(--centered-column-number),
+        minmax(
+          0,
+          calc(
+            min(var(--page-width) - (var(--page-margin) * 2), 100% - (var(--page-margin) * 2)) /
+              var(--centered-column-number)
+          )
+        )
+      )
+      minmax(var(--page-margin), 1fr);
   }
 
   @media screen and (min-width: 990px) {

@@ -424,7 +424,7 @@
               "settings": {
                 "image_ratio": "portrait",
                 "show_hover_label": false,
-                "show_overlay_quick_add": true,
+                "show_overlay_quick_add": false,
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,

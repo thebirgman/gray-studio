@@ -74,6 +74,8 @@
     "auto_open_cart_drawer": true,
     "show_cart_note": false,
     "show_add_discount_code": false,
+    "quick_add": false,
+    "mobile_quick_add": false,
     "cart_free_shipping_threshold": "0",
     "cart_reward_gift_label": "15% off",
     "cart_reward_gift_threshold": "250",
