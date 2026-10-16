@@ -2357,22 +2357,23 @@
         "type": "text",
         "id": "cart_free_shipping_threshold",
         "label": "Free shipping threshold",
-        "info": "Amount in your store currency (e.g. 100 for $100). The first rewards milestone.",
-        "default": "100",
+        "info": "Use 0 for free shipping on every order. A number above 0 makes free shipping a spend milestone.",
+        "default": "0",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
       {
         "type": "text",
         "id": "cart_reward_gift_label",
-        "label": "Gift card reward label",
-        "default": "A $50 Gift Card",
+        "label": "Discount reward label",
+        "default": "15% off",
+        "info": "Shown on the rewards bar. The discount is automatic in Shopify and is not added as a product.",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
       {
         "type": "text",
         "id": "cart_reward_gift_threshold",
-        "label": "Gift card threshold",
-        "info": "Amount in your store currency for the second rewards milestone.",
+        "label": "Discount threshold",
+        "info": "Spend amount that unlocks the automatic discount.",
         "default": "250",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
@@ -2380,28 +2381,28 @@
         "type": "product",
         "id": "cart_reward_gift_product",
         "label": "Gift card product",
-        "info": "Automatically added to the cart when the gift card threshold is reached. Use a $0 product for a free bonus."
+        "info": "Automatically added when the gift card threshold below is reached. Use a $0 product for a free bonus."
       },
       {
         "type": "text",
         "id": "cart_reward_secret_label",
-        "label": "Secret gift reward label",
-        "default": "A Secret Gift",
+        "label": "Gift card reward label",
+        "default": "A $50 Gift Card",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
       {
         "type": "text",
         "id": "cart_reward_secret_threshold",
-        "label": "Secret gift threshold",
-        "info": "Amount in your store currency for the final rewards milestone. The bar fills toward this total.",
+        "label": "Gift card threshold",
+        "info": "Spend amount that adds the gift card. The bar fills toward this total.",
         "default": "500",
         "visible_if": "{{ settings.cart_free_shipping_enabled == true }}"
       },
       {
         "type": "product",
         "id": "cart_reward_secret_product",
-        "label": "Secret gift product",
-        "info": "Automatically added to the cart when the secret gift threshold is reached. Use a $0 product for a free bonus."
+        "label": "Extra reward product",
+        "info": "Leave blank. The gift card product above is the reward added at the gift card threshold."
       },
       {
         "type": "header",

@@ -11,8 +11,8 @@ import { CartLinesUpdateEvent, StandardEvents } from '@shopify/events';
  */
 
 /**
- * Automatically adds/removes configured reward products when the cart
- * subtotal crosses the gift-card or secret-gift thresholds.
+ * Automatically adds/removes the gift card when pre-discount spend
+ * crosses the gift-card threshold. The 15% reward is not a product.
  *
  * @extends {Component}
  */
@@ -132,7 +132,7 @@ class CartRewardsController extends Component {
   #qualifyingTotal(items) {
     return items.reduce((sum, item) => {
       if (this.#isRewardItem(item)) return sum;
-      return sum + Number(item.final_line_price ?? item.linePrice ?? 0);
+      return sum + Number(item.original_line_price ?? item.final_line_price ?? item.linePrice ?? 0);
     }, 0);
   }
 

@@ -1,7 +1,7 @@
 {%- doc -%}
   Loads the cart rewards controller that auto-adds and auto-removes the
-  configured gift-card and secret-gift products when cart subtotal crosses
-  their thresholds.
+  gift card once the gift-card spend threshold is reached. The 15% reward
+  is an automatic Shopify discount and is not added as a product.
 
   @example
     {% render 'cart-rewards-controller' %}
@@ -16,33 +16,20 @@
 
   {%- liquid
     assign gift_product = settings.cart_reward_gift_product
-    assign secret_product = settings.cart_reward_secret_product
     assign gift_variant = gift_product.selected_or_first_available_variant
-    assign secret_variant = secret_product.selected_or_first_available_variant
-    assign gift_threshold_cents = settings.cart_reward_gift_threshold | default: 250 | times: 100
-    assign secret_threshold_cents = settings.cart_reward_secret_threshold | default: 500 | times: 100
+    assign gift_threshold_cents = settings.cart_reward_secret_threshold | default: 500 | times: 100
   -%}
 
-  {%- if gift_product != blank or secret_product != blank -%}
+  {%- if gift_product != blank and gift_threshold_cents > 0 -%}
     <cart-rewards-controller hidden>
       <script type="application/json">
         [
-          {%- if gift_product != blank -%}
-            {
-              "key": "gift",
-              "productId": {{ gift_product.id | json }},
-              "variantId": {{ gift_variant.id | default: 0 | json }},
-              "threshold": {{ gift_threshold_cents | json }}
-            }{%- if secret_product != blank -%},{%- endif -%}
-          {%- endif -%}
-          {%- if secret_product != blank -%}
-            {
-              "key": "secret",
-              "productId": {{ secret_product.id | json }},
-              "variantId": {{ secret_variant.id | default: 0 | json }},
-              "threshold": {{ secret_threshold_cents | json }}
-            }
-          {%- endif -%}
+          {
+            "key": "gift",
+            "productId": {{ gift_product.id | json }},
+            "variantId": {{ gift_variant.id | default: 0 | json }},
+            "threshold": {{ gift_threshold_cents | json }}
+          }
         ]
       </script>
     </cart-rewards-controller>

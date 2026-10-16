@@ -6,26 +6,37 @@
 {%- enddoc -%}
 
 {%- liquid
+  assign gift_product_id = settings.cart_reward_gift_product.id
+  assign secret_product_id = settings.cart_reward_secret_product.id
   assign current = 0
   for item in cart.items
-    if item.properties._cart_reward == blank
-      assign current = current | plus: item.final_line_price
+    assign is_reward_item = false
+    if item.properties._cart_reward != blank
+      assign is_reward_item = true
+    elsif gift_product_id != blank and item.product_id == gift_product_id
+      assign is_reward_item = true
+    elsif secret_product_id != blank and item.product_id == secret_product_id
+      assign is_reward_item = true
     endif
+    unless is_reward_item
+      assign current = current | plus: item.original_line_price
+    endunless
   endfor
 
-  assign t1_value = settings.cart_free_shipping_threshold | default: 100
-  assign t2_value = settings.cart_reward_gift_threshold | default: 250
-  assign t3_value = settings.cart_reward_secret_threshold | default: 500
+  assign t1_value = settings.cart_free_shipping_threshold | default: 0 | plus: 0
+  assign t2_value = settings.cart_reward_gift_threshold | default: 250 | plus: 0
+  assign t3_value = settings.cart_reward_secret_threshold | default: 500 | plus: 0
+  assign shipping_sitewide = false
+  if t1_value <= 0
+    assign shipping_sitewide = true
+  endif
 
   assign t1 = t1_value | times: 100
   assign t2 = t2_value | times: 100
   assign t3 = t3_value | times: 100
 
-  if t1 <= 0
-    assign t1 = 10000
-  endif
-  if t2 <= t1
-    assign t2 = t1 | times: 2.5 | round
+  if t2 <= 0
+    assign t2 = 25000
   endif
   if t3 <= t2
     assign t3 = t2 | times: 2
@@ -39,13 +50,17 @@
     assign percent = 0
   endif
 
-  assign t1_pos = t1 | times: 100.0 | divided_by: t3
+  if shipping_sitewide
+    assign t1_pos = 0
+  else
+    assign t1_pos = t1 | times: 100.0 | divided_by: t3
+  endif
   assign t2_pos = t2 | times: 100.0 | divided_by: t3
 
   assign unlocked_1 = false
   assign unlocked_2 = false
   assign unlocked_3 = false
-  if current >= t1
+  if shipping_sitewide or current >= t1
     assign unlocked_1 = true
   endif
   if current >= t2
@@ -55,17 +70,17 @@
     assign unlocked_3 = true
   endif
 
-  assign gift_label = settings.cart_reward_gift_label | default: 'A $50 Gift Card'
-  assign secret_label = settings.cart_reward_secret_label | default: 'A Secret Gift'
+  assign gift_label = settings.cart_reward_gift_label | default: '15% off'
+  assign secret_label = settings.cart_reward_secret_label | default: 'A $50 Gift Card'
   assign shipping_label = 'content.cart_reward_free_shipping' | t
 
   assign remaining = 0
-  assign next_reward = shipping_label
+  assign next_reward = gift_label
   assign all_unlocked = false
 
   if unlocked_3
     assign all_unlocked = true
-  elsif current < t1
+  elsif shipping_sitewide == false and current < t1
     assign remaining = t1 | minus: current
     assign next_reward = shipping_label
   elsif current < t2
@@ -106,7 +121,7 @@
     <span class="cart-rewards__fill" aria-hidden="true"></span>
 
     <span
-      class="cart-rewards__marker{% if unlocked_1 %} cart-rewards__marker--unlocked{% endif %}"
+      class="cart-rewards__marker{% if shipping_sitewide %} cart-rewards__marker--start{% endif %}{% if unlocked_1 %} cart-rewards__marker--unlocked{% endif %}"
       style="left: {{ t1_pos }}%;"
       aria-hidden="true"
     >
@@ -142,7 +157,7 @@
 
   <div class="cart-rewards__labels">
     <span
-      class="cart-rewards__label{% unless unlocked_1 %} cart-rewards__label--locked{% endunless %}"
+      class="cart-rewards__label{% if shipping_sitewide %} cart-rewards__label--start{% endif %}{% unless unlocked_1 %} cart-rewards__label--locked{% endunless %}"
       style="left: {{ t1_pos }}%;"
     >
       {{ shipping_label }}
