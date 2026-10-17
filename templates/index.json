@@ -89,6 +89,7 @@
           "type": "collection",
           "settings": {
             "collection": "south-of-france",
+            "image": "shopify://shop_images/pups_provence_lavender_picnic_template_09_26.jpg",
             "image_asset": "featured-collection-provence.jpg",
             "title": "The South of France",
             "scenes_label": "8 scenes",
