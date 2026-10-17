@@ -262,6 +262,7 @@
       ],
       "name": "t:names.steps",
       "settings": {
+        "image": "shopify://shop_images/pups_chateau_royal_pillow_09_26.jpg",
         "image_asset": "step-by-step-portrait.jpg",
         "image_alt": "Custom pup portrait",
         "image_shape": "rectangle",
