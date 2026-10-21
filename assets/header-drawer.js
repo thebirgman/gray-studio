@@ -80,6 +80,7 @@ class HeaderDrawer extends Component {
 
     if (!summary) return;
 
+    this.#syncMenuDrawerTop();
     details.setAttribute('open', '');
     summary.setAttribute('aria-expanded', 'true');
 
@@ -110,6 +111,19 @@ class HeaderDrawer extends Component {
    */
   close() {
     this.#close(this.refs.details);
+  }
+
+  /**
+   * Place the mobile drawer against the header that is actually on screen.
+   * The default offset still includes the announcement bar after it has scrolled away.
+   */
+  #syncMenuDrawerTop() {
+    const header = this.closest('header-component');
+
+    if (!(header instanceof HTMLElement)) return;
+
+    const top = Math.max(0, Math.round(header.getBoundingClientRect().bottom));
+    this.style.setProperty('--menu-drawer-top', `${top}px`);
   }
 
   /**

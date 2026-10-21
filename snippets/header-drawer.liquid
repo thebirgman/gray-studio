@@ -803,8 +803,8 @@
     @media screen and (max-width: 749px) {
       width: 100vw;
       max-width: 100vw;
-      top: var(--account-offset-top);
-      height: calc(100dvh - var(--account-offset-top));
+      top: var(--menu-drawer-top, var(--account-offset-top));
+      height: calc(100dvh - var(--menu-drawer-top, var(--account-offset-top)));
       border-right: none;
       box-shadow: none;
     }
@@ -831,8 +831,8 @@
     transition: opacity var(--drawer-animation-speed) ease;
 
     @media screen and (max-width: 749px) {
-      top: var(--account-offset-top);
-      height: calc(100dvh - var(--account-offset-top));
+      top: var(--menu-drawer-top, var(--account-offset-top));
+      height: calc(100dvh - var(--menu-drawer-top, var(--account-offset-top)));
     }
 
     .menu-open & {

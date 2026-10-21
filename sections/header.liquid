@@ -672,6 +672,19 @@
     view-transition-name: sticky-header;
   }
 
+  /* view-transition-name makes position:fixed children stick to the header box.
+     Drop it while the mobile menu is open so the drawer can use the viewport. */
+  @media screen and (max-width: 749px) {
+    #header-component:has(#Details-menu-drawer-container[open]) {
+      view-transition-name: none;
+    }
+
+    #header-component:has(#Details-menu-drawer-container[open]) .header__underlay-closed {
+      height: 100%;
+      background: var(--color-background-top-row);
+    }
+  }
+
   :active-view-transition-type(empty-cart-drawer) {
     .header[data-sticky-state='active'] {
       view-transition-name: none;

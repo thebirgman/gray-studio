@@ -67,8 +67,8 @@
                 | image_url: width: 224
                 | image_tag:
                   class: 'pups-footer__logo-img',
-                  widths: '112, 224, 336',
-                  sizes: '112px',
+                  widths: '112, 224, 400',
+                  sizes: '(min-width: 750px) 112px, 200px',
                   width: 112,
                   height: 36,
                   alt: logo_alt,
@@ -394,17 +394,19 @@
 
   .pups-footer__logo {
     display: block;
-    width: 7.015rem;
-    height: 2.264rem;
-    overflow: clip;
+    width: 12.5rem;
+    height: 12.5rem;
+    margin-inline: auto;
+    overflow: visible;
   }
 
   .pups-footer__logo-img {
     display: block;
-    width: 7.015rem;
-    height: 2.264rem;
+    width: 12.5rem;
+    height: 12.5rem;
+    margin-inline: auto;
     object-fit: contain;
-    object-position: left center;
+    object-position: center;
   }
 
   .pups-footer__contact {
@@ -721,6 +723,12 @@
 
     .pups-footer__brand {
       align-items: flex-start;
+    }
+
+    .pups-footer__logo,
+    .pups-footer__logo-img {
+      width: 7.015rem;
+      height: 2.264rem;
     }
 
     .pups-footer__logo-img {

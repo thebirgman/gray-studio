@@ -1,5 +1,25 @@
 # Project Log — gray-studio
 
+## 2026-10-21 — Larger centered footer logo on mobile
+
+**What:** Under 750px, the footer logo is a centered `12.5rem` square (200px at the 393px mobile baseline) so the circular paw fills the space. A width-only box kept the paw small because the image tag’s 112×36 ratio letterboxed it. Desktop stays `7.015rem` × `2.264rem`, left-aligned.
+
+## 2026-10-21 — Mobile menu covers the page after scroll
+
+**What:** Opening the burger menu while scrolled no longer leaves a strip of page content above the drawer.
+
+**Why:** The drawer top used the full header-group offset, which still included the announcement bar after it had scrolled away. A sticky `view-transition-name` also made `position: fixed` relative to the header instead of the viewport.
+
+**How:** On open, `header-drawer.js` sets `--menu-drawer-top` from the header's on-screen bottom. While the menu is open on mobile, the header drops `view-transition-name` and paints a solid underlay. At the top of the page the drawer still starts under the visible header.
+
+## 2026-10-21 — Hero copy sits higher on mobile
+
+**What:** Under 750px, the hero heading, gaps, top offset, and buttons are slightly smaller so the star row clears the preview badge.
+
+**Why:** The badge is positioned on the photo. The copy block was tall enough that the stars landed on top of it.
+
+**Mobile values:** heading `2rem` / `2.375rem` line-height, content gap `0.625rem`, intro gap `0.75rem`, top padding offset `1.25rem`, buttons `2.75rem` tall at `0.9375rem`. Desktop is unchanged.
+
 ## 2026-10-21 — Hero stars above the preview badge on mobile
 
 **What:** On viewports under 750px, the star row in `sections/hero-banner.liquid` paints above the floating badges.
