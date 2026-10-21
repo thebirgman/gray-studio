@@ -14,7 +14,7 @@
 
 **Why:** Client asked to hide footer socials for now.
 
-**How to restore:** Set `show_footer_socials` to `true` near the top of `sections/footer.liquid`.
+**How to restore:** In the theme editor, open the footer and turn on **Show social links**. The checkbox defaults to off. Handle and URL fields appear only while it is on.
 
 ## 2026-09-15 — Reconnected local git to GitHub main
 

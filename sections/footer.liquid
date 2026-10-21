@@ -11,7 +11,7 @@
   assign logo_image = settings.logo
   assign logo_alt = shop.name | escape
 
-  assign show_footer_socials = false
+  assign show_footer_socials = section.settings.show_social_links
   assign instagram_url = section.settings.instagram_url | default: settings.social_instagram_link
   assign pinterest_url = section.settings.pinterest_url | default: settings.social_pinterest_link
   assign tiktok_url = section.settings.tiktok_url | default: settings.social_tiktok_link
@@ -860,37 +860,49 @@
       "content": "Social"
     },
     {
+      "type": "checkbox",
+      "id": "show_social_links",
+      "label": "Show social links",
+      "default": false
+    },
+    {
       "type": "url",
       "id": "instagram_url",
-      "label": "Instagram"
+      "label": "Instagram",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "text",
       "id": "instagram_handle",
       "label": "Instagram handle",
-      "default": "@pupsaroundtheworld"
+      "default": "@pupsaroundtheworld",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "url",
       "id": "pinterest_url",
-      "label": "Pinterest"
+      "label": "Pinterest",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "text",
       "id": "pinterest_handle",
       "label": "Pinterest handle",
-      "default": "@pupsaroundtheworld"
+      "default": "@pupsaroundtheworld",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "url",
       "id": "tiktok_url",
-      "label": "TikTok"
+      "label": "TikTok",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "text",
       "id": "tiktok_handle",
       "label": "TikTok handle",
-      "default": "@pupsaroundtheworld"
+      "default": "@pupsaroundtheworld",
+      "visible_if": "{{ section.settings.show_social_links }}"
     },
     {
       "type": "header",
@@ -1004,6 +1016,7 @@
         "contact_label": "Contact us",
         "contact_email": "support@pupsaroundtheworld.com",
         "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful locations all around the world, and at home!",
+        "show_social_links": false,
         "instagram_handle": "@pupsaroundtheworld",
         "pinterest_handle": "@pupsaroundtheworld",
         "tiktok_handle": "@pupsaroundtheworld",
