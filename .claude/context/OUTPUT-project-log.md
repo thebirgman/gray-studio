@@ -18,7 +18,7 @@
 
 **Why:** The badge is positioned on the photo. The copy block was tall enough that the stars landed on top of it.
 
-**Mobile values:** heading `2rem` / `2.375rem` line-height, content gap `0.625rem`, intro gap `0.75rem`, top padding offset `1.25rem`, buttons `2.75rem` tall at `0.9375rem`. Desktop is unchanged.
+**Mobile values (loosened after the first pass felt too tight):** heading `2.125rem` / `2.5rem` line-height, copy gap `0.5rem`, content gap `0.875rem`, intro gap `1rem`, top padding offset `1.5rem`, buttons `2.875rem` tall at `1rem`. Still shorter than the original stack so the stars stay above the preview badge. Desktop is unchanged.
 
 ## 2026-10-21 — Hero stars above the preview badge on mobile
 
