@@ -11,6 +11,9 @@
   "sections": {
     "hero_banner_home": {
       "type": "hero-banner",
+      "custom_css": [
+        "@media screen and (max-width: 768px) {p.hero-banner__social-text {color: #fff; } .hero-banner__badge--preview{bottom: 27%; }}"
+      ],
       "name": "Hero banner",
       "settings": {
         "heading": "Here begins the portrait of your",
@@ -30,7 +33,7 @@
         "badge_2_line_2": "Ready in moments",
         "badge_2_icon_asset": "pups-badge-style-icon.svg",
         "desktop_image": "shopify://shop_images/home_hero_image_desktop_2x_79dd7b64-11fc-4af2-a6a5-77f8d656561b.webp",
-        "mobile_image": "shopify://shop_images/mobile_hero_home_1.webp",
+        "mobile_image": "shopify://shop_images/home_hero_image_mobile_2x_088429c1-d739-406f-88cb-94a628d84541.webp",
         "desktop_image_asset": "hero-pups-desktop.png",
         "mobile_image_asset": "hero-pups-mobile.png",
         "image_alt": "White fluffy dog wearing a beret at a Parisian café with the Eiffel Tower in the background",
