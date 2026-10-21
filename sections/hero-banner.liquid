@@ -662,7 +662,7 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 1;
+      z-index: auto;
       grid-row: 1;
       grid-column: 1 / -1;
       align-self: start;
@@ -680,6 +680,8 @@
     }
 
     .hero-banner__social {
+      position: relative;
+      z-index: 3;
       justify-content: flex-start;
       height: 1.875rem;
       padding-top: 0;

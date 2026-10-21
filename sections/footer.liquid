@@ -11,6 +11,7 @@
   assign logo_image = settings.logo
   assign logo_alt = shop.name | escape
 
+  assign show_footer_socials = false
   assign instagram_url = section.settings.instagram_url | default: settings.social_instagram_link
   assign pinterest_url = section.settings.pinterest_url | default: settings.social_pinterest_link
   assign tiktok_url = section.settings.tiktok_url | default: settings.social_tiktok_link
@@ -194,6 +195,7 @@
           <p class="pups-footer__tagline">{{ tagline }}</p>
         {%- endif -%}
 
+        {%- if show_footer_socials -%}
         <div class="pups-footer__socials">
           {%- if instagram_url != blank or instagram_handle != blank -%}
             <a
@@ -264,6 +266,7 @@
             </a>
           {%- endif -%}
         </div>
+        {%- endif -%}
       </div>
 
       <div class="pups-footer__bottom">

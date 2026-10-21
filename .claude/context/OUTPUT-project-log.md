@@ -1,5 +1,21 @@
 # Project Log — gray-studio
 
+## 2026-10-21 — Hero stars above the preview badge on mobile
+
+**What:** On viewports under 750px, the star row in `sections/hero-banner.liquid` paints above the floating badges.
+
+**Why:** The badge overlay (`z-index: 2`) covered the stars, which lived inside the copy block (`z-index: 1`).
+
+**How:** Mobile copy uses `z-index: auto` so it no longer traps descendants. `.hero-banner__social` is `position: relative; z-index: 3`. Desktop stacking is unchanged.
+
+## 2026-10-21 — Footer social links hidden
+
+**What:** Instagram, Pinterest, and TikTok in `sections/footer.liquid` no longer render. Handles, URLs, and theme-editor settings are unchanged.
+
+**Why:** Client asked to hide footer socials for now.
+
+**How to restore:** Set `show_footer_socials` to `true` near the top of `sections/footer.liquid`.
+
 ## 2026-09-15 — Reconnected local git to GitHub main
 
 **What:** Reset local `main` onto `origin/main` (mixed), restored GitHub-only files (`bin/lanternsol.js`, extra Cursor rules, etc.), set upstream to `origin/main`. Committing onboarding analysis + workflow rules. Theme file diffs vs GitHub left uncommitted.
