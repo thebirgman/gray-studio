@@ -12,7 +12,7 @@
     "hero_banner_home": {
       "type": "hero-banner",
       "custom_css": [
-        "@media screen and (max-width: 768px) {p.hero-banner__social-text {color: #fff; } .hero-banner__badge--preview{bottom: 27%; }}"
+        "@media screen and (max-width: 768px) {p.hero-banner__social-text {color: #fff; } .hero-banner__badge--preview {bottom: 27%; }}"
       ],
       "name": "Hero banner",
       "settings": {
@@ -163,10 +163,11 @@
           "type": "collection",
           "settings": {
             "collection": "the-staycation",
+            "image": "shopify://shop_images/pups_chateau_tubtemplate10_26.png",
             "image_asset": "",
             "title": "The Staycation",
             "scenes_label": "6 scenes",
-            "category": "cosy",
+            "category": "cozy",
             "link": ""
           }
         },
