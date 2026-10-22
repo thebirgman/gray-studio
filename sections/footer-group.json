@@ -45,8 +45,8 @@
       "settings": {
         "contact_label": "Contact us",
         "contact_email": "support@pupsaroundtheworld.com",
-        "tagline": "Soft, dreamy impressionist portraits of your dog, set in beautiful locations all around the world, and at home!",
-        "show_social_links": false,
+        "tagline": "Soft, dreamy impressionist portraits of your dog (or cat!), set in beautiful locations all around the world, and at home!",
+        "show_social_links": true,
         "instagram_url": "",
         "instagram_handle": "@pupsaroundtheworldart",
         "pinterest_url": "",
