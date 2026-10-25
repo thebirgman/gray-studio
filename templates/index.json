@@ -92,7 +92,7 @@
           "type": "collection",
           "settings": {
             "collection": "south-of-france",
-            "image": "shopify://shop_images/pups_provence_lavender_picnic_template_09_26.jpg",
+            "image": "shopify://shop_images/pups_provence_lavender_picnic_template_10_26.jpg",
             "image_asset": "featured-collection-provence.jpg",
             "title": "The South of France",
             "scenes_label": "8 scenes",
@@ -104,7 +104,7 @@
           "type": "collection",
           "settings": {
             "collection": "italy",
-            "image": "shopify://shop_images/italy_2x_af8a9bcb-8f61-4244-a388-499a4fd4f495.webp",
+            "image": "shopify://shop_images/pups_italy_lakecomotemplate10_26.jpg",
             "image_asset": "featured-collection-italy.jpg",
             "title": "Italy",
             "scenes_label": "3 scenes",
@@ -116,7 +116,7 @@
           "type": "collection",
           "settings": {
             "collection": "england",
-            "image": "shopify://shop_images/england_2x_51786c36-4e44-489d-815e-a1d16663e7f0.webp",
+            "image": "shopify://shop_images/pups_england_londonpubtemplate10_26.png",
             "image_asset": "featured-collection-england.jpg",
             "title": "England",
             "scenes_label": "1 scene",

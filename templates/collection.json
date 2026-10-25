@@ -80,6 +80,38 @@
     "main": {
       "type": "main-collection",
       "blocks": {
+        "collection_featured_card_3xUX7X": {
+          "type": "_collection-featured-card",
+          "name": "Featured card",
+          "settings": {
+            "position": 26,
+            "size": "1x",
+            "hide_on_mobile": false,
+            "content_direction": "column",
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "flex-end",
+            "gap": 8,
+            "width": "fill",
+            "height": "fill",
+            "background_color": "",
+            "background_media": "image",
+            "background_image": "shopify://shop_images/pups_italy_rome_trevi_template_09_26_1.jpg",
+            "background_image_position": "cover",
+            "video_position": "cover",
+            "toggle_overlay": false,
+            "overlay_color": "#00000026",
+            "overlay_style": "gradient",
+            "gradient_direction": "to top",
+            "border_radius": 0,
+            "link": "",
+            "open_in_new_tab": false,
+            "padding-block-start": 24,
+            "padding-block-end": 24,
+            "padding-inline-start": 24,
+            "padding-inline-end": 24
+          },
+          "blocks": {}
+        },
         "featured_card_1": {
           "type": "_collection-featured-card",
           "settings": {
@@ -94,7 +126,7 @@
             "height": "fill",
             "background_color": "",
             "background_media": "image",
-            "background_image": "shopify://shop_images/pups_monte_carlo_prompt.jpg",
+            "background_image": "shopify://shop_images/pups_italy_venicegondolatemplate10_26.jpg",
             "background_image_position": "cover",
             "video_position": "cover",
             "toggle_overlay": true,
@@ -239,7 +271,7 @@
             "height": "fill",
             "background_color": "",
             "background_media": "image",
-            "background_image": "shopify://shop_images/Hero_Framed_Painting.jpg",
+            "background_image": "shopify://shop_images/pups_italy_lakecomotemplate10_26.jpg",
             "background_image_position": "cover",
             "video_position": "cover",
             "toggle_overlay": true,
@@ -504,6 +536,7 @@
         }
       },
       "block_order": [
+        "collection_featured_card_3xUX7X",
         "featured_card_1",
         "featured_card_2"
       ],
