@@ -275,39 +275,6 @@
             "padding-inline-end-mobile": 0
           },
           "blocks": {
-            "image_Mgximb": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image": "shopify://shop_images/pups_scotland_highland_picnic_template_10_26.jpg",
-                "link": "",
-                "hide_on_mobile": false,
-                "hide_on_desktop": false,
-                "image_ratio": "adapt",
-                "custom_ratio": "1 / 1",
-                "image_fit": "cover",
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_color": "",
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "use_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 0,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
-              },
-              "blocks": {}
-            },
             "card-gallery": {
               "type": "_product-card-gallery",
               "settings": {
@@ -386,7 +353,6 @@
             }
           },
           "block_order": [
-            "image_Mgximb",
             "card-gallery",
             "product_title_4nY4eT",
             "price_EzJzMm"
