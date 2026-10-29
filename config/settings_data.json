@@ -54,7 +54,6 @@
     "page_transition_enabled": false,
     "transition_to_main_product": false,
     "card_hover_effect": "none",
-    "collection_card_image_zoom": 140,
     "gsap_enabled": true,
     "badge_position": "top-right",
     "badge_corner_radius": 100,
@@ -74,8 +73,6 @@
     "auto_open_cart_drawer": true,
     "show_cart_note": false,
     "show_add_discount_code": false,
-    "quick_add": false,
-    "mobile_quick_add": false,
     "cart_free_shipping_threshold": "0",
     "cart_reward_gift_label": "15% off",
     "cart_reward_gift_threshold": "250",
@@ -90,6 +87,9 @@
     "currency_code_enabled_product_pages": false,
     "currency_code_enabled_product_cards": false,
     "currency_code_enabled_cart_items": false,
+    "quick_add": false,
+    "mobile_quick_add": false,
+    "collection_card_image_zoom": 140,
     "product_corner_radius": 0,
     "card_corner_radius": 4,
     "show_variant_image": false,
@@ -102,6 +102,13 @@
     "variant_button_width": "equal-width-buttons",
     "popover_border": "none",
     "content_for_index": [],
+    "blocks": {
+      "4758743926054211994": {
+        "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-cart-image/019fcb85-cdee-7125-9e57-d241767d6aa5",
+        "disabled": false,
+        "settings": {}
+      }
+    },
     "color_palette": {
       "background": "#ffffff",
       "foreground": "#000000",
