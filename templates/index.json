@@ -18,7 +18,7 @@
       "settings": {
         "heading": "Here begins the portrait of your",
         "heading_accent": "Best Friend and their worldly adventure!",
-        "description": "Upload one photo of your pup. Choose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.",
+        "description": "Upload one photo of your pup. \nChoose a destination: Paris, Provence, the Italian Lakes, and more. See the finished portrait free before you ever spend a cent.",
         "button_primary_label": "Start free preview",
         "button_primary_link": "shopify://products/create-your-portrait",
         "button_secondary_label": "See how it works",
@@ -39,7 +39,7 @@
         "image_alt": "White fluffy dog wearing a beret at a Parisian café with the Eiffel Tower in the background",
         "background_color": "#fffdf8",
         "text_color": "#242027",
-        "accent_color": "#F1E732",
+        "accent_color": "#f1e732",
         "brand_color": "#321c41",
         "muted_color": "#605c64",
         "badge_background": "#faf8f0"
