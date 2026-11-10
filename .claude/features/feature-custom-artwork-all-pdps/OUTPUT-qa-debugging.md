@@ -1,6 +1,8 @@
 # QA — Custom Artwork Flow On All Product Pages
 
-Test on the theme connected from branch `feature/custom-artwork-all-pdps` (preview only, not live).
+Test on the unpublished theme `[LS] Custom Artwork All PDPs`: https://zkbzu7-zs.myshopify.com?preview_theme_id=165573066867
+
+**AI pre-check (WebKit, iPhone 15 + desktop 1440):** Staycation, Provence, Paris, Chateau and Palm Beach scenes preselect the right collection and scene. The gallery, the stage and the thumb show the same scene. Add to cart and Buy now are hidden until a preview exists. No horizontal overflow. Create Your Portrait is unchanged.
 
 ## Round 1 — Status: Ready for testing
 
@@ -11,7 +13,7 @@ Test on the theme connected from branch `feature/custom-artwork-all-pdps` (previ
 - [ ] The title shows the product's name, not "Create Your Portrait"
 - [ ] Add to cart and Buy now stay locked until a preview is generated
 - [ ] Switching scene after generating requires a new preview
-- [ ] `/products/switzerland-matterhorn-trails-pet-portrait`: known gap, opens on the first scene
+- [ ] Opening a scene from a collection card shows that scene in the gallery, the dropdown and the thumb strip
 
 ### Create Your Portrait
 - [ ] `/products/create-your-portrait` looks and works as before

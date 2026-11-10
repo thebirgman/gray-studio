@@ -9,6 +9,9 @@
 **Watch:**
 - `switzerland-matterhorn-trails-pet-portrait` has no scene in the app's scene list, so it falls back to the first scene. The scene needs adding in the app.
 - The preselect depends on the widget's markup (`[data-pp-widget]`, `[data-pp-collection]`, `[data-pp-thumbs]`, `data-scene-id`). If the app changes those, the preselect silently stops working.
+- Gallery sync: the widget auto-selects the collection's first scene before ours, and each scene swaps the gallery image only once it loads, so a late stale load could win. The component remembers the skipped scenes' images and re-selects our scene until they have loaded.
+- Unpublished QA theme: `[LS] Custom Artwork All PDPs` (#165573066867), pushed from this branch. Re-push with `shopify theme push --theme 165573066867` after changes.
+- Not ours, seen in WebKit: `build-a-box.js` imports a `CartAddEvent` that nothing exports, and Safari lacks `requestIdleCallback`.
 - `product.custom-artwork.json` stays for `create-your-portrait`, which has no matching scene and keeps the widget's default.
 - Showcase pages: decided they mean the custom artwork (personalize) PDPs. They are covered by this build, with no extra page or button. Picked as the simplest reading of the request.
 
