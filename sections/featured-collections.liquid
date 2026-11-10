@@ -51,6 +51,9 @@
 ></div>
 
 <featured-collections-component
+  {% if section.settings.anchor_id != blank %}
+    id="{{ section.settings.anchor_id | handleize }}"
+  {% endif %}
   class="
     section
     featured-collections
@@ -259,6 +262,7 @@
 {% stylesheet %}
   .featured-collections {
     color: var(--fc-text);
+    scroll-margin-top: var(--header-height, 0px);
   }
 
   .featured-collections__layout {
@@ -687,6 +691,12 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "info": "Lets buttons scroll to this section. Link to it as /#your-anchor-id."
     },
     {
       "type": "text",
