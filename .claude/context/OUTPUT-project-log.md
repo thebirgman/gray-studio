@@ -1,5 +1,13 @@
 # Project Log — gray-studio
 
+## 2026-11-10 — Create Now section (task 81464264) + custom artwork live
+
+**Live:** The custom artwork flow was merged to main and verified on pupsaroundtheworld.com. The checkout test was stopped before payment, so no order was placed.
+
+**Create Now:** We reused the homepage `featured-collections` section instead of building a new one (decided with the user). The heading is now "Create Now", and a new optional `anchor_id` setting renders `id="create-now"` with a header scroll offset. The hero "Start free preview" button now goes to `/#create-now` instead of `/products/create-your-portrait`. The location cards still open their collection page, and each scene there leads to a PDP with the upload flow. A new grid of every scene with direct PDP links was considered and rejected as more work for one less click.
+
+**Navigation:** Collections should come out of `main-menu` (store data), but `/collections` stays live for links and SEO. The CLI has no store auth for navigation scopes, so the menu edit is pending.
+
 ## 2026-11-10 — Custom artwork flow on all PDPs: built on branch
 
 **What:** `templates/product.json` now has the custom-artwork composition (portrait widget, `pdp-intro`, picker under buy buttons). The only change is that the title stays `{{ closest.product.title }}`. The four suffix checks now use `snippets/custom-artwork-pdp-check.liquid`, which is true on product templates with no suffix or the `custom-artwork` suffix. The `<custom-artwork-pdp>` wrapper is now a web component (`assets/custom-artwork-pdp.js`). It preselects the scene that matches the product handle: it switches the widget's collection dropdown, then clicks the thumb, and stops if the customer has already interacted.
