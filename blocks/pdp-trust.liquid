@@ -6,6 +6,7 @@
   assign item_2_icon = block.settings.item_2_icon
   assign item_3_icon = block.settings.item_3_icon
 -%}
+{%- capture custom_artwork_pdp -%}{%- render 'custom-artwork-pdp-check' -%}{%- endcapture -%}
 
 <ul class="pdp-trust" role="list" {{ block.shopify_attributes }}>
   <li class="pdp-trust__item">
@@ -47,7 +48,7 @@
     <span class="pdp-trust__label">{{ item_2_label | escape }}</span>
   </li>
   <li class="pdp-trust__item">
-    <span class="pdp-trust__icon pdp-trust__icon--shield{% if template.suffix == 'custom-artwork' %} pdp-trust__icon--scenes{% endif %}" aria-hidden="true">
+    <span class="pdp-trust__icon pdp-trust__icon--shield{% if custom_artwork_pdp == 'true' %} pdp-trust__icon--scenes{% endif %}" aria-hidden="true">
       {%- if item_3_icon != blank -%}
         {{
           item_3_icon
@@ -60,7 +61,7 @@
             alt: ''
         }}
       {%- else -%}
-        {%- if template.suffix == 'custom-artwork' -%}
+        {%- if custom_artwork_pdp == 'true' -%}
           {{ 'pdp-trust-scenes.svg' | inline_asset_content }}
         {%- else -%}
           {{ 'pdp-trust-shield.svg' | inline_asset_content }}

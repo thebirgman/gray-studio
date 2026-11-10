@@ -1,5 +1,52 @@
 # Project Log — gray-studio
 
+## 2026-11-10 — Custom artwork flow on all PDPs: built on branch
+
+**What:** `templates/product.json` now has the custom-artwork composition (portrait widget, `pdp-intro`, picker under buy buttons). The only change is that the title stays `{{ closest.product.title }}`. The four suffix checks now use `snippets/custom-artwork-pdp-check.liquid`, which is true on product templates with no suffix or the `custom-artwork` suffix. The `<custom-artwork-pdp>` wrapper is now a web component (`assets/custom-artwork-pdp.js`). It preselects the scene that matches the product handle: it switches the widget's collection dropdown, then clicks the thumb, and stops if the customer has already interacted.
+
+**Why:** It doesn't touch live. No product `templateSuffix` changes and no app extension release. It reaches live only when the branch is merged or published after Kathryn approves.
+
+**Watch:**
+- `switzerland-matterhorn-trails-pet-portrait` has no scene in the app's scene list, so it falls back to the first scene. The scene needs adding in the app.
+- The preselect depends on the widget's markup (`[data-pp-widget]`, `[data-pp-collection]`, `[data-pp-thumbs]`, `data-scene-id`). If the app changes those, the preselect silently stops working.
+- `product.custom-artwork.json` stays for `create-your-portrait`, which has no matching scene and keeps the widget's default.
+- Showcase pages: not found in the theme. The URL is needed before building the "Personalize with your dog" button.
+
+## 2026-11-09 — Custom artwork flow on all PDPs: scoped, waiting on response
+
+**Status:** Waiting for a reply on the LanternOS task "Apply Custom Artwork Logic To All Product Pages" (`4ca81a9c-25c6-4a81-bf09-0439b14d84e8`). The solution message is drafted. No code changes have been made yet.
+
+**Request:** Every scene PDP should work like `/products/create-your-portrait`: pick a scene, upload a dog photo, then buy. Nothing should be sellable "as is".
+
+**Findings:**
+- The flow is `templates/product.custom-artwork.json`: the `ls-seedream-portrait-flow` app block plus `pdp-intro`. Theme code turns it on with `template.suffix == 'custom-artwork'` in `sections/product-information.liquid`, `blocks/_product-media-gallery.liquid`, `snippets/variant-main-picker.liquid` and `blocks/pdp-trust.liquid`.
+- All 33 products share the same Format / Size / Frame options (28 variants), so the template fits every product.
+- The widget locks add-to-cart until a preview exists and writes `_pp_scene`, `_pp_job_id` and `Pet's name` as line-item properties.
+- The scene IDs from `/apps/portrait/scenes` equal the product handles. The widget always auto-selects the first scene (`renderThumbs` in the app's `pet-portrait-widget.js`), so a scene PDP would open on the wrong scene.
+- No quick-add in the theme templates bypasses the PDP.
+
+**Proposed plan:**
+1. In the app block, pass `product.handle` to `.pp-widget` and preselect that scene and its collection. A theme-side script is the temporary fallback.
+2. Bulk-assign all scene products to the `custom-artwork` template. This is store data and reversible. Do it only after step 1.
+3. Add the "Personalize with your dog" button on the Showcase pages. Its location in the theme hasn't been found yet.
+4. QA on desktop and mobile, plus a test order.
+
+**Collections page recommendation:** Point one Live button to a "Create Now" section. Keep `/collections` live but remove it from the navigation, for SEO and existing links.
+
+**Rejected alternative:** Copying the custom-artwork JSON into `product.json`. The suffix checks wouldn't fire, so the wrapper and styles would be missing. *(Revised below.)*
+
+**How to build without affecting live (preferred path, decided 2026-11-09):**
+- Product template assignment (`templateSuffix`) is store data. It changes the live page immediately because the live theme already has `custom-artwork`. Don't bulk-assign products for testing.
+- Build everything in an unpublished theme on a feature branch:
+  1. Put the custom artwork flow (app block + `pdp-intro`) in `product.json`.
+  2. Replace the four `template.suffix == 'custom-artwork'` checks with a shared condition so they also apply to the default template.
+  3. Do the scene preselect theme-side (scoped script), since app extension releases hit all themes, including live.
+- For a one-off check without editing templates, use a hidden `[LS]` test product assigned to `custom-artwork`.
+- QA and a test order happen in preview. Live changes only when the theme is published after Kathryn approves.
+- Open question: whether the app extension can be previewed on this store before release (`shopify app dev`). Not checked yet.
+
+**Feature setup:** Branch `feature/custom-artwork-all-pdps`, folder `.claude/features/feature-custom-artwork-all-pdps/` with the brief filled in. Next: `/scope-feature`.
+
 ## 2026-10-21 — Larger centered footer logo on mobile
 
 **What:** Under 750px, the footer logo is a centered `12.5rem` square (200px at the 393px mobile baseline) so the circular paw fills the space. A width-only box kept the paw small because the image tag’s 112×36 ratio letterboxed it. Desktop stays `7.015rem` × `2.264rem`, left-aligned.

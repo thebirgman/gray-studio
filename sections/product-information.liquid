@@ -20,8 +20,11 @@
   {% content_for 'blocks' %}
 {% endcapture %}
 
-{% if template.suffix == 'custom-artwork' %}
-  <custom-artwork-pdp>
+{%- capture custom_artwork_pdp -%}{%- render 'custom-artwork-pdp-check' -%}{%- endcapture -%}
+
+{% if custom_artwork_pdp == 'true' %}
+  <script src="{{ 'custom-artwork-pdp.js' | asset_url }}" type="module"></script>
+  <custom-artwork-pdp data-scene-handle="{{ closest.product.handle | escape }}">
 {% endif %}
 
 {% if section.settings.enable_sticky_add_to_cart %}
@@ -181,7 +184,7 @@
 %}
 
 {% render 'pdp-main-styles' %}
-{% if template.suffix == 'custom-artwork' %}
+{% if custom_artwork_pdp == 'true' %}
   {% render 'pdp-custom-artwork-styles' %}
   </custom-artwork-pdp>
 {% endif %}

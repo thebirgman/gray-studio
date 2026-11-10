@@ -14,6 +14,7 @@
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
+{%- capture custom_artwork_pdp -%}{%- render 'custom-artwork-pdp-check' -%}{%- endcapture -%}
 
 {% liquid
   # Custom styling applies to:
@@ -94,8 +95,8 @@
       </div>
     {%- endif -%}
     <div
-      class="variant-picker__form{% if template.suffix == 'custom-artwork' %} variant-picker__form--from-step-3{% endif %}"
-      {% if template.suffix == 'custom-artwork' %}
+      class="variant-picker__form{% if custom_artwork_pdp == 'true' %} variant-picker__form--from-step-3{% endif %}"
+      {% if custom_artwork_pdp == 'true' %}
         style="counter-reset: vp-step 2;"
       {% endif %}
     >

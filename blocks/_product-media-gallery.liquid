@@ -7,6 +7,8 @@
   ></script>
 {%- endif -%}
 
+{%- capture custom_artwork_pdp -%}{%- render 'custom-artwork-pdp-check' -%}{%- endcapture -%}
+
 {%- liquid
   assign selected_product = closest.product
   assign selected_variant_media = selected_product.selected_or_first_available_variant.featured_media
@@ -17,7 +19,7 @@
   assign gallery_thumb_width = block_settings.thumbnail_width
   assign gallery_media_radius = block_settings.media_radius
 
-  if request.page_type == 'product' and template.suffix != 'custom-artwork'
+  if request.page_type == 'product' and custom_artwork_pdp != 'true'
     assign gallery_presentation = 'carousel'
     assign gallery_controls_style = 'thumbnails'
     assign gallery_thumb_position = 'left'
