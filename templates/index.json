@@ -32,7 +32,7 @@
         "badge_2_line_1": "Soft impressionist style",
         "badge_2_line_2": "Ready in moments",
         "badge_2_icon_asset": "pups-badge-style-icon.svg",
-        "desktop_image": "shopify://shop_images/pups_hero_200.png",
+        "desktop_image": "shopify://shop_images/pups_hero_300.png",
         "mobile_image": "shopify://shop_images/home_hero_image_mobile_2x_088429c1-d739-406f-88cb-94a628d84541.webp",
         "desktop_image_asset": "hero-pups-desktop.png",
         "mobile_image_asset": "hero-pups-mobile.png",
@@ -206,6 +206,7 @@
         "description": "Every scene is an original piece of art. Upload your pup's photo, customize the setting, and select a frame and size. Free to preview, always.",
         "button_label": "See all 30+ scenes",
         "button_link": "shopify://collections/all",
+        "anchor_id": "create-now",
         "filters_label": "Collection filters",
         "background_color": "#fffdf8",
         "brand_color": "#321c41",
@@ -219,8 +220,7 @@
         "padding-block-start-mobile": 60,
         "padding-block-end-mobile": 25,
         "padding-inline-start-mobile": 25,
-        "padding-inline-end-mobile": 25,
-        "anchor_id": "create-now"
+        "padding-inline-end-mobile": 25
       }
     },
     "step_by_step_home": {
