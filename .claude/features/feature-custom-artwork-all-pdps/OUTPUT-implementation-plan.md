@@ -22,5 +22,5 @@ Every product page uses the custom artwork layout and the `ls-seedream-portrait-
 ## Known gaps / open items
 
 - `switzerland-matterhorn-trails-pet-portrait` has no matching scene in `/apps/portrait/scenes`, so that PDP falls back to the first scene. The app's scene list needs that scene added.
-- "Showcase pages": nothing in the theme is named showcase. Waiting for a URL or a screenshot before adding the "Personalize with your dog" button.
+- "Showcase pages": decided 2026-11-10 that this means the custom artwork PDPs. Every scene PDP now uses the flow, so no extra button is needed.
 - Collections page: recommendation only (keep `/collections`, remove it from the nav).

@@ -22,7 +22,7 @@ Source: LanternOS task "Apply Custom Artwork Logic To All Product Pages" (`4ca81
 - Removing the Collections page and pointing a Live button to a "Create Now" section. Recommendation: keep `/collections` live, remove it from the nav.
 
 **Open questions**
-- Where the Showcase pages live in the theme. Not found yet.
+- ~~Where the Showcase pages live in the theme.~~ Resolved 2026-11-10: "Showcase pages" means the personalized custom artwork PDPs themselves. No separate page or button needed.
 - Whether the app extension can be previewed on this store before release.
 - QA: desktop and mobile, plus a test order in preview.
 

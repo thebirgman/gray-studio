@@ -10,7 +10,7 @@
 - `switzerland-matterhorn-trails-pet-portrait` has no scene in the app's scene list, so it falls back to the first scene. The scene needs adding in the app.
 - The preselect depends on the widget's markup (`[data-pp-widget]`, `[data-pp-collection]`, `[data-pp-thumbs]`, `data-scene-id`). If the app changes those, the preselect silently stops working.
 - `product.custom-artwork.json` stays for `create-your-portrait`, which has no matching scene and keeps the widget's default.
-- Showcase pages: not found in the theme. The URL is needed before building the "Personalize with your dog" button.
+- Showcase pages: decided they mean the custom artwork (personalize) PDPs. They are covered by this build, with no extra page or button. Picked as the simplest reading of the request.
 
 ## 2026-11-09 — Custom artwork flow on all PDPs: scoped, waiting on response
 
