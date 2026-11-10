@@ -58,7 +58,7 @@
             "image_gap": 8,
             "large_first_image": false,
             "icons_style": "none",
-            "slideshow_controls_style": "thumbnails",
+            "slideshow_controls_style": "dots",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "left",
             "thumbnail_width": 78,
@@ -201,7 +201,6 @@
                 },
                 "review_pdp": {
                   "type": "pdp-reviews",
-                  "disabled": true,
                   "settings": {
                     "fallback_count": 148
                   },
@@ -216,184 +215,17 @@
             "from_price_pdp": {
               "type": "pdp-from-price",
               "settings": {
-                "suffix": "",
-                "show_range_mobile": false
+                "suffix": "depending on format & size",
+                "show_range_mobile": true
               },
               "blocks": {}
             },
-            "collection_browser_pdp": {
-              "type": "collection-browser",
+            "intro_pdp": {
+              "type": "pdp-intro",
               "settings": {
-                "collection": "",
-                "heading": "Browse the collection"
+                "text": "Select a scene, upload a clear photo of your dog, and see them painted into it. Free, before you spend a cent."
               },
               "blocks": {}
-            },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "show_option_descriptions": true,
-                "size_guide_label": "Size guide",
-                "size_guide_heading": "Size guide",
-                "size_guide_image": "shopify://shop_images/size_guide_pups.jpg",
-                "size_guide_link": "",
-                "frame_guide_label": "Frame guide",
-                "frame_guide_heading": "Frame guide",
-                "frame_guide_image_print": "shopify://shop_images/c6b79403b6e742fc1288b66358f8628936e9f3c9-1680x2100_1.webp",
-                "frame_guide_image_canvas": "shopify://shop_images/bd4bb7ca9114294e5655be7aa6f4f9da5ef5e570-1796x2245.webp",
-                "frame_guide_image": "shopify://shop_images/attachment.jpg",
-                "frame_guide_link": "",
-                "option_label_text_color": "",
-                "variant_style_class": "default",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "use_mobile_padding": false,
-                "padding-block-start-mobile": 0,
-                "padding-block-end-mobile": 8,
-                "padding-inline-start-mobile": 0,
-                "padding-inline-end-mobile": 0
-              },
-              "blocks": {
-                "desc_digital": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Digital Download",
-                    "description": "High resolution file, delivered in minutes, crisp at any print size, print online or locally",
-                    "badge": "",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_poster": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Archival Quality Print",
-                    "description": "Museum quality fine art print, luxurious matte finish, fade resistant inks, digital file included free, shipping is free, ships in 3–7 days",
-                    "badge": "",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_canvas": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Giclée Canvas",
-                    "description": "High resolution print with fade resistant inks on canvas fabric, wrapped over wood stretcher bars, digital file included free, shipping is free, ships in 3–7 days",
-                    "badge": "",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_small": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Small - 12x16\"",
-                    "description": "",
-                    "badge": "",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_medium": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Medium - 18x24\"",
-                    "description": "",
-                    "badge": "Most loved",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_large": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Large - 24x32\"",
-                    "description": "",
-                    "badge": "Best value",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_frame_none": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "No Frame",
-                    "description": "",
-                    "badge": "",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_frame_white": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "White",
-                    "description": "",
-                    "badge": "",
-                    "image": "shopify://shop_images/Gemini_Generated_Image_4mn4rp4mn4rp4mn4_1.jpg",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_frame_black": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Black",
-                    "description": "",
-                    "badge": "",
-                    "image": "shopify://shop_images/Gemini_Generated_Image_64vb5x64vb5x64vb.jpg",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_frame_natural": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Light Wood",
-                    "description": "",
-                    "badge": "",
-                    "image": "shopify://shop_images/Gemini_Generated_Image_414po1414po1414p.jpg",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                },
-                "desc_frame_dark_wood": {
-                  "type": "_option-description",
-                  "settings": {
-                    "option_value": "Dark Wood",
-                    "description": "",
-                    "badge": "",
-                    "image": "shopify://shop_images/Gemini_Generated_Image_pic0rwpic0rwpic0.jpg",
-                    "format_scope": "any"
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "desc_digital",
-                "desc_poster",
-                "desc_canvas",
-                "desc_small",
-                "desc_medium",
-                "desc_large",
-                "desc_frame_none",
-                "desc_frame_white",
-                "desc_frame_black",
-                "desc_frame_natural",
-                "desc_frame_dark_wood"
-              ]
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -423,6 +255,176 @@
                 "padding-inline-end": 0
               },
               "blocks": {
+                "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA": {
+                  "type": "shopify://apps/ls-seedream-portrait-flow/blocks/pet-portrait-widget/019fcb85-cdee-7125-9e57-d241767d6aa5",
+                  "settings": {
+                    "max_tries": 3,
+                    "loading_video": "https://cdn.shopify.com/videos/c/o/v/21de526f86bf40c9b10ad094610d64a6.webm"
+                  }
+                },
+                "variant_picker_R3rGDr": {
+                  "type": "variant-picker",
+                  "settings": {
+                    "variant_style": "buttons",
+                    "show_swatches": false,
+                    "show_option_descriptions": true,
+                    "size_guide_label": "Size guide",
+                    "size_guide_heading": "Size guide",
+                    "size_guide_link": "",
+                    "frame_guide_label": "Frame guide",
+                    "frame_guide_heading": "Frame guide",
+                    "frame_guide_image": "shopify://shop_images/attachment.jpg",
+                    "frame_guide_link": "",
+                    "option_label_text_color": "",
+                    "variant_style_class": "default",
+                    "custom_variant_background": "{{ settings.color_palette.background }}",
+                    "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                    "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                    "selected_variant_style_class": "default",
+                    "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                    "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                    "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                    "alignment": "left",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0,
+                    "use_mobile_padding": false,
+                    "padding-block-start-mobile": 0,
+                    "padding-block-end-mobile": 8,
+                    "padding-inline-start-mobile": 0,
+                    "padding-inline-end-mobile": 0
+                  },
+                  "blocks": {
+                    "desc_digital": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Digital Download",
+                        "description": "High resolution file, delivered in minutes, crisp at any print size, print online or locally",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_poster": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Archival Quality Print",
+                        "description": "Museum quality fine art print, luxurious matte finish, fade resistant inks, digital file included free, shipping is free, ships in 3–7 days",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_canvas": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Giclée Canvas",
+                        "description": "High resolution print with fade resistant inks on canvas fabric, wrapped over wood stretcher bars, digital file included free, shipping is free, ships in 3–7 days",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_small": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Small - 12x16\"",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_medium": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Medium - 18x24\"",
+                        "description": "",
+                        "badge": "Most loved",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_large": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Large - 24x32\"",
+                        "description": "",
+                        "badge": "Best value",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_none": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "No Frame",
+                        "description": "",
+                        "badge": "",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_white": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "White",
+                        "description": "",
+                        "badge": "",
+                        "image": "shopify://shop_images/Gemini_Generated_Image_4mn4rp4mn4rp4mn4_1.jpg",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_black": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Black",
+                        "description": "",
+                        "badge": "",
+                        "image": "shopify://shop_images/Gemini_Generated_Image_64vb5x64vb5x64vb.jpg",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_natural": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Light Wood",
+                        "description": "",
+                        "badge": "",
+                        "image": "shopify://shop_images/Gemini_Generated_Image_414po1414po1414p.jpg",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    },
+                    "desc_frame_dark_wood": {
+                      "type": "_option-description",
+                      "settings": {
+                        "option_value": "Dark Wood",
+                        "description": "",
+                        "badge": "",
+                        "image": "shopify://shop_images/Gemini_Generated_Image_pic0rwpic0rwpic0.jpg",
+                        "format_scope": "any"
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "desc_digital",
+                    "desc_poster",
+                    "desc_canvas",
+                    "desc_small",
+                    "desc_medium",
+                    "desc_large",
+                    "desc_frame_none",
+                    "desc_frame_white",
+                    "desc_frame_black",
+                    "desc_frame_natural",
+                    "desc_frame_dark_wood"
+                  ]
+                },
                 "quantity": {
                   "type": "quantity",
                   "static": true,
@@ -454,7 +456,10 @@
                   "blocks": {}
                 }
               },
-              "block_order": []
+              "block_order": [
+                "ls_seedream_portrait_flow_pet_portrait_widget_wVxzAA",
+                "variant_picker_R3rGDr"
+              ]
             },
             "trust_pdp": {
               "type": "pdp-trust",
@@ -463,8 +468,7 @@
                 "item_1_label": "Free shipping",
                 "item_2_icon": "shopify://shop_images/Frame_2.svg",
                 "item_2_label": "Worldwide Delivery",
-                "item_3_icon": "shopify://shop_images/Group_1597884212.svg",
-                "item_3_label": "Lifetime warranty"
+                "item_3_label": "30+ scene collection"
               },
               "blocks": {}
             },
@@ -476,7 +480,7 @@
                   "type": "_pdp-faq",
                   "settings": {
                     "question": "Materials & formats",
-                    "answer": "Prints are made with museum-quality archival paper with fade-resistant inks. The kind of quality that holds color and detail for decades.\n\nCanvas is artist grade 2cm cotton- poly blend."
+                    "answer": "Prints ship worldwide with tracked delivery. Always free! Digital downloads deliver by email in seconds.Prints are made with museum-quality archival paper with fade-resistant inks. The kind of quality that holds color and detail for decades.\n\nCanvas is artist grade 2cm cotton- poly blend."
                   },
                   "blocks": {}
                 },
@@ -508,8 +512,7 @@
           "block_order": [
             "group_icgrde",
             "from_price_pdp",
-            "collection_browser_pdp",
-            "variant_picker_R3rGDr",
+            "intro_pdp",
             "buy_buttons_eYQEYi",
             "trust_pdp",
             "faqs_pdp"
@@ -539,39 +542,52 @@
         "benefit_materials": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884199_1.webp",
             "icon_asset": "step-by-step-pdp-icon-1.svg",
-            "title": "Archival-quality materials",
-            "description": "Matte archival paper on Archival Quality Prints, gallery-wrapped canvas on Giclée. Made to hold its color for years, not fade in a sunny room."
+            "title": "Select a scene",
+            "description": "Choose from 20+ destinations, browsed by place or by mood."
           }
         },
         "benefit_frame": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884196.webp",
             "icon_asset": "step-by-step-pdp-icon-2.svg",
-            "title": "Frame it your way",
-            "description": "Prints can ship with no frame, a black frame, or a white frame — whichever actually matches the room it's going in."
+            "title": "Upload a photo",
+            "description": "One clear photo of your pup is all it takes to begin."
           }
         },
         "benefit_format": {
           "type": "step",
           "settings": {
+            "icon": "shopify://shop_images/group_1597884196_1.webp",
             "icon_asset": "step-by-step-pdp-icon-3.svg",
-            "title": "Rectangular by design",
-            "description": "Every scene is painted in a rectangular format, giving more size and framing options and a more natural fit on the wall."
+            "title": "Preview the portrait",
+            "description": "See your pup in the scene within minutes. No charge, no obligation."
+          }
+        },
+        "step_bmbtrF": {
+          "type": "step",
+          "settings": {
+            "icon": "shopify://shop_images/group_1597884199.webp",
+            "icon_asset": "step-by-step-pdp-icon-3.svg",
+            "title": "Select a size & buy",
+            "description": "Love it? Choose your size and finish. Don't? No hard feelings, no hidden fees."
           }
         }
       },
       "block_order": [
         "benefit_materials",
         "benefit_frame",
-        "benefit_format"
+        "benefit_format",
+        "step_bmbtrF"
       ],
       "name": "Why you'll love it",
       "settings": {
-        "image": "shopify://shop_images/staycation-its-five-o-clock-somewhere_722c19d5-4979-4572-aaa2-26b8daff7416.jpg",
+        "image": "shopify://shop_images/palm-beach-shop-til-you-drop_dace552c-0123-4e93-bf75-02850b4e0375.jpg",
         "image_asset": "step-by-step-pdp-portrait.jpg",
         "image_alt": "Impressionist portrait of a boxer in an ornate parlor",
-        "image_shape": "square",
+        "image_shape": "rectangle",
         "heading": "Why you'll love it",
         "show_numbers": false,
         "background_color": "#fffdf8",
