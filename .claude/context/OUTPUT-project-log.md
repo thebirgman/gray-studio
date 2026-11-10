@@ -6,7 +6,7 @@
 
 **Create Now:** We reused the homepage `featured-collections` section instead of building a new one (decided with the user). The heading is now "Create Now", and a new optional `anchor_id` setting renders `id="create-now"` with a header scroll offset. The hero "Start free preview" button now goes to `/#create-now` instead of `/products/create-your-portrait`. The location cards still open their collection page, and each scene there leads to a PDP with the upload flow. A new grid of every scene with direct PDP links was considered and rejected as more work for one less click.
 
-**Navigation:** Collections should come out of `main-menu` (store data), but `/collections` stays live for links and SEO. The CLI has no store auth for navigation scopes, so the menu edit is pending.
+**Navigation (store data, applied live with `menuUpdate`):** The header `main-menu` "Shop" link went from `/collections/all` (CATALOG) to `/#create-now` (HTTP). The footer `shop` menu lost its "Collections" item, so "Custom Portrait" is the only one left. `/collections/all` and the collection pages stay live for links and SEO, and the Create Now cards and its "See all 30+ scenes" button still link to them. A backup of the menus before the change is in the session scratchpad (`menus-backup-2026-11-10.json`). To roll back, set Shop to type CATALOG and re-add Collections (CATALOG) to the `shop` menu.
 
 ## 2026-11-10 — Custom artwork flow on all PDPs: built on branch
 
